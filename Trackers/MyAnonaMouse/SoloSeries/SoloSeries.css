@@ -1,0 +1,34 @@
+/* Settings Bar */
+div #MAM-SS-Menu {
+    text-align: right;
+}
+
+
+/* Cover image div */
+.newTorTable div.posterImage.MAM-SS-CoverElement {
+    width: 150px;
+    height: 200px;
+}
+
+/* Cover image img */
+.newTorTable div.MAM-SS-CoverElement > img {
+    max-width: 150px;
+    max-height: 200px;
+}
+
+/* FileType: First */
+span.torFileTypes a.MAM-SS-FileType-1 {
+    font-size: 16px;
+    color: var(--text-important);
+}
+
+
+/* FileType: Secondary */
+span.torFileTypes a.MAM-SS-FileType-2 {
+    font-size: 14px;
+}
+
+/* MAM-WedgeWaster button */
+.newTorTable tr td.MAM-SS-DownBook img.MAM-WW-BrowseButton {
+    margin-left: 1em
+}
