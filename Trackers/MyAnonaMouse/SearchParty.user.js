@@ -16,9 +16,9 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_listValues
 
-// @homepage    https://gist.github.com/WirlyWirly/79d7e3ea68b7a862233ee4d468996c83/
-// @updateURL   https://gist.github.com/WirlyWirly/79d7e3ea68b7a862233ee4d468996c83/raw/MAM%2520-%2520SearchParty.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/79d7e3ea68b7a862233ee4d468996c83/raw/MAM%2520-%2520SearchParty.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js?raw=true
 // ==/UserScript==
 
 // ----------------------------------- UserScript --------------------------------------
