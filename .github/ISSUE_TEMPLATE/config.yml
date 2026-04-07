@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Feature Request
+    url: https://github.com/WirlyWirly/UserScripts/discussions/new?category=feature-request
+    about: Start a discussion for a new feature request
+

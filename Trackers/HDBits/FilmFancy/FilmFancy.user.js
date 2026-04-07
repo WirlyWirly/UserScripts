@@ -2,7 +2,7 @@
 // @name 		HDB - FilmFancy
 // @author 		WirlyWirly
 // @namespace 		https://github.com/WirlyWirly
-// @version 		2.4
+// @version 		2.5
 
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/browse.php*
@@ -10,11 +10,11 @@
 
 // @icon    https://hdbits.org/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/e2ff763385188b4a2d7fd3bbc51851ce/
-// @updateURL   https://gist.github.com/WirlyWirly/e2ff763385188b4a2d7fd3bbc51851ce/raw/HDB%2520-%2520FilmFancy.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/e2ff763385188b4a2d7fd3bbc51851ce/raw/HDB%2520-%2520FilmFancy.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
 
-// @resource    HDB-FF-CSS https://gist.github.com/WirlyWirly/e2ff763385188b4a2d7fd3bbc51851ce/raw/HDB%2520-%2520FilmFancy.css
+// @resource    HDB-FF-CSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.css?raw=true
 // @grant 		GM_getResourceText
 // @grant 		GM_addStyle
 

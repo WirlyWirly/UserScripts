@@ -10,9 +10,9 @@
 
 // @icon 		https://www.myanonamouse.net/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/e599ca9e293558ec014d0e806914b936
-// @updateURL   https://gist.github.com/WirlyWirly/e599ca9e293558ec014d0e806914b936/raw/MAM%2520-%2520WedgeWaster.user.js
-// @downloadURL   https://gist.github.com/WirlyWirly/e599ca9e293558ec014d0e806914b936/raw/MAM%2520-%2520WedgeWaster.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/SearchParty.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/WedgeWaster.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/WedgeWaster.user.js?raw=true
 
 // @description Waste a wedge and not your time when purchasing freeleech!
 // @grant 		GM_download

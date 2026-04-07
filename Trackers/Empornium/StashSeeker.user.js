@@ -2,7 +2,7 @@
 // @name 		EMP - StashSeeker
 // @author 		WirlyWirly
 // @namespace 	https://github.com/WirlyWirly
-// @version 	1.0
+// @version 	1.1
 
 // @description Seek content to add to the Stash!
 
@@ -11,9 +11,9 @@
 
 // @icon    https://www.empornium.sx/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/7dd02432c309a55146d528a7b05faeed
-// @updateURL   https://gist.github.com/WirlyWirly/7dd02432c309a55146d528a7b05faeed/raw/EMP%2520-%2520StashSeeker.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/7dd02432c309a55146d528a7b05faeed/raw/EMP%2520-%2520StashSeeker.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/Empornium/StashSeeker.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Empornium/StashSeeker.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Empornium/StashSeeker.user.js?raw=true
 
 // @require https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.3/waitForKeyElements.js
 

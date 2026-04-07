@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name 		MAM - SearchParty
 // @author 		WirlyWirly
-// @version     2.0
+// @version     2.1
 // @description It's a search party! 🥳 Custom search bars and quick-search icons throughout the site
 
 // @match 		https://www.myanonamouse.net/*
@@ -16,7 +16,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_listValues
 
-// @homepage    https://github.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/SearchParty.user.js
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js?raw=true
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SearchParty.user.js?raw=true
 // ==/UserScript==

@@ -2,7 +2,7 @@
 // @name 		RED - OriginGenerator
 // @author 		WirlyWirly
 // @namespace 	https://github.com/WirlyWirly
-// @version 	1.0
+// @version 	1.1
 
 // @match       https://redacted.sh/artist.php?id=*
 // @match       https://redacted.sh/collages.php*
@@ -11,9 +11,9 @@
 
 // @icon        https://redacted.sh/favicon.ico
 
-// @homepage    https://redacted.sh/forums.php?action=viewthread&threadid=72242
-// @updateURL   https://gist.github.com/WirlyWirly/3699dbada2689e6c80a0f4035658bea9/raw/RED%2520-%2520OriginGenerator.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/3699dbada2689e6c80a0f4035658bea9/raw/RED%2520-%2520OriginGenerator.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/Redacted/OriginGenerator.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Redacted/OriginGenerator.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Redacted/OriginGenerator.user.js?raw=true
 
 // @description Generate and download origin.yaml files
 

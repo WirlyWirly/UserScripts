@@ -2,15 +2,15 @@
 // @name    BTN - Series Fanart Applier
 // @author  WIRLYWIRLY
 // @namespace   https://github.com/WirlyWirlyPool
-// @version     0.4
+// @version     0.5
 
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php?id=*
 // @icon    https://broadcasthe.net/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirlyPool/b86e03683329647d7b25635ef491bec9
-// @updateURL   https://gist.github.com/WirlyWirlyPool/b86e03683329647d7b25635ef491bec9/raw/BTN%2520-%2520Series%2520Fanart%2520Applier.user.js
-// @downloadURL https://gist.github.com/WirlyWirlyPool/b86e03683329647d7b25635ef491bec9/raw/BTN%2520-%2520Series%2520Fanart%2520Applier.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/BroadcasTheNet/SeriesFanartApplier.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/SeriesFanartApplier.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/SeriesFanartApplier.user.js?raw=true
 
 // @description Apply Fanart on Series page and Torrent group page for a unique experience.
 // @grant       none

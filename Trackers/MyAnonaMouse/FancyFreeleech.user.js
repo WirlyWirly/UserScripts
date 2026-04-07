@@ -2,15 +2,15 @@
 // @name 		MAM - FancyFreeleech
 // @author 		WirlyWirly
 // @namespace 		https://github.com/WirlyWirly
-// @version 		1.1
+// @version 		1.2
 
 // @match 		https://www.myanonamouse.net/freeleech.php
 
 // @icon 		https://www.myanonamouse.net/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/f13255697e47864b743e8320651e2c18
-// @updateURL   https://gist.github.com/WirlyWirly/f13255697e47864b743e8320651e2c18/raw/MAM%2520-%2520FancyFreeleech.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/f13255697e47864b743e8320651e2c18/raw/MAM%2520-%2520FancyFreeleech.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/FancyFreeleech.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/FancyFreeleech.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/FancyFreeleech.user.js?raw=true
 
 // @description Fancy up the list of freeleech torrents
 // @grant 		none

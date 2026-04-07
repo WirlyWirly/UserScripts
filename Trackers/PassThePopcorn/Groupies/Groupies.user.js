@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name 		PTP - Groupies
 // @author 		WirlyWirly
-// @version     1.3
+// @version     1.4
 // @namespace   https://github.com/WirlyWirly
 // @icon        https://passthepopcorn.me/favicon.ico
 // @description Group torrents on film pages by resolution
 
 // @match       https://passthepopcorn.me/torrents.php?id=*
 
-// @homepage    https://gist.github.com/WirlyWirly/f77854d92fdc6a37171299b59865aab8/
-// @updateURL   https://gist.github.com/WirlyWirly/f77854d92fdc6a37171299b59865aab8/raw/PTP%2520-%2520Groupies.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/f77854d92fdc6a37171299b59865aab8/raw/PTP%2520-%2520Groupies.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/PassThePopcorn/Groupies/Groupies.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/PassThePopcorn/Groupies/Groupies.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/PassThePopcorn/Groupies/Groupies.user.js?raw=true
 
 // @grant       GM_setValue
 // @grant       GM_getValue

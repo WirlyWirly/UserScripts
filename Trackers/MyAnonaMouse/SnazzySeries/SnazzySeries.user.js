@@ -2,7 +2,7 @@
 // @name 		MAM - SnazzySeries
 // @author 		WirlyWirly
 // @namespace 	https://github.com/WirlyWirly
-// @version 	1.4
+// @version 	1.5
 
 // @description Series pages, but done all snazzy-like!
 
@@ -10,11 +10,11 @@
 
 // @icon 		https://www.myanonamouse.net/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/eea6111280b56cba55e622f39d675887
-// @updateURL   https://gist.github.com/WirlyWirly/eea6111280b56cba55e622f39d675887/raw/MAM%2520-%2520SnazzySeries.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/eea6111280b56cba55e622f39d675887/raw/MAM%2520-%2520SnazzySeries.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/SnazzySeries/SnazzySeries.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SnazzySeries/SnazzySeries.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SnazzySeries/SnazzySeries.user.js?raw=true
 
-// @resource    MAM-SS-CSS https://gist.github.com/WirlyWirly/eea6111280b56cba55e622f39d675887/raw/MAM%2520-%2520SnazzySeries.css
+// @resource    MAM-SS-CSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SnazzySeries/SnazzySeries.css?raw=true
 // @grant       GM_getResourceText
 // @grant       GM_addStyle
 

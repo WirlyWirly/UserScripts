@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name 		MAM - HumbleHunter
 // @author 		WIRLYWIRLY
-// @namespace 		https://github.com/WirlyWirlyPool
-// @version 		1.0
+// @namespace 	https://github.com/WirlyWirlyPool
+// @version 	1.1
+// @description Hunt down books from HumbleBookBundles on MyAnonaMouse!
+// @icon 		https://www.myanonamouse.net/favicon.ico
+// @grant 		none
+// @run-at 		document-end
+
 
 // @match 		https://www.humblebundle.com/books/*
 
-// @icon 		https://www.myanonamouse.net/favicon.ico
-// @homepage    https://gist.github.com/WirlyWirly/9f53f70d6bfeee0e805bd7dc08c465c1/
-// @updateURL   https://gist.github.com/WirlyWirly/9f53f70d6bfeee0e805bd7dc08c465c1/raw/MAM%2520-%2520HumbleHunter.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/9f53f70d6bfeee0e805bd7dc08c465c1/raw/MAM%2520-%2520HumbleHunter.user.js
-// @description 		Hunt down books from HumbleBookBundles on MyAnonaMouse!
-// @grant 		none
-// @run-at 		document-end
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/HumbleHunter.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/HumbleHunter.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/HumbleHunter.user.js?raw=true
 // ==/UserScript==
 
 // Get all book detail boxes

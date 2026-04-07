@@ -2,7 +2,7 @@
 // @name 		MAM - SoloSeries
 // @author 		WirlyWirly
 // @namespace 	https://github.com/WirlyWirly
-// @version 	1.0
+// @version 	1.1
 
 // @description Clear out all torrents belonging to a series from search results
 
@@ -10,10 +10,11 @@
 
 // @icon 		https://www.myanonamouse.net/favicon.ico
 
-// @homepage    https://gist.github.com/WirlyWirly/1e038728b7d599c344ae29c9bde50cc9
-// @updateURL   https://gist.github.com/WirlyWirly/1e038728b7d599c344ae29c9bde50cc9/raw/MAM%2520-%2520SoloSeries.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/1e038728b7d599c344ae29c9bde50cc9/raw/MAM%2520-%2520SoloSeries.user.js
-// @resource    MAM-SS-CSS https://gist.github.com/WirlyWirly/1e038728b7d599c344ae29c9bde50cc9/raw/MAM%2520-%2520SoloSeries.css
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/MyAnonaMouse/SoloSeries/SoloSeries.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SoloSeries/SoloSeries.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SoloSeries/SoloSeries.user.js?raw=true
+
+// @resource    MAM-SS-CSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/SoloSeries/SoloSeries.css?raw=true
 //
 // @grant       GM_getResourceText
 // @grant       GM_addStyle
