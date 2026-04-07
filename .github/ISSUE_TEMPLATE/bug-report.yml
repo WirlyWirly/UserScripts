@@ -1,39 +1,35 @@
 name: 🐞 Bug Report
 description: Create a new issue for a bug that has not yet been reported
-# type: bug
 title: "[UserScriptName] bugName"
 labels: ["bug"]
 body:
   - type: input
     id: userscriptName
+    validations:
+      required: true
     attributes:
       label: 🐵 UserScript
-      description: What is the name of the UserScript you are reporting a bug for?
-      placeholder: FilmFancy
+      description: What is the name and version of the UserScript you are reporting a bug for?
+      placeholder: FilmFancy, v2.5
+  - type: textarea
+    id: bugDescription
     validations:
       required: true
-  - type: textarea
-    id: description
     attributes:
       label: ✏️ Description
-      description: Briefly explain the problem, the expected outcome, and how it can be reproduced.
-      placeholder: Tell us what you see!
-      # value: "A bug happened!"
+      description: Briefly explain the expected behaviour, the buggy behaviour, and how this bug can be reproduced.
+  - type: input
+    id: userBrowser
     validations:
       required: true
-  - type: dropdown
-    id: browser
     attributes:
       label: 🖥️ Browser
       description: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
+      placeholder: LibreWolf
   - type: dropdown
     id: userscriptManager
+    validations:
+      required: true
     attributes:
       label: 🐵 UserScript Manager
       description: What UserScript manager are you using?
@@ -42,12 +38,13 @@ body:
         - Tampermonkey
         - Greasemonkey
         - Other
-      # default: Violentmonkey
+      default: Violentmonkey
+  - type: textarea
+    id: consoleMessages
     validations:
       required: true
-  - type: textarea
-    id: console
     attributes:
       label: 📄 Console Messages
-      description: Paste any browser console logs errors related to this bug. This will be automatically formatted into code, so no need for backticks.
+      description: Paste the browser console logs errors related to this bug. This will be automatically formatted into code, so no need for backticks.
       render: shell
+
