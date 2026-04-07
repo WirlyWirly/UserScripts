@@ -2,13 +2,16 @@
 // @name         Steam: Game Trailer and Gameplay Buttons
 // @author       WIRLYWIRLY
 // @namespace    https://github.com/WirlyWirlyPool
-// @version      2.0
-// @homepage     https://gist.github.com/WirlyWirlyPool/c682c27daf748022db3ff9760c3ac6cc
-// @updateURL    https://gist.github.com/WirlyWirlyPool/c682c27daf748022db3ff9760c3ac6cc/raw/Steam:%2520Game%2520Trailer%2520and%2520Gameplay%2520Buttons.user.js
-// @downloadURL  https://gist.github.com/WirlyWirlyPool/c682c27daf748022db3ff9760c3ac6cc/raw/Steam:%2520Game%2520Trailer%2520and%2520Gameplay%2520Buttons.user.js
-// @description  This will add buttons on steam gamepages that when clicked will search YouTube for gameplay or trailer videos. This is based off the script "Steam Game Page - Add Links To Game Trailer & Gameplay Search On YouTube" written by CoopCoding.
-// @match        htt*://store.steampowered.com/app/*
 // @icon         https://store.steampowered.com/favicon.ico
+// @version      2.1
+// @description  This will add buttons on steam gamepages that when clicked will search YouTube for gameplay or trailer videos. This is based off the script "Steam Game Page - Add Links To Game Trailer & Gameplay Search On YouTube" written by CoopCoding.
+
+// @match        htt*://store.steampowered.com/app/*
+
+// @homepage     https://github.com/WirlyWirly/UserScripts/blob/main/Other/Steam%20-%20Game%20Trailer%20and%20Gameplay%20Buttons.user.js
+// @updateURL    https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/Steam%20-%20Game%20Trailer%20and%20Gameplay%20Buttons.user.js?raw=true
+// @downloadURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/Steam%20-%20Game%20Trailer%20and%20Gameplay%20Buttons.user.js?raw=true
+
 // @grant        none
 // ==/UserScript==
 

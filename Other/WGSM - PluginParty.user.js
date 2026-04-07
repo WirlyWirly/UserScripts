@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        WGSM - PluginParty
 // @author      WirlyWirly
-// @version     0.8
+// @version     0.9
 // @namespace   https://github.com/WirlyWirly
 
 // @match       https://windowsgsm.com/*
@@ -9,9 +9,9 @@
 // @icon        https://windowsgsm.com/favicon.ico
 // @description It's a plugin party! List all available WindowsGSM plugins on a single page and filter through them with a searchbar!
 
-// @homepage    https://gist.github.com/WirlyWirly/fb6fce9864eb8d1701cb226b6f83cb45/
-// @updateURL   https://gist.github.com/WirlyWirly/fb6fce9864eb8d1701cb226b6f83cb45/raw/WGSM%2520-%2520PluginParty.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/fb6fce9864eb8d1701cb226b6f83cb45/raw/WGSM%2520-%2520PluginParty.user.js
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/WGSM%20-%20PluginParty.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/WGSM%20-%20PluginParty.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/WGSM%20-%20PluginParty.user.js?raw=true
 
 // @grant       GM_xmlhttpRequest
 

@@ -10,9 +10,9 @@
 
 // @match       https://gist.github.com/WirlyWirly/*
 
-// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/GistHub/FileCollapse.user.js
-// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/GistHub/FileCollapse.user.js?raw=true
-// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/GistHub/FileCollapse.user.js?raw=true
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/GistHub%20-%20FileToggle.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/GistHub%20-%20FileToggle.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/GistHub%20-%20FileToggle.user.js?raw=true
 
 // ==/UserScript==
 
