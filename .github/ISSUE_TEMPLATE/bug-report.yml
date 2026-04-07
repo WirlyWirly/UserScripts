@@ -33,12 +33,13 @@ body:
     attributes:
       label: 🐵 UserScript Manager
       description: What UserScript manager are you using?
+      multiple: true
+      default: 0
       options:
         - Violentmonkey
         - Tampermonkey
         - Greasemonkey
         - Other
-      default: Violentmonkey
   - type: textarea
     id: consoleMessages
     validations:
