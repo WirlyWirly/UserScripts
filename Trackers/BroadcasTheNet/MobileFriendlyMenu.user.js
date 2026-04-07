@@ -7,9 +7,9 @@
 // @match   https://broadcasthe.net/*
 // @icon	https://broadcasthe.net/favicon.ico
 
-// @homepage	https://gist.github.com/WirlyWirly/317f9f029a107dc6fd1e6267bc93cc4a
-// @updateURL	https://gist.github.com/WirlyWirly/317f9f029a107dc6fd1e6267bc93cc4a/raw/BTN%2520-%2520Mobile%2520Friendly%2520Menu.user.js
-// @downloadURL	https://gist.github.com/WirlyWirly/317f9f029a107dc6fd1e6267bc93cc4a/raw/BTN%2520-%2520Mobile%2520Friendly%2520Menu.user.js
+// @homepage	https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/BroadcasTheNet/MobileFriendlyMenu.user.js
+// @updateURL	https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/MobileFriendlyMenu.user.js?raw=true
+// @downloadURL	https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/MobileFriendlyMenu.user.js?raw=true
 
 // @description	Main menu buttons are made mobile friendly. Reccomended for use only on mobile devices.
 // @run-at 		document-end

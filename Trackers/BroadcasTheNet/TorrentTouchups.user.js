@@ -3,15 +3,15 @@
 // @author	WIRLYWIRLY
 // @namespace	https://github.com/WirlyWirly
 // @version 	0.3
+// @description	Touch-up torrent listings to enhance user experience.
 
 // @match   https://broadcasthe.net/torrents.php?id=*
 // @icon	https://broadcasthe.net/favicon.ico
 
-// @homepage	https://gist.github.com/WirlyWirly/386f6d6572724c002771edc6dd32b007
-// @updateURL	https://gist.github.com/WirlyWirly/386f6d6572724c002771edc6dd32b007/raw/BTN%2520-%2520Torrent%2520Touch-ups.user.js
-// @downloadURL	https://gist.github.com/WirlyWirly/386f6d6572724c002771edc6dd32b007/raw/BTN%2520-%2520Torrent%2520Touch-ups.user.js
+// @homepage	https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/BroadcasTheNet/TorrentTouchups.user.js
+// @updateURL	https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/TorrentTouchups.user.js?raw=true
+// @downloadURL	https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/BroadcasTheNet/TorrentTouchups.user.js?raw=true
 
-// @description	Touch-up torrent listings to enhance user experience.
 // @grant 		none
 // @run-at 		document-end
 // ==/UserScript==
