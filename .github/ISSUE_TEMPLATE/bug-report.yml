@@ -24,17 +24,14 @@ body:
       required: true
     attributes:
       label: 🖥️ Browser
-      description: On what browser are you encountering this bug?
-      placeholder: LibreWolf
+      placeholder: LibreWolf, FireFox, Chrome
   - type: dropdown
     id: userscriptManager
     validations:
       required: true
     attributes:
       label: 🐵 UserScript Manager
-      description: What UserScript manager are you using?
       multiple: true
-      default: 0
       options:
         - Violentmonkey
         - Tampermonkey
@@ -46,16 +43,15 @@ body:
       required: true
     attributes:
       label: 📄 Console Messages
-      description: Copy-paste the browser console log\error messages related to this bug. This will be automatically formatted into code, so no need for backticks.
+      description: Copy-paste the browser's console messages related to this bug. This will be automatically formatted into code, so no need for backticks.
       render: shell
   - type: checkboxes
     id: userConfirmation
     attributes:
       label: Confirm New Issue
-      description: By creating this issue, you agree that you have searched and confirmed that this bug has not alrady been reported and it is not a result form conflicting with another UserScripts\programs
       options:
         - label: Yes, I have searched for and confirmed this bug has not yet been reported
           required: true
-        - label: Yes, I can reproduce this bug even after disabling other UserScripts\program that may cause interference
+        - label: Yes, I can reproduce this bug even after disabling other UserScripts\programs that may cause interference
           required: true
 
