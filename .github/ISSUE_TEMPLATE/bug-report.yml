@@ -1,5 +1,5 @@
 name: 🐞 Bug Report
-description: Create a new issue for a bug that has not yet been reported
+description: Open a new issue for a bug that has not yet been reported
 title: "[UserScriptName] bugName"
 labels: ["bug"]
 body:
@@ -10,7 +10,7 @@ body:
     attributes:
       label: 🐵 UserScript
       description: What is the name and version of the UserScript you are reporting a bug for?
-      placeholder: FilmFancy, v2.5
+      placeholder: FilmFancy [v2.5]
   - type: textarea
     id: bugDescription
     validations:
@@ -24,7 +24,7 @@ body:
       required: true
     attributes:
       label: 🖥️ Browser
-      description: What browsers are you seeing the problem on?
+      description: On what browser are you encountering this bug?
       placeholder: LibreWolf
   - type: dropdown
     id: userscriptManager
@@ -46,6 +46,16 @@ body:
       required: true
     attributes:
       label: 📄 Console Messages
-      description: Paste the browser console logs errors related to this bug. This will be automatically formatted into code, so no need for backticks.
+      description: Copy-paste the browser console log\error messages related to this bug. This will be automatically formatted into code, so no need for backticks.
       render: shell
+  - type: checkboxes
+    id: userConfirmation
+    attributes:
+      label: Confirm New Issue
+      description: By creating this issue, you agree that you have searched and confirmed that this bug has not alrady been reported and it is not a result form conflicting with another UserScripts\programs
+      options:
+        - label: Yes, I have searched for and confirmed this bug has not yet been reported
+          required: true
+        - label: Yes, I can reproduce this bug even after disabling other UserScripts\program that may cause interference
+          required: true
 
