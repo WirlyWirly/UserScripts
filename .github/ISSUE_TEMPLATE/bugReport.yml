@@ -1,0 +1,52 @@
+name: Bug Report
+description: Create a new issue for a bug that has not yet been reported
+type: bug
+title: '[UserScriptName] bugName'
+labels: ['bug']
+body:
+  - type: input
+    id: userscriptName
+    attributes:
+      label: UserScript
+      description: What is the name of the UserScript you are reporting a bug for?
+      placeholder: FilmFancy
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Briefly explain the problem, the expected outcome, and how it can be reproduced.
+      placeholder: Tell us what you see!
+      # value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: dropdown
+    id: userscriptManager
+    attributes:
+      label: UserScript Manager
+      description: What UserScript manager are you using?
+      options:
+        - Violentmonkey
+        - Tampermonkey
+        - Greasemonkey
+        - Other
+      # default: Violentmonkey
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser Console Messages
+      description: Paste any browser console logs\errors related to this bug. This will be automatically formatted into code, so no need for backticks.
+      render: shell
