@@ -1,8 +1,8 @@
 name: 🐞 Bug Report
 description: Create a new issue for a bug that has not yet been reported
-type: bug
-title: '[UserScriptName] bugName'
-labels: ['bug']
+# type: bug
+title: "[UserScriptName] bugName"
+labels: ["bug"]
 body:
   - type: input
     id: userscriptName
