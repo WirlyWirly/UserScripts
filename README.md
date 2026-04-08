@@ -1,9 +1,5 @@
 <div align="center">
- 
-  # **🐵 UserScripts 🐵**
-</div>
-
-<div align="center">
+  <h1>🐵 UserScripts 🐵</h1>
   <img src=".github/assets/banner.png" alt="banner" width="100%" />
 </div>
 
