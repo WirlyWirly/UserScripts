@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        WGSM - PluginParty
 // @author      WirlyWirly
-// @version     0.9
+// @version     0.10
 // @namespace   https://github.com/WirlyWirly
 
 // @match       https://windowsgsm.com/*

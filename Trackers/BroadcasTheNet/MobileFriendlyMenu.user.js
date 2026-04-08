@@ -2,7 +2,7 @@
 // @name	BTN - Mobile Friendly Menu
 // @author	WIRLYWIRLY
 // @namespace	https://github.com/WirlyWirly
-// @version 	0.1
+// @version 	0.2
 
 // @match   https://broadcasthe.net/*
 // @icon	https://broadcasthe.net/favicon.ico

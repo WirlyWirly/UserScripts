@@ -2,7 +2,7 @@
 // @name	BTN - Torrent Touch-ups
 // @author	WIRLYWIRLY
 // @namespace	https://github.com/WirlyWirly
-// @version 	0.3
+// @version 	0.4
 // @description	Touch-up torrent listings to enhance user experience.
 
 // @match   https://broadcasthe.net/torrents.php?id=*

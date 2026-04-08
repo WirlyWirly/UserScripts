@@ -3,7 +3,7 @@
 // @author       WIRLYWIRLY
 // @namespace    https://github.com/WirlyWirlyPool
 // @icon         https://store.steampowered.com/favicon.ico
-// @version      2.1
+// @version      2.2
 // @description  This will add buttons on steam gamepages that when clicked will search YouTube for gameplay or trailer videos. This is based off the script "Steam Game Page - Add Links To Game Trailer & Gameplay Search On YouTube" written by CoopCoding.
 
 // @match        htt*://store.steampowered.com/app/*
