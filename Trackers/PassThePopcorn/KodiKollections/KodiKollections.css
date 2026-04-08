@@ -1,0 +1,62 @@
+/* FilmFancy torrentList header */
+div.torrentListHeader {
+    font-size: 21px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: .5em;
+}
+
+/* Configuration Menu */
+div#HDB-FF-Menu {
+    float: right;
+    margin-right: 1em;
+}
+
+/* Search Links */
+div.HDB-FF-SearchLinks {
+    margin-bottom: 8px;
+    margin-left: 15px;
+    text-align: left;
+}
+
+/* SearchLinks: Text */
+a.HDB-FF-SearchLink {
+    margin-right: .5em;
+    font-size: 13px;
+}
+
+/* SearchLinks: Images */
+a.HDB-FF-SearchLink > img {
+    max-width: 18px;
+    max-height: 18px;
+    margin-right: .5em;
+}
+/* Banner element */
+td.HDB-FF-Banner {
+    background-color: var(--dark);
+}
+
+/* Banner: Text */
+div.HDB-FF-BannerText {
+    margin: .5em;
+    font-size: 21px;
+    font-weight: bold;
+    text-align: center;
+    color: #eeeeee;
+}
+
+/* Banner: Images */
+div.HDB-FF-BannerText  > img {
+    max-width: 64px;
+    max-height: 28px;
+}
+
+/* Dead: Transparency*/
+tr.HDB-FF-Seederless {
+    opacity: 40%
+}
+
+/* Dead: Hover */
+tr.HDB-FF-Seederless:hover {
+    opacity: 100%
+}

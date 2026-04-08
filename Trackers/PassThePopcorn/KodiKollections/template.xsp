@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<smartplaylist type="movies">
+    <name>__COLLECTION_NAME__</name>
+    <match>one</match>
+    <rule field="title" operator="contains">
+        <value>__MOVIE_TITLE__</value>
+    </rule>
+    <group>none</group>
+</smartplaylist>

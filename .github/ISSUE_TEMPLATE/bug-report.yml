@@ -4,6 +4,11 @@ title: "[UserScriptName] bugName"
 labels: ["bug"]
 body:
 
+  - type: markdown
+    attributes:
+      value: |
+        When reporting a bug, it is important to note that a UserScript that does not have a `@homepage` definied in the metadata block is still in development and is therfore not ready to be used by the general public.
+
   - type: input
     id: userscriptName
     validations:
