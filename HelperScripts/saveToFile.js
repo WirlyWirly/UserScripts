@@ -1,34 +1,3 @@
-// Various helper functions useful in other scripts
-
-function waitForElement(cssTarget, observeTarget = document.body, observeSubTree = true) {
-    // Wait until the cssTarget exists within the observeTarget and then resolve the promise
-    // Source: https://stackoverflow.com/a/61511955
-
-    return new Promise(resolve => {
-
-        if ( observeTarget.querySelector(cssTarget) ) {
-            // The cssTarget already exists within the observeTarget, so immediately resolve the promise
-            return resolve(observeTarget.querySelector(cssTarget))
-        }
-
-        const observer = new MutationObserver(mutations => {
-            // The actions to take when there are new mutations to the observeTarget
-
-            if ( observeTarget.querySelector(cssTarget) ) {
-                // The cssTarget has been found within the observeTarget
-                observer.disconnect()
-                resolve(observeTarget.querySelector(cssTarget))
-            }
-        })
-
-        // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-        observer.observe(observeTarget, { childList: true, subtree: observeSubTree })
-
-    })
-
-}
-
-
 function saveToFile(fileData, filename) {
     // Save the provided fileData to a local file
     
@@ -36,12 +5,13 @@ function saveToFile(fileData, filename) {
         // The different MIME types this function is setup to handl. 
         // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
             
-        'jpg': 'image/jpeg',
         'jpeg': 'image/jpeg',
+        'jpg': 'image/jpeg',
         'json': 'application/json;charset=utf-8;',
         'png': 'image/png',
         'text': 'text/plain;charset=utf-8;',
         'torrent': 'application/x-bittorrent',
+        'txt': 'text/plain;charset=utf-8;',
 
     }
 
