@@ -13,7 +13,7 @@ class simpleLogger {
 
     log(message) {
         if ( this.enabled == true && this.levels.includes('log') ) {
-            console.log(`---------- [LOG] ${this.scriptName} ----------\n\n${message}`)
+            console.log(message)
         }
     }
 
