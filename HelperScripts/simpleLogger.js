@@ -5,7 +5,7 @@
 
 class simpleLogger {
 
-    constructor({ enabled = false, scriptName = 'UserScript', enabledLevels = ['log', 'user', 'debug', 'error']}) {
+    constructor({ enabled = false, scriptName = 'UserScript', enabledLevels = ['log', 'info', 'debug', 'error']}) {
         this.enabled = enabled
         this.levels = enabledLevels
         this.scriptName = scriptName
@@ -17,8 +17,8 @@ class simpleLogger {
         }
     }
 
-    user(message) {
-        if ( this.enabled == true && this.levels.includes('user') ) {
+    info(message) {
+        if ( this.enabled == true && this.levels.includes('info') ) {
             console.info(`---------- ${this.scriptName} ----------\n\n${message}`)
         }
     }
