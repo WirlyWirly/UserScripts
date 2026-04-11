@@ -19,7 +19,7 @@ class simpleLogger {
 
     info(message) {
         if ( this.enabled == true && this.levels.includes('info') ) {
-            console.info(`---------- ${this.scriptName} ----------\n\n${message}`)
+            console.log(`---------- ${this.scriptName} ----------\n\n${message}`)
         }
     }
 
