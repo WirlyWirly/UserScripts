@@ -1,0 +1,60 @@
+/* ==UserStyle==
+@name       ClearJAV: EnlargePosters
+@author     WirlyWirly
+@version    1.0
+@updateURL      
+@homepageURL      
+==/UserStyle== */
+
+:root {
+	/* Adjust these variables to easily modify the CSS settings */
+	
+	--randomTableHeight: 850px; /* Increase\Decrease this value to best fit your screen resolution */
+	--randomTableBackgroundSize: contain; /* 'contain' or 'cover', */
+}
+
+/* ========== Random Torrents ========== */
+
+div.random__media {
+	height: var(--randomTableHeight);
+}
+
+div.random__media > a {
+	background-size: var(--randomTableBackgroundSize) !important;
+	background-color: #000000;
+	opacity: unset;
+}
+
+div.random__media > a > div {
+	color: #eeeeee;
+	background: #00000075;
+	font-size: 11px;
+	padding: 1px;
+}
+
+/* ========== List View ========== */
+
+/* Poster Column */
+tr.torrent-search--list__row {
+	grid-template-columns: 155px 100px 1fr 150px 68px 100px 50px 50px 50px 120px;
+}
+
+img.torrent-search--list__poster-img {
+	max-width: 145px;
+	width: unset;
+	height: unset;
+}
+
+
+/* Poster Hover */
+div.torrent-search--hover__info {
+	width: unset;
+	height: unset;
+}
+
+div.torrent-search--hover__info .poster img {
+	max-width: 600px;
+	max-height: 500px;
+	height: unset;
+	width: unset;
+}
