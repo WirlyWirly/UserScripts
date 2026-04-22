@@ -45,7 +45,6 @@
     }
 
     img.torrent-search--list__poster-img {
-        z-index: 10;
         max-width: 145px;
         width: unset;
         height: unset;
@@ -56,6 +55,7 @@
     div.torrent-search--hover__info {
         left: 30%;
         top: -15%;
+        z-index: 10;
         width: unset;
         height: unset;
     }
