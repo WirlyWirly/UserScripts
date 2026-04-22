@@ -67,4 +67,16 @@
         width: unset;
     }
 
+    /* ========== Grouped View ========== */
+    header.torrent-search--grouped__header {
+        height: unset;
+        max-height: 200px;
+    }
+
+    a.torrent-search--grouped__poster > img {
+        height: unset;
+        max-height: 200px;
+
+    }
+
 }
