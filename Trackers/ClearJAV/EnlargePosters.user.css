@@ -5,7 +5,7 @@
 @namespace  https://github.com/WirlyWirly
 @description Enlarge torrent posters to improve visibility
 
-@updateURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true  
+@updateURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/EnlargePosters.user.css
 
 ==/UserStyle== */
@@ -13,7 +13,7 @@
 @-moz-document domain('clearjav.com') {
     :root {
         /* Adjust these variables to easily modify the CSS settings */
-        
+
         --randomTableHeight: 850px; /* Increase\Decrease this value to best fit your screen resolution */
         --randomTableBackgroundSize: contain; /* 'contain' or 'cover', */
     }
@@ -45,6 +45,7 @@
     }
 
     img.torrent-search--list__poster-img {
+        z-index: 10;
         max-width: 145px;
         width: unset;
         height: unset;
@@ -53,6 +54,8 @@
 
     /* Poster Hover */
     div.torrent-search--hover__info {
+        left: 30%;
+        top: -15%;
         width: unset;
         height: unset;
     }
