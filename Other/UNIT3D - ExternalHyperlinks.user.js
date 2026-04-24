@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        UNIT3D: ExternalHyperlinks
+// @name        UNIT3D - ExternalHyperlinks
 // @author      WirlyWirly
 // @version     1.0
 // @description Add additional external links alongside the sites defaults
