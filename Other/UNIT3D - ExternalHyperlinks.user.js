@@ -16,11 +16,13 @@
 
 // ==/UserScript==
 
-let externalLinksList, imdbId
+let externalLinksList, imdbId, mediaTitle
 
 try {
     externalLinksList = document.querySelector('ul.meta__ids')
     imdbId = externalLinksList.querySelector('li.meta__imdb > a').href.match(/\/(tt\d+)/)[1]
+    mediaTitle = encodeURIComponent(document.querySelector('h1.meta__title').innerText.match(/(.*) \(\d+\)/)[1])
+
 } catch(error) {
     throw new Error('ExternalLinks: Unable to parse the IMDB number needed for generating external links, aborting further script execution')
 }
@@ -47,6 +49,12 @@ let externalLinks = [
     },
 
     {
+        name: 'AnimeBytes',
+        searchURL: `https://animebytes.tv/series.php?action=search&seriesname=${mediaTitle}`,
+        base64: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAD8klEQVR42r1XXWgcVRS+Z2azs2kSMjObpC21Bk2hLRRq/EEwYGsf2r40CPqmD4UShM1G2zRSKipE/Ccksbvrgwh56VNKBBGRvNSIWuwPjeJDDbTZqNiEkJ2dxKTJZnfmeO5mN93Mzt+u2vuwy86eOec73z3nu+cC87mw6Uy9bmSPMEBJ0RKX+LNFNbrfQHOUMWhkyKaBsSkG8LUsB8chOZjx4xe8DNLqqw8jGq8jY6fI+KYiBo/DwtDy0q7ecO5eZhIRd5c7BZ1sR5kgvqdoF/6oCgC2D9SkZ5L9lFkfMqwhw0klID3Lg/P/U2r0HWaab7mnB6v03oeKLH3kxIgtgMXmyB4jy0Yp6/aiowDAE41a/FbRJqVEfiJwT/ukeTIkSie2pYb+8gTA9zVn4mXiYEfxmcCE04oe/6TUTlMivyKyA34AbOQAfwoCdMqp+M+OAHjmuSx8XxqcDKZV/dM2q0NN6b5I+/+SXwAFb3O1YvDJUiY2AeT3PDl9dZN2l+zzYMM9T+UM41plAPIRr6py6FCxJjYBUEbvU0bnt9qCrgSCu4uFZ11pOfqayczhijEAfKCmE29sAsi3mmnc5tVuMfyKDDvdnHEmDN4NyI5b33dBsBoShba6hdgsFLKPUfbRcjvhnJqOf+zH50pTz86MYXYRkDf9ABEYfKboiVeAK5xmrM8zxNoyIxA7lHTsSiX0ppWeZ0w0x0oL2Z4E9rcih5ohrUQ76YUvbVEKgVYvJbNb+W0xzB+9mBAF4Rg40c+XGpAanArQa/lRSqqxOLgpmhQMba+fH5yvBgCvibWccdcVAIPvQJMjd6j3H7WlSBTarcpVEQtecg1sirYgskSS2mBrIEBXWEt8XjUAuXuEivGkY3wqRHcADMbCeuLFagH4kWteA78RTXvtGYKsFBBauWBUCeAHAtDhCkCTuyeoXQ45GjAYUvVEb6XB8wPLSmbWqxVd27DIAini4UoFydfAwv3ravQoafm4h9mcFJQO+m1JPRx9zDDxip26lnneOIaT80SV7GpIAwUp1wuNqdh1z+AGfuMlxfcZZs6HUbkxZOljQBKFmLUwC0PqWdKU034y3wJguaW3ZT27dtu5He2A4BQiTFEvrxF7ewDhcd/HsRVAgYW3iYX+Sh3827V1JJtJfuvVt/8bAL42tiJzw+6y8UAA8LVx3cLxBwXC9mJSYOKL/2w7aAZ06gyvqxlNydjntzvKnefb9l3qlFumiaMVAbCwwafel73EqiSwTl8jIIjDfKTDR3olTV/7xe7Q8wRQysji7zPPmYgnaGv2UVY7GMJDhX81onmWAlwjxZyQxZrL1lGOC1V2JTNAAZ+nn3XF5/8Arw/vm0KgPqUAAAAASUVORK5CYII=`,
+    },
+
+    {
         name: 'Simkl',
         searchURL: `https://api.simkl.com/redirect?to=Simkl&imdb=${imdbId}`,
         base64: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR42p2Tz08TURDHv/urlNIGtB6QnuQqkQPam9QrniTxB2o1RA8iiaKxtAZNtP5IKKiIGBQviuhZ0cgJId407UEa/B+antva7nZ3fTPbhW7kopO8zHtv33zeznznScH2XT8ARPF/9l0SAFNMZHfHtm2Pd02SJI9vmEkA2w2gj6FQCH6/H6qqiLUMOm7ZFgzdQKlcRqVS4XMNkM0ACg6Hd2Ps6hXE+vsRCgahahpkASCCZVmo1WooFotY/vQZb5feoVqtEsQBmKaJ0csjmM5MMpmAFETDvU1RFP7nUqmEoTNxrK2v0569lcL88zmci5/lmyanppHN5hppgYNPnjiOwWODvL4xnsTrN4siTdUB0A0LL+ZxeugUA2afzSGby/G8VtPZh/eEsbezE4VCAT838uw9KUzcTOH2rQk0q0H77tB1nYu4ufkLd9Jp9rIsOwDKNdLVhWQygYN9fayEz+fjoYliqiIFUobWZC8XXiGRTG3/gSDhSCyG7u59UGQFq2tfWa6WFr8YPgFQ0dt7AI+mMgz/srKC+Plh1Ot1ByCKgfdLizg6MCACf+PxzAw28nnKA24/9fTsR2o8gUAggA8flzF84SKptN0H99N3cf3amKcGbjc2NQ7bvQcPkRFKbdWADkYiEYyOXEI0eggd7R0iX40OgBBUI8MwuAdI3idPZ70qNPd+sK0N/tZWaCItSXaeCAHMeh1VIWdZKOE2mNvKOz8mZ/HXA9rpMa2KyWFw1/+TEf3bH+Z0GEFGcmpoAAAAAElFTkSuQmCC`,
@@ -63,7 +71,6 @@ let externalLinks = [
         searchURL: `https://thetvdb.com/redirect/imdb/${imdbId}`,
         base64: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAkFBMVEUbJSVr1ZH///+MkZGusrI2Pz/3+PiJjo5iwoVnzIszWkUhMS1MVFRka2s1XkgyWEQsSzw7a1AdKiglOjJkx4hctX1Snm9Hh2E9cFMoQjdZrXhOl2pDfVsqRjlfu4EkLi5ASUlLkGYvODgvUkGhpaVbbGV6gICYnZ1IUFBWp3RAclbNz8/DxsZscnJfZmZRm22q8P4tAAAA60lEQVQ4je2R63KCMBCFd1csCUmUWwCBioi1Kr28/9t15VZmZNoX8PzYZHK+bM5kAZ4aFaq//ShGaZM02+7CZcDDSSIvysd2r+zs8wlKASpz0OYXUHy6URNQA6xp5bzMWkiMt0oIwW4sMFtrcwe0Po6ARa9ba5SqqU/EWjldHYCk7xD5WEDyRqeqf6Jy6ADDzS5DCdbfxWfSYwZDQ9KyBwQ0zBo6j8A7XXogQMzAu3ISJfHWUtveM3y05AwZGkRZBlfMg4J33qfrutpw+Zr+GueqH/86nPt7f2Ealg1pv9OgiZbHpTb+PxN/6ge00QyWHXgbEAAAAABJRU5ErkJggg==`,
     },
-
 ]
 
 for ( let external of externalLinks ) {
