@@ -1,19 +1,19 @@
 // ==UserScript==
-// @name         UNIT3D: ExternalHyperlinks
-// @author       WIRLYWIRLY
-// @namespace    https://github.com/WirlyWirlyPool
-// @icon
-// @version      1.0
-// @description  Add additional external links alongside the sites defaults
+// @name        UNIT3D: ExternalHyperlinks
+// @author      WirlyWirly
+// @version     1.0
+// @description Add additional external links alongside the sites defaults
+// @namespace   https://github.com/WirlyWirly
+// @icon        https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/monkey.png?raw=true
+// @grant        none
 
 // @include     /http?s://.*/torrents/\d+$/
 // @include     /http?s://.*/torrents/similar/[\d\.]+$/
 
-// @homepage
-// @updateURL
-// @downloadURL
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/UNIT3D%20-%20ExternalHyperlinks.user.js
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/UNIT3D%20-%20ExternalHyperlinks.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/UNIT3D%20-%20ExternalHyperlinks.user.js?raw=true
 
-// @grant        none
 // ==/UserScript==
 
 let externalLinksList, imdbId
