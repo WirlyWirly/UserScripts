@@ -2,7 +2,7 @@
 // @name        UNIT3D - ExternalHyperlinks
 // @author      WirlyWirly
 // @version     1.0
-// @description Add additional external links alongside the sites defaults
+// @description Add additional search links alongside those already present on a UNIT3D tracker
 // @namespace   https://github.com/WirlyWirly
 // @icon        https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/monkey.png?raw=true
 // @grant        none
