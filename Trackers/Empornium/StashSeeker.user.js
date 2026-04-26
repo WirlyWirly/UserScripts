@@ -2,7 +2,7 @@
 // @name 		EMP - StashSeeker
 // @author 		WirlyWirly
 // @namespace 	https://github.com/WirlyWirly
-// @version 	1.1
+// @version 	1.2
 
 // @description Seek content to add to the Stash!
 
@@ -20,8 +20,6 @@
 // @run-at 		document-end
 // ==/UserScript==
 
-let versionNumber = '1.0'
-
 // -------------------------------------------------------------------------------------------------------------
 
 function createSearchIcon(searchTerm, searchDelimiter) {
@@ -32,10 +30,10 @@ function createSearchIcon(searchTerm, searchDelimiter) {
 
     // Parse searchTerm into EMP tag
     if (searchDelimiter == 'titleSearch') {
-        searchIcon.setAttribute('href', `https://www.empornium.sx/torrents.php?title=${encodeURIComponent(searchTerm)}`)
+        searchIcon.setAttribute('href', `https://emparadise.rs/torrents.php?title=${encodeURIComponent(searchTerm)}`)
     } else {
         let empTag = searchTerm.toLowerCase().replace(/[^\w.]/g, searchDelimiter)
-        searchIcon.setAttribute('href', `https://www.empornium.sx/torrents.php?taglist=${encodeURIComponent(empTag)}`)
+        searchIcon.setAttribute('href', `https://emparadise.rs/torrents.php?taglist=${encodeURIComponent(empTag)}`)
     }
 
     searchIcon.setAttribute('target', '_blank')
@@ -45,6 +43,7 @@ function createSearchIcon(searchTerm, searchDelimiter) {
             </button>`
 
     return searchIcon
+
 }
 
 // -------------------------------------------------------------------------------------------------------------
