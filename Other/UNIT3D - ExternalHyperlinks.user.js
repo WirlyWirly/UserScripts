@@ -26,7 +26,7 @@ try {
     abortScript = false
 
 } catch(error) {
-    console.info(`---------- 🐵 ExternalHyperlinks 🐵 ----------\n\nThis UNIT3D page does not have the necessary metadata or page layout to generate hyperlinks.`)
+    console.info(`---------- 🐵 ExternalHyperlinks 🐵 ----------\n\nThis UNIT3D page does not have the necessary metadata or page layout to generate hyperlinks`)
     // console.log(error)
 }
 

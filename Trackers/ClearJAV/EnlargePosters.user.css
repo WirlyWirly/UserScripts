@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV: EnlargePosters
-@version    1.0
+@version    1.5
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description Enlarge torrent posters to improve visibility
@@ -8,32 +8,61 @@
 @updateURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/EnlargePosters.user.css
 
+@advanced number randomjav-height "RandomJAV: Table Height" [850]
+@advanced dropdown randomjav-columns "RandomJAV: Table Columns" {
+    Option3 "3" <<<EOT
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr); EOT;
+    Option2 "2" <<<EOT
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr); EOT;
+    Option1 "1" <<<EOT
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, 1fr); EOT;
+}
+@advanced dropdown randomjav-fill "RandomJAV: Image Fill" {
+    Option1 "Contain" <<<EOT
+    contain EOT;
+    Option2 "Cover" <<<EOT
+    cover EOT;
+}
+
+@advanced text randomjav-fontsize "RandomJAV: Font Size" 11px
+@advanced color randomjav-bg-color "RandomJAV: Table Background Color" #000000
+
 ==/UserStyle== */
 
 @-moz-document domain('clearjav.com') {
     :root {
-        /* Adjust these variables to easily modify the CSS settings */
+        /* Global Variables */
 
-        --randomTableHeight: 850px; /* Increase\Decrease this value to best fit your screen resolution */
-        --randomTableBackgroundSize: contain; /* 'contain' or 'cover', */
+        --randomjav-height: /*[[randomjav-height]]*/px;
+        --randomjav-bg-color: /*[[randomjav-bg-color]]*/;
+        --randomjav-fill: /*[[randomjav-fill]]*/;
+        --randomjav-fontsize: /*[[randomjav-fontsize]]*/;
+
     }
 
     /* ========== Random Torrents ========== */
 
     div.random__media {
-        height: var(--randomTableHeight);
+        height: var(--randomjav-height);
+
+        /* Dropdown selected columns */
+        /*[[randomjav-columns]]*/
+
     }
 
     div.random__media > a {
-        background-size: var(--randomTableBackgroundSize) !important;
-        background-color: #000000;
+        background-size: var(--randomjav-fill) !important;
+        background-color: var(--randomjav-bg-color);
         opacity: unset;
     }
 
     div.random__media > a > div {
         color: #eeeeee;
         background: #00000075;
-        font-size: 11px;
+        font-size: var(--randomjav-fontsize);
         padding: 1px;
     }
 
@@ -41,13 +70,21 @@
 
     /* Poster Column */
     tr.torrent-search--list__row {
+
         grid-template-columns: 155px 100px 1fr 150px 68px 100px 50px 50px 50px 120px;
+
+        @media (width < 768px) {
+            /* mobile devices */
+            grid-template-columns: repeat(12,1fr);
+        }
+
     }
 
     img.torrent-search--list__poster-img {
-        max-width: 145px;
+        max-width: 100%;
         width: unset;
         height: unset;
+
     }
 
 
