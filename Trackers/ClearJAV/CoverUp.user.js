@@ -37,14 +37,13 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
 
     target = document.querySelector('section.torrent-search__results')
     config = { childList: true, subtree: true }
-    queryFromElement = target
     coverUp()
 
     function coverUp() {
         // Functionality to run when changes are detected to the target element
 
         // --- List View ---
-        let allListViewRows = queryFromElement.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
+        let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
         if ( allListViewRows ) {
             for ( let tableRow of allListViewRows ) {
                 // For each tableRow (torrent), replace the Poster image with the Hover Cover
@@ -61,7 +60,7 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
         }
 
         // --- Grouped View ---
-        let allGroupedViewArticles = queryFromElement.querySelectorAll('div.torrent-search--grouped__results article:not([data-coverup_done="true"])')
+        let allGroupedViewArticles = target.querySelectorAll('div.torrent-search--grouped__results article:not([data-coverup_done="true"])')
         if ( allGroupedViewArticles ) {
             for ( let article of allGroupedViewArticles ) {
                 // For each Article (torrent), replace the Poster image with the Hover Cover
@@ -75,25 +74,23 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
             }
         }
 
-
     }
 
     let observer = new MutationObserver(coverUp)
     observer.observe(target, config)
 
-} else {
+} else if ( pagePath.match(/\/$/) ) {
     // ---------- Homepage ----------
 
     target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
     config = { childList: true }
-    queryFromElement = target
     coverUp()
 
     function coverUp() {
         // Functionality to run when changes are detected to the target element
 
         // --- List View ---
-        let allListViewRows = queryFromElement.querySelectorAll('tr:not([data-coverup_done="true"])')
+        let allListViewRows = target.querySelectorAll('tr:not([data-coverup_done="true"])')
         if ( allListViewRows ) {
             for ( let tableRow of allListViewRows ) {
                 // For each tableRow (torrent), replace the Poster image with the Hover Cover
