@@ -41,7 +41,7 @@
 @advanced text header-groupedview "🔽 Group 🔽" 'Group Options'
 @advanced number torrents-grouped-height "Poster Max-Height [Pixels]" [200]
 
-@advanced text header-both "🔽 List & Group 🔽" 'List & Group'
+@advanced text header-both "🔽 List & Group 🔽" 'List & Group Options'
 @advanced dropdown both-hover-cover-enabled "Hover Cover Enabled" {
     Option1 "True" <<<EOT
     visible EOT;
