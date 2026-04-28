@@ -3,12 +3,13 @@
 @version    1.5
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
-@description Enlarge torrent posters to improve visibility
+@description Customize the displayed size of torrent posters!
 
 @updateURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/EnlargePosters.user.css
+@supportURL https://clearjav.com/forums/topics/134
 
-@advanced number randomjav-height "RandomJAV: Table Height" [850]
+@advanced number randomjav-height "RandomJAV: Table Height [Pixels]" [850]
 @advanced dropdown randomjav-columns "RandomJAV: Table Columns" {
     Option3 "3" <<<EOT
     grid-template-columns: repeat(3, 1fr);
@@ -20,15 +21,26 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, 1fr); EOT;
 }
-@advanced dropdown randomjav-fill "RandomJAV: Image Fill" {
+
+@advanced dropdown randomjav-cover-size "RandomJAV: Cover Size" {
     Option1 "Contain" <<<EOT
     contain EOT;
     Option2 "Cover" <<<EOT
     cover EOT;
 }
 
-@advanced text randomjav-fontsize "RandomJAV: Font Size" 11px
+@advanced number randomjav-font-size "RandomJAV: Font Size [Point]" 10
 @advanced color randomjav-bg-color "RandomJAV: Table Background Color" #000000
+@advanced number randomjav-opacity "RandomJAV: Cover Opacity [Percentile]" [100,0,100]
+
+@advanced number torrents-hover-size "Torrents: Hover Cover Max-Size [Pixels]" [600]
+@advanced number torrents-hover-x-offset "Torrents: Hover Cover X-Offset [Percentile]" [30]
+@advanced number torrents-hover-y-offset "Torrents: Hover Cover Y-Offset [Percentile]" [120]
+
+@advanced number torrents-list-poster-column-width "ListView: Poster Column Width [Pixels]" [400]
+@advanced number torrents-list-hover-poster-width "ListView: Hover Poster Max-Width [Pixels]" [800]
+
+@advanced number torrents-grouped-height "GroupedView: Poster Max-Height [Pixels]" [200]
 
 ==/UserStyle== */
 
@@ -38,9 +50,18 @@
 
         --randomjav-height: /*[[randomjav-height]]*/px;
         --randomjav-bg-color: /*[[randomjav-bg-color]]*/;
-        --randomjav-fill: /*[[randomjav-fill]]*/;
-        --randomjav-fontsize: /*[[randomjav-fontsize]]*/;
+        --randomjav-cover-size: /*[[randomjav-cover-size]]*/;
+        --randomjav-font-size: /*[[randomjav-font-size]]*/pt;
+        --randomjav-opacity: /*[[randomjav-opacity]]*/%;
 
+        --torrents-hover-size: /*[[torrents-hover-size]]*/px;
+        --torrents-hover-x-offset: /*[[torrents-hover-x-offset]]*/%;
+        --torrents-hover-y-offset: /*[[torrents-hover-y-offset]]*/%;
+
+        --torrents-list-poster-column-width: /*[[torrents-list-poster-column-width]]*/px;
+        --torrents-list-hover-poster-width: /*[[torrents-list-hover-poster-width]]*/px;
+
+        --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
     }
 
     /* ========== Random Torrents ========== */
@@ -54,16 +75,54 @@
     }
 
     div.random__media > a {
-        background-size: var(--randomjav-fill) !important;
+        background-size: var(--randomjav-cover-size) !important;
         background-color: var(--randomjav-bg-color);
-        opacity: unset;
+        opacity: var(--randomjav-opacity);
     }
 
     div.random__media > a > div {
         color: #eeeeee;
         background: #00000075;
-        font-size: var(--randomjav-fontsize);
+        font-size: var(--randomjav-font-size);
         padding: 1px;
+    }
+
+    /* ========== Hover Cover========== */
+
+    div.torrent-search--hover__info {
+        left: var(--torrents-hover-x-offset) !important;
+        top: var(--torrents-hover-y-offset) !important;
+        z-index: 10;
+        width: unset;
+        height: unset;
+    }
+
+    div.torrent-search--hover__info .poster img {
+        max-width: var(--torrents-hover-size);
+        max-height: var(--torrents-hover-size);
+        height: unset;
+        width: unset;
+    }
+
+    /* ========== Hover Poster ========== */
+    div.meta__poster-popup-card {
+        width: auto;
+    }
+
+    div.meta__poster-popup-backdrop {
+        height: unset;
+    }
+
+    div.meta__poster-popup-content {
+        width: auto;
+        min-width: 500px;
+        max-width: var(--torrents-list-hover-poster-width);
+    }
+
+    div.meta__poster-popup-backdrop > img {
+        max-width: var(--torrents-list-hover-poster-width);
+        width: auto;
+        height: auto;
     }
 
     /* ========== List View ========== */
@@ -71,48 +130,35 @@
     /* Poster Column */
     tr.torrent-search--list__row {
 
-        grid-template-columns: 155px 100px 1fr 150px 68px 100px 50px 50px 50px 120px;
+        grid-template-columns: var(--torrents-list-poster-column-width) 100px 1fr 150px 68px 100px 50px 50px 50px 120px;
 
         @media (width < 768px) {
             /* mobile devices */
-            grid-template-columns: repeat(12,1fr);
+            grid-template-columns: var(--torrents-list-poster-column-width) repeat(11,1fr);
         }
 
     }
 
     img.torrent-search--list__poster-img {
-        max-width: 100%;
-        width: unset;
+        width: calc(var(--torrents-list-poster-column-width) - 10px);
         height: unset;
 
+        @media (width < 768px) {
+            /* mobile devices */
+            width: var(--torrents-list-poster-column-width);
+        }
     }
 
-
-    /* Poster Hover */
-    div.torrent-search--hover__info {
-        left: 30%;
-        top: -15%;
-        z-index: 10;
-        width: unset;
-        height: unset;
-    }
-
-    div.torrent-search--hover__info .poster img {
-        max-width: 600px;
-        max-height: 500px;
-        height: unset;
-        width: unset;
-    }
 
     /* ========== Grouped View ========== */
     header.torrent-search--grouped__header {
-        height: unset;
-        max-height: 200px;
+        height: unset !important;
+        max-height: var(--torrents-grouped-height);
     }
 
     a.torrent-search--grouped__poster > img {
         height: unset;
-        max-height: 200px;
+        max-height: var(--torrents-grouped-height);
 
     }
 
