@@ -24,7 +24,7 @@
 @advanced dropdown randomjav-cover-size "RandomJAV: Cover Size" {
     Option1 "Contain" <<<EOT
     contain EOT;
-    Option2 "Cover" <<<EOT
+    Option2 "Fill" <<<EOT
     cover EOT;
 }
 @advanced number randomjav-font-size "RandomJAV: Font Size [Point]" 10
