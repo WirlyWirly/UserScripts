@@ -43,10 +43,10 @@
 
 @advanced text header-both "🔽 List & Group 🔽" 'List & Group Options'
 @advanced dropdown both-hover-cover-enabled "Hover Cover Enabled" {
-    Option1 "True" <<<EOT
-    visible EOT;
-    Option2 "False" <<<EOT
+    Option1 "False" <<<EOT
     hidden EOT;
+    Option2 "True" <<<EOT
+    visible EOT;
 }
 @advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [600]
 @advanced number both-hover-cover-x-offset "Hover Cover X-Offset [Percentile]" [30]
