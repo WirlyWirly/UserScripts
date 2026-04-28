@@ -19,8 +19,8 @@
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @updateURL
-// @downloadURL
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/CoverUp.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/CoverUp.user.js?raw=true
 //
 // ==/UserScript==
 
