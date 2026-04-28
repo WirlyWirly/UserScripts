@@ -9,8 +9,9 @@
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/EnlargePosters.user.css
 @supportURL https://clearjav.com/forums/topics/134
 
-@advanced number randomjav-height "RandomJAV: Table Height [Pixels]" [850]
-@advanced dropdown randomjav-columns "RandomJAV: Table Columns" {
+@advanced text header-randomjav "🔽 RandomJAV 🔽" 'RandomJAV Options'
+@advanced number randomjav-height "Table Height [Pixels]" [850]
+@advanced dropdown randomjav-columns "Table Columns" {
     Option3 "3" <<<EOT
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr); EOT;
@@ -21,27 +22,35 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, 1fr); EOT;
 }
-@advanced dropdown randomjav-cover-size "RandomJAV: Cover Size" {
+@advanced dropdown randomjav-cover-size "Cover Size" {
     Option1 "Contain" <<<EOT
     contain EOT;
     Option2 "Fill" <<<EOT
     cover EOT;
 }
-@advanced number randomjav-font-size "RandomJAV: Font Size [Point]" 10
-@advanced color randomjav-bg-color "RandomJAV: Table Background Color" #000000
-@advanced number randomjav-opacity "RandomJAV: Cover Opacity [Percentile]" [100,0,100]
+@advanced number randomjav-font-size "Font Size [Point]" 10
+@advanced color randomjav-bg-color "Table Background Color" #000000
+@advanced number randomjav-opacity "Cover Opacity [Percentile]" [100,0,100]
 
-@advanced number torrents-hover-size "Torrents: Hover Cover Max-Size [Pixels]" [600]
-@advanced number torrents-hover-x-offset "Torrents: Hover Cover X-Offset [Percentile]" [30]
-@advanced number torrents-hover-y-offset "Torrents: Hover Cover Y-Offset [Percentile]" [120]
+@advanced text header-listview "🔽 List 🔽" 'List Options'
+@advanced number torrents-list-poster-column-width "Poster Column Width [Pixels]" [400]
+@advanced number torrents-list-hover-poster-width "Hover Poster Max-Width [Pixels]" [800]
+@advanced number torrents-list-hover-poster-x-offset "Hover Poster X-Offset [Percentile]" [27]
+@advanced number torrents-list-hover-poster-y-offset "Hover Poster Y-Offset [Percentile]" [50]
 
-@advanced number torrents-grouped-height "GroupedView: Poster Max-Height [Pixels]" [200]
+@advanced text header-groupedview "🔽 Group 🔽" 'Group Options'
+@advanced number torrents-grouped-height "Poster Max-Height [Pixels]" [200]
 
-@advanced number torrents-list-poster-column-width "ListView: Poster Column Width [Pixels]" [400]
-@advanced number torrents-list-hover-poster-width "ListView: Hover Poster Max-Width [Pixels]" [800]
-@advanced number torrents-list-hover-poster-x-offset "ListView: Hover Poster X-Offset [Percentile]" [27]
-@advanced number torrents-list-hover-poster-y-offset "ListView: Hover Poster Y-Offset [Percentile]" [50]
-
+@advanced text header-both "🔽 List & Group 🔽" 'List & Group'
+@advanced dropdown both-hover-cover-enabled "Hover Cover Enabled" {
+    Option1 "True" <<<EOT
+    visible EOT;
+    Option2 "False" <<<EOT
+    hidden EOT;
+}
+@advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [600]
+@advanced number both-hover-cover-x-offset "Hover Cover X-Offset [Percentile]" [30]
+@advanced number both-hover-cover-y-offset "Hover Cover Y-Offset [Percentile]" [120]
 
 ==/UserStyle== */
 
@@ -55,16 +64,19 @@
         --randomjav-font-size: /*[[randomjav-font-size]]*/pt;
         --randomjav-opacity: /*[[randomjav-opacity]]*/%;
 
-        --torrents-hover-size: /*[[torrents-hover-size]]*/px;
-        --torrents-hover-x-offset: /*[[torrents-hover-x-offset]]*/%;
-        --torrents-hover-y-offset: /*[[torrents-hover-y-offset]]*/%;
+        --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
 
         --torrents-list-poster-column-width: /*[[torrents-list-poster-column-width]]*/px;
         --torrents-list-hover-poster-width: /*[[torrents-list-hover-poster-width]]*/px;
         --torrents-list-hover-poster-x-offset: /*[[torrents-list-hover-poster-x-offset]]*/%;
         --torrents-list-hover-poster-y-offset: /*[[torrents-list-hover-poster-y-offset]]*/%;
 
-        --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
+        /* The cover that is displayed when hovering over the torrent title */
+        --both-hover-cover-enabled: /*[[both-hover-cover-enabled]]*/;
+        --both-hover-cover-size: /*[[both-hover-cover-size]]*/px;
+        --both-hover-cover-x-offset: /*[[both-hover-cover-x-offset]]*/%;
+        --both-hover-cover-y-offset: /*[[both-hover-cover-y-offset]]*/%;
+
     }
 
     /* ========== RandomJAV ========== */
@@ -95,17 +107,19 @@
     /* List + Grouped: The cover that appears when hovering over the torrent title */
 
     div.torrent-search--hover__info {
-        left: var(--torrents-hover-x-offset) !important;
-        top: var(--torrents-hover-y-offset) !important;
-        z-index: 10;
-        width: unset;
         height: unset;
+        left: var(--both-hover-cover-x-offset) !important;
+        top: var(--both-hover-cover-y-offset) !important;
+        visibility: var(--both-hover-cover-enabled) !important;
+        width: unset;
+        z-index: 10;
+
     }
 
     div.torrent-search--hover__info .poster img {
-        max-width: var(--torrents-hover-size);
-        max-height: var(--torrents-hover-size);
         height: unset;
+        max-height: var(--both-hover-cover-size);
+        max-width: var(--both-hover-cover-size);
         width: unset;
     }
 
