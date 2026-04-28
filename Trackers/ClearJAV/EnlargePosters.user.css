@@ -21,14 +21,12 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, 1fr); EOT;
 }
-
 @advanced dropdown randomjav-cover-size "RandomJAV: Cover Size" {
     Option1 "Contain" <<<EOT
     contain EOT;
     Option2 "Cover" <<<EOT
     cover EOT;
 }
-
 @advanced number randomjav-font-size "RandomJAV: Font Size [Point]" 10
 @advanced color randomjav-bg-color "RandomJAV: Table Background Color" #000000
 @advanced number randomjav-opacity "RandomJAV: Cover Opacity [Percentile]" [100,0,100]
@@ -37,12 +35,13 @@
 @advanced number torrents-hover-x-offset "Torrents: Hover Cover X-Offset [Percentile]" [30]
 @advanced number torrents-hover-y-offset "Torrents: Hover Cover Y-Offset [Percentile]" [120]
 
+@advanced number torrents-grouped-height "GroupedView: Poster Max-Height [Pixels]" [200]
+
 @advanced number torrents-list-poster-column-width "ListView: Poster Column Width [Pixels]" [400]
 @advanced number torrents-list-hover-poster-width "ListView: Hover Poster Max-Width [Pixels]" [800]
-@advanced number torrents-list-hover-poster-x-offset "ListView: Hover Poster X-Offset [Percentile]" [22]
+@advanced number torrents-list-hover-poster-x-offset "ListView: Hover Poster X-Offset [Percentile]" [27]
 @advanced number torrents-list-hover-poster-y-offset "ListView: Hover Poster Y-Offset [Percentile]" [50]
 
-@advanced number torrents-grouped-height "GroupedView: Poster Max-Height [Pixels]" [200]
 
 ==/UserStyle== */
 
@@ -68,7 +67,7 @@
         --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
     }
 
-    /* ========== Random Torrents ========== */
+    /* ========== RandomJAV ========== */
 
     div.random__media {
         height: var(--randomjav-height);
@@ -91,7 +90,9 @@
         padding: 1px;
     }
 
-    /* ========== Hover Cover========== */
+
+    /* ========== Hover Cover ========== */
+    /* List + Grouped: The cover that appears when hovering over the torrent title */
 
     div.torrent-search--hover__info {
         left: var(--torrents-hover-x-offset) !important;
@@ -108,35 +109,25 @@
         width: unset;
     }
 
-    /* ========== Hover Poster ========== */
-    div.meta__poster-popup {
-        top: var(--torrents-list-hover-poster-y-offset);
-        left: var(--torrents-list-hover-poster-x-offset);
+
+    /* ========== Grouped View ========== */
+
+    /* --- Poster Size --- */
+    header.torrent-search--grouped__header {
+        height: unset !important;
+        max-height: var(--torrents-grouped-height);
     }
 
-    div.meta__poster-popup-card {
-        width: auto;
-    }
-
-    div.meta__poster-popup-backdrop {
+    a.torrent-search--grouped__poster > img {
         height: unset;
+        max-height: var(--torrents-grouped-height);
+
     }
 
-    div.meta__poster-popup-content {
-        width: auto;
-        min-width: 500px;
-        max-width: var(--torrents-list-hover-poster-width);
-    }
-
-    div.meta__poster-popup-backdrop > img {
-        max-width: var(--torrents-list-hover-poster-width);
-        width: auto;
-        height: auto;
-    }
 
     /* ========== List View ========== */
 
-    /* Poster Column */
+    /* --- Poster Column --- */
     tr.torrent-search--list__row {
 
         grid-template-columns: var(--torrents-list-poster-column-width) 100px 1fr 150px 68px 100px 50px 50px 50px 120px;
@@ -158,17 +149,31 @@
         }
     }
 
+    /* --- Hover Poster --- */
 
-    /* ========== Grouped View ========== */
-    header.torrent-search--grouped__header {
-        height: unset !important;
-        max-height: var(--torrents-grouped-height);
+    div.meta__poster-popup {
+        top: var(--torrents-list-hover-poster-y-offset);
+        left: var(--torrents-list-hover-poster-x-offset);
     }
 
-    a.torrent-search--grouped__poster > img {
-        height: unset;
-        max-height: var(--torrents-grouped-height);
+    div.meta__poster-popup-card {
+        width: auto;
+    }
 
+    div.meta__poster-popup-backdrop {
+        height: unset;
+    }
+
+    div.meta__poster-popup-content {
+        width: auto;
+        min-width: 0px;
+        max-width: var(--torrents-list-hover-poster-width);
+    }
+
+    div.meta__poster-popup-backdrop > img {
+        max-width: var(--torrents-list-hover-poster-width);
+        width: auto;
+        height: auto;
     }
 
 }
