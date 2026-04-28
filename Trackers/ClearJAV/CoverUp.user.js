@@ -2,15 +2,16 @@
 
 // ----------------------------------- MetaData --------------------------------------
 
-// @name        CLEAR - CoverUp
+// @name        CLEAR - CoverUp!
 // @author      WirlyWirly
 // @version     1.0
-// @homepage    https://github.com/WirlyWirly/quiCKIE
-// @description Swap out low resolution posters for higher resolution covers!
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/CoverUp.user.js
+// @description Cover up low resolution posters with higher resolution covers!
 
 // @namespace   https://github.com/WirlyWirly
-// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
+// @icon        https://clearjav.com/favicon.ico
 // @run-at      document-end
+// @grant       none
 
 // ----------------------------------- Matches --------------------------------------
 
