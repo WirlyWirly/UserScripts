@@ -1,17 +1,18 @@
 /* ==UserStyle==
-@name       ClearJAV: EnlargePosters
+@name       ClearJAV - EnlargePosters
 @version    1.5
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
-@description Customize the displayed size of torrent posters!
+@description Customize the displayed size of torrent images!
+             These rules are based on the HTML of ClearJAV
 
-@updateURL  https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true
+@updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/EnlargePosters.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/EnlargePosters.user.css
-@supportURL https://clearjav.com/forums/topics/134
+@supportURL  https://clearjav.com/forums/topics/134
 
-@advanced text header-randomjav "🔽 RandomJAV 🔽" 'RandomJAV Options'
-@advanced number randomjav-height "Table Height [Pixels]" [850]
-@advanced dropdown randomjav-columns "Table Columns" {
+@advanced text header-randomtorrents "🔽 Random Torrents 🔽" 'Random Torrents Options'
+@advanced number randomtorrents-height "Table Height [Pixels]" [850]
+@advanced dropdown randomtorrents-columns "Table Columns" {
     Option3 "3" <<<EOT
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr); EOT;
@@ -22,15 +23,15 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, 1fr); EOT;
 }
-@advanced dropdown randomjav-cover-size "Cover Size" {
+@advanced dropdown randomtorrents-cover-size "Cover Size" {
     Option1 "Contain" <<<EOT
     contain EOT;
     Option2 "Fill" <<<EOT
     cover EOT;
 }
-@advanced number randomjav-font-size "Font Size [Point]" 10
-@advanced color randomjav-bg-color "Table Background Color" #000000
-@advanced number randomjav-opacity "Cover Opacity [Percentile]" [100,0,100]
+@advanced number randomtorrents-font-size "Font Size [Point]" 10
+@advanced color randomtorrents-bg-color "Table Background Color" #000000
+@advanced number randomtorrents-opacity "Cover Opacity [Percentile]" [100,0,100]
 
 @advanced text header-listview "🔽 List 🔽" 'List Options'
 @advanced number torrents-list-poster-column-width "Poster Column Width [Pixels]" [400]
@@ -54,15 +55,15 @@
 
 ==/UserStyle== */
 
-@-moz-document domain('clearjav.com') {
+@-moz-document regexp("https?://(clearjav|bitporn|oldtoons|lat-team)\.\w+.*") {
     :root {
         /* Global Variables */
 
-        --randomjav-height: /*[[randomjav-height]]*/px;
-        --randomjav-bg-color: /*[[randomjav-bg-color]]*/;
-        --randomjav-cover-size: /*[[randomjav-cover-size]]*/;
-        --randomjav-font-size: /*[[randomjav-font-size]]*/pt;
-        --randomjav-opacity: /*[[randomjav-opacity]]*/%;
+        --randomtorrents-height: /*[[randomtorrents-height]]*/px;
+        --randomtorrents-bg-color: /*[[randomtorrents-bg-color]]*/;
+        --randomtorrents-cover-size: /*[[randomtorrents-cover-size]]*/;
+        --randomtorrents-font-size: /*[[randomtorrents-font-size]]*/pt;
+        --randomtorrents-opacity: /*[[randomtorrents-opacity]]*/%;
 
         --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
 
@@ -79,26 +80,26 @@
 
     }
 
-    /* ========== RandomJAV ========== */
+    /* ========== Random Torrents ========== */
 
     div.random__media {
-        height: var(--randomjav-height);
+        height: var(--randomtorrents-height);
 
         /* Dropdown selected columns */
-        /*[[randomjav-columns]]*/
+        /*[[randomtorrents-columns]]*/
 
     }
 
     div.random__media > a {
-        background-size: var(--randomjav-cover-size) !important;
-        background-color: var(--randomjav-bg-color);
-        opacity: var(--randomjav-opacity);
+        background-size: var(--randomtorrents-cover-size) !important;
+        background-color: var(--randomtorrents-bg-color);
+        opacity: var(--randomtorrents-opacity);
     }
 
     div.random__media > a > div {
         color: #eeeeee;
         background: #00000075;
-        font-size: var(--randomjav-font-size);
+        font-size: var(--randomtorrents-font-size);
         padding: 1px;
     }
 

@@ -75,6 +75,33 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
             }
         }
 
+        // --- Poster View ---
+        let allPosterViewArticles = target.querySelectorAll('div.torrent-search--poster__results article:not([data-coverup_done="true"])')
+        if ( allPosterViewArticles == 'skip' ) {
+            for ( let article of allPosterViewArticles ) {
+                // For each Article (torrent), replace the URL with that of the hi-res poster image
+
+                let posterElement = article.querySelector('a.torrent-search--poster__poster img')
+                let posterURL = posterElement.src
+
+                if ( posterURL.match(/\/movie\/poster_thumb\/\d+\/.+ps\./) ) {
+                    // This posterURL can be upgraded to a coverURL
+
+                    let coverNumber = Number(posterURL.match(/poster_thumb\/(\d+)/)[1])
+                    coverNumber++
+
+                    console.log(coverNumber)
+                    posterURL = posterURL.replace(/poster_thumb\/\d+/, `poster_full\/${coverNumber}`)
+                    let coverURL = posterURL.replace(/(\d+)ps\./, '$1pl\.')
+                    console.log(posterURL)
+
+                    posterElement.src = coverURL
+
+                }
+
+                article.setAttribute('data-coverup_done', 'true')
+            }
+        }
     }
 
     let observer = new MutationObserver(coverUp)
