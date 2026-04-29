@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV - EnlargePosters
-@version    1.5
+@version    1.6
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description Customize the displayed size of torrent images!
@@ -55,7 +55,7 @@
 
 ==/UserStyle== */
 
-@-moz-document regexp("https?://(clearjav|bitporn|oldtoons|lat-team)\.\w+.*") {
+@-moz-document regexp("https?://(clearjav|bitporn)\.\w+.*") {
     :root {
         /* Global Variables */
 
