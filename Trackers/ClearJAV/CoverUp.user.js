@@ -85,8 +85,8 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
             }
 
         } else {
-            // There are NOT CardCovers in this view, so trigger listToCard()
-            event.button == 0 ? listToCard() : null
+            // There are NOT CardCovers in this view, so trigger cardCovers()
+            event.button == 0 ? cardCovers() : null
         }
 
     })
@@ -119,8 +119,8 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
                 tableRow.setAttribute('data-coverup_done', 'true')
             }
 
-            // If autoCardCovers is enabled, call listToCard()
-            autoCardCovers == true ? listToCard() : null
+            // If autoCardCovers is enabled, call cardCovers()
+            autoCardCovers == true ? cardCovers() : null
 
         }
 
@@ -197,12 +197,12 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
 
 // List view to Card view
 
-function listToCard() {
+function cardCovers() {
     // Convert the List view into a Card type view
 
     let listViewElement = document.querySelector('div.torrent-search--list__results')
     if ( listViewElement == null ) { return }
-    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_listtocard="true"])')
+    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_cardcovers="true"])')
 
     if ( allListViewRows ) {
         let articlesHolder = document.createElement('div')
@@ -296,10 +296,11 @@ function listToCard() {
 
             articlesHolder.appendChild(cardArticleElement)
 
-            tableRow.setAttribute('data-coverup_listtocard', 'true')
+            tableRow.setAttribute('data-coverup_cardcovers', 'true')
 
         }
 
+        // The styles that will be applied to CardCovers (and at the same time override normal CardView)
         GM_addStyle(`
             div.torrent-search--card__results {
                 grid-gap: 1rem;
@@ -335,6 +336,7 @@ function listToCard() {
 
         `)
 
+        // Insert the new articles and remove the table rows
         listViewElement.insertAdjacentElement('beforebegin', articlesHolder)
         listViewElement.remove()
 
