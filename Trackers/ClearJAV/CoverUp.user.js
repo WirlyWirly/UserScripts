@@ -25,6 +25,13 @@
 //
 // ==/UserScript==
 
+// The dimensions of the CardCovers
+const cardWidthMinimum = '420px' // Default: 420px
+const coverHeight = '290px' // Default: 290px
+
+// Other Ratios worth trying
+// 480px by 338px
+
 // This string helps prevent various JavaScript oddities when working with variables
 'use strict'
 
@@ -296,12 +303,14 @@ function listToCard() {
         GM_addStyle(`
             div.torrent-search--card__results {
                 grid-gap: 1rem;
+                grid-template-columns: repeat(auto-fit,minmax(${cardWidthMinimum}, 1fr));
             }
 
             article.torrent-card {
+               min-width: ${cardWidthMinimum};
                border-radius: 8px;
                height: unset;
-               grid-template-rows: 40px 290px 55px 40px;
+               grid-template-rows: 40px ${coverHeight} 55px 40px;
                grid-template-areas: "header header" "poster poster" "body body" "footer footer";
             }
 
@@ -314,8 +323,8 @@ function listToCard() {
             }
 
             figure.torrent-card__figure {
-                height: 290px;
                 width: unset;
+                height: ${coverHeight};
                 backdrop-filter: blur(20px)
             }
 
