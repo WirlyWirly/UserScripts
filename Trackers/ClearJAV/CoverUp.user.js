@@ -40,10 +40,12 @@ const coverHeight = '290px' // Default: 290px
 const pageURL = document.URL
 const pagePath = document.location.pathname
 
+// CardCover global variables
 let autoCardCovers = false
 let cardCoversButton = document.createElement('div')
 
-let target, config, queryFromElement
+// The MutationObserver global variables
+let target, config
 
 if ( pagePath.match(/\/$/) ) {
     // ---------- Homepage ----------
@@ -54,13 +56,12 @@ if ( pagePath.match(/\/$/) ) {
     // The initial page load does not require a MutationObserver, so call homepageCoverUp()
     homepageCoverUp()
 
+    // The MutationObserver that will monitor changes and call homepageCoverUp()
     let observer = new MutationObserver(homepageCoverUp)
     observer.observe(target, config)
 
 } else if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
     // ---------- Search Page ----------
-
-    // If CardCovers should be automatically triggered
 
     // Create the CardCovers button
     cardCoversButton.textContent = 'CardCovers'
@@ -116,6 +117,7 @@ if ( pagePath.match(/\/$/) ) {
     // The initial page load does not require a MutationObserver, so call searchpageCoverUp()
     searchpageCoverUp()
 
+    // The MutationObserver that will monitor changes and call searchpageCoverUp()
     let observer = new MutationObserver(searchpageCoverUp)
     observer.observe(target, config)
 
@@ -125,7 +127,7 @@ if ( pagePath.match(/\/$/) ) {
 // =================================== FUNCTIONS ======================================
 
 function homepageCoverUp() {
-    // Functionality to run when changes are detected to the target element
+    // Homepage: Swap poster images for Cover images
 
     // --- List View ---
     let allListViewRows = target.querySelectorAll('tr:not([data-coverup_done="true"])')
@@ -148,7 +150,7 @@ function homepageCoverUp() {
 
 
 function searchpageCoverUp() {
-    // Functionality to run when changes are detected to the target element
+    // Searchpage: Swap poster images for Cover images (+ enable CardCovers)
 
     // --- List View ---
     let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
