@@ -32,22 +32,37 @@ const coverHeight = '290px' // Default: 290px
 // Other Ratios worth trying
 // 480px by 338px
 
+// =================================== CODE ======================================
+
 // This string helps prevent various JavaScript oddities when working with variables
 'use strict'
 
 const pageURL = document.URL
 const pagePath = document.location.pathname
+
+let autoCardCovers = false
+let cardCoversButton = document.createElement('div')
+
 let target, config, queryFromElement
 
+if ( pagePath.match(/\/$/) ) {
+    // ---------- Homepage ----------
 
-if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
+    target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
+    config = { childList: true }
+
+    // The initial page load does not require a MutationObserver, so call homepageCoverUp()
+    homepageCoverUp()
+
+    let observer = new MutationObserver(homepageCoverUp)
+    observer.observe(target, config)
+
+} else if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
     // ---------- Search Page ----------
 
     // If CardCovers should be automatically triggered
-    let autoCardCovers = false
 
     // Create the CardCovers button
-    let cardCoversButton = document.createElement('div')
     cardCoversButton.textContent = 'CardCovers'
     cardCoversButton.title = 'Click to Display CardCovers'
     cardCoversButton.classList.add('coverup_button')
@@ -98,104 +113,103 @@ if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
     target = document.querySelector('section.torrent-search__results')
     config = { childList: true, subtree: true }
 
-    function coverUp() {
-        // Functionality to run when changes are detected to the target element
+    // The initial page load does not require a MutationObserver, so call searchpageCoverUp()
+    searchpageCoverUp()
 
-        // --- List View ---
-        let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
-        if ( allListViewRows.length > 0 ) {
-            cardCoversButton.style.display = ''
-
-            for ( let tableRow of allListViewRows ) {
-                // For each tableRow (torrent), replace the Poster image with the Hover Cover
-
-                let coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
-                let posterElement = tableRow.querySelector('img.torrent-search--list__poster-img')
-                let posterHoverElement = tableRow.querySelector('div.meta__poster-popup img')
-
-                posterElement.src = coverURL
-                posterHoverElement.src = coverURL
-
-                tableRow.setAttribute('data-coverup_done', 'true')
-            }
-
-            // If autoCardCovers is enabled, call cardCovers()
-            autoCardCovers == true ? cardCovers() : null
-
-        }
-
-        // --- Grouped View ---
-        let allGroupedViewArticles = target.querySelectorAll('div.torrent-search--grouped__results article:not([data-coverup_done="true"])')
-        if ( allGroupedViewArticles.length > 0 ) {
-            cardCoversButton.style.display = 'none'
-            for ( let article of allGroupedViewArticles ) {
-                // For each Article (torrent), replace the Poster image with the Hover Cover
-
-                let coverURL = article.querySelector('div.torrent-search--hover__info img').src
-                let posterElement = article.querySelector('a.torrent-search--grouped__poster img')
-
-                posterElement.src = coverURL
-
-                article.setAttribute('data-coverup_done', 'true')
-            }
-        }
-
-        // --- Card View ---
-        let allCardViewArticles = target.querySelectorAll('div.torrent-search--card__results article:not([data-coverup_cardcovers="true"])')
-        if ( allCardViewArticles.length > 0 ) {
-            // This is the CardView (not the CardCovers view)
-            cardCoversButton.style.display = 'none'
-        }
-
-        // --- Poster View ---
-        let allPosterViewArticles = target.querySelectorAll('div.torrent-search--poster__results article')
-        if ( allPosterViewArticles.length > 0 ) {
-            cardCoversButton.style.display = 'none'
-        }
-
-    }
-
-    // The intial page load does not require a MutationObserver, so call coverUp()
-    coverUp()
-
-    let observer = new MutationObserver(coverUp)
-    observer.observe(target, config)
-
-} else if ( pagePath.match(/\/$/) ) {
-    // ---------- Homepage ----------
-
-    target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
-    config = { childList: true }
-    coverUp()
-
-    function coverUp() {
-        // Functionality to run when changes are detected to the target element
-
-        // --- List View ---
-        let allListViewRows = target.querySelectorAll('tr:not([data-coverup_done="true"])')
-        if ( allListViewRows ) {
-            for ( let tableRow of allListViewRows ) {
-                // For each tableRow (torrent), replace the Poster image with the Hover Cover
-
-                let coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
-                let posterElement = tableRow.querySelector('img.torrent-search--list__poster-img')
-                let posterHoverElement = tableRow.querySelector('div.meta__poster-popup img')
-
-                posterElement.src = coverURL
-                posterHoverElement.src = coverURL
-
-                tableRow.setAttribute('data-coverup_done', 'true')
-
-            }
-        }
-    }
-
-    let observer = new MutationObserver(coverUp)
+    let observer = new MutationObserver(searchpageCoverUp)
     observer.observe(target, config)
 
 }
 
-// List view to Card view
+
+// =================================== FUNCTIONS ======================================
+
+function homepageCoverUp() {
+    // Functionality to run when changes are detected to the target element
+
+    // --- List View ---
+    let allListViewRows = target.querySelectorAll('tr:not([data-coverup_done="true"])')
+    if ( allListViewRows ) {
+        for ( let tableRow of allListViewRows ) {
+            // For each tableRow (torrent), replace the Poster image with the Hover Cover
+
+            let coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
+            let posterElement = tableRow.querySelector('img.torrent-search--list__poster-img')
+            let posterHoverElement = tableRow.querySelector('div.meta__poster-popup img')
+
+            posterElement.src = coverURL
+            posterHoverElement.src = coverURL
+
+            tableRow.setAttribute('data-coverup_done', 'true')
+
+        }
+    }
+}
+
+
+function searchpageCoverUp() {
+    // Functionality to run when changes are detected to the target element
+
+    // --- List View ---
+    let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
+    if ( allListViewRows.length > 0 ) {
+        cardCoversButton.style.display = ''
+
+        for ( let tableRow of allListViewRows ) {
+            // For each tableRow (torrent), replace the Poster image with the Hover Cover
+
+            let coverURL, posterElement, posterHoverElement
+            try {
+                coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
+            } catch(error) {
+                // This torrent has no cover image, so use a placeholder
+                coverURL = 'https://clearjav.com/logo.png'
+            }
+            posterElement = tableRow.querySelector('img.torrent-search--list__poster-img')
+            posterHoverElement = tableRow.querySelector('div.meta__poster-popup img')
+
+            posterElement.src = coverURL
+            posterHoverElement.src = coverURL
+
+            tableRow.setAttribute('data-coverup_done', 'true')
+        }
+
+        // If autoCardCovers is enabled, call cardCovers()
+        autoCardCovers == true ? cardCovers() : null
+
+    }
+
+    // --- Grouped View ---
+    let allGroupedViewArticles = target.querySelectorAll('div.torrent-search--grouped__results article:not([data-coverup_done="true"])')
+    if ( allGroupedViewArticles.length > 0 ) {
+        cardCoversButton.style.display = 'none'
+        for ( let article of allGroupedViewArticles ) {
+            // For each Article (torrent), replace the Poster image with the Hover Cover
+
+            let coverURL = article.querySelector('div.torrent-search--hover__info img').src
+            let posterElement = article.querySelector('a.torrent-search--grouped__poster img')
+
+            posterElement.src = coverURL
+
+            article.setAttribute('data-coverup_done', 'true')
+        }
+    }
+
+    // --- Card View ---
+    let allCardViewArticles = target.querySelectorAll('div.torrent-search--card__results article:not([data-coverup_cardcovers="true"])')
+    if ( allCardViewArticles.length > 0 ) {
+        // This is the CardView (not the CardCovers view)
+        cardCoversButton.style.display = 'none'
+    }
+
+    // --- Poster View ---
+    let allPosterViewArticles = target.querySelectorAll('div.torrent-search--poster__results article')
+    if ( allPosterViewArticles.length > 0 ) {
+        cardCoversButton.style.display = 'none'
+    }
+
+}
+
 
 function cardCovers() {
     // Convert the List view into a Card type view
@@ -222,7 +236,13 @@ function cardCovers() {
             let leecherCount = tableRow.querySelector('td.torrent-search--list__leechers').innerText
             let completedCount = tableRow.querySelector('td.torrent-search--list__completed').innerText
 
-            let coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
+            let coverURL
+            try {
+                coverURL = tableRow.querySelector('div.torrent-search--hover__info img').src
+            } catch(error) {
+                // This torrent has no cover image, so use a placeholder
+                coverURL = 'https://clearjav.com/logo.png'
+            }
 
             let torrentTitle = tableRow.querySelector('div.torrent-search--list__name div.video-title').innerText
             let uploaderElement = tableRow.querySelector('span.torrent-search--list__uploader > a')
