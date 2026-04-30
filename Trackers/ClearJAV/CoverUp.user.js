@@ -65,7 +65,7 @@ if ( pagePath.match(/\/$/) ) {
 
     // Create the CardCovers button
     cardCoversButton.textContent = 'CardCovers'
-    cardCoversButton.title = 'Click to Display CardCovers'
+    cardCoversButton.title = 'Click to Enable CardCovers'
     cardCoversButton.classList.add('coverup_button')
     cardCoversButton.setAttribute('style', `
         background: #153245;
@@ -87,22 +87,18 @@ if ( pagePath.match(/\/$/) ) {
     cardCoversButton.addEventListener('mouseup', function(event) {
         // The actions to take when the CardCover button is clicked
 
-        if ( document.querySelector('div.torrent-search--card__results article[data-coverup_cardcovers="true"]') ) {
-            // There are already CardCovers in this view, so toggle autoCardCovers
+        if ( document.querySelector('div.torrent-search--card__results[data-coverup_cardcovers]') && event.button == 0 ) {
+            // This is already the CardCovers view, so disable autoCardCovers
+            autoCardCovers = false
+            this.textContent = 'CardCovers'
+            this.title = 'Click to Enable CardCovers'
 
-            if ( autoCardCovers == false ) {
-                autoCardCovers = true
-                this.textContent = '🤖 CardCovers'
-                this.title = 'Click to Disable Auto CardCovers'
-            } else if ( autoCardCovers == true ) {
-                autoCardCovers = false
-                this.textContent = 'CardCovers'
-                this.title = 'Click to Display CardCovers'
-            }
-
-        } else {
-            // There are NOT CardCovers in this view, so trigger cardCovers()
-            event.button == 0 ? cardCovers() : null
+        } else if ( event.button == 0 ) {
+            // This is NOT the CardCovers view, so call cardCovers() and enable autoCardCovers
+            cardCovers()
+            autoCardCovers = true
+            this.textContent = '🌸 CardCovers'
+            this.title = 'Click to Disable CardCovers'
         }
 
     })
@@ -198,15 +194,15 @@ function searchpageCoverUp() {
     }
 
     // --- Card View ---
-    let allCardViewArticles = target.querySelectorAll('div.torrent-search--card__results article:not([data-coverup_cardcovers="true"])')
-    if ( allCardViewArticles.length > 0 ) {
-        // This is the CardView (not the CardCovers view)
+    let cardView = target.querySelector('div.torrent-search--card__results:not([data-coverup_cardcovers="true"])')
+    if ( cardView ) {
+        // This is the sites built-in CardView (not the CardCovers view)
         cardCoversButton.style.display = 'none'
     }
 
     // --- Poster View ---
-    let allPosterViewArticles = target.querySelectorAll('div.torrent-search--poster__results article')
-    if ( allPosterViewArticles.length > 0 ) {
+    let posterView = target.querySelector('div.torrent-search--poster__results')
+    if ( posterView ) {
         cardCoversButton.style.display = 'none'
     }
 
@@ -217,12 +213,17 @@ function cardCovers() {
     // Convert the List view into a Card type view
 
     let listViewElement = document.querySelector('div.torrent-search--list__results')
-    if ( listViewElement == null ) { return }
-    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_cardcovers="true"])')
 
+    // The listViewElement is null, probably already having been removed in a previous call
+    if ( listViewElement == null ) { return }
+
+    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_cardcovers="true"])')
     if ( allListViewRows ) {
+
+        // The element that will hold all the torrent <article> elements
         let articlesHolder = document.createElement('div')
         articlesHolder.className = 'panel__body torrent-search--card__results'
+        articlesHolder.setAttribute('data-coverup_cardcovers', 'true')
 
         for ( let tableRow of allListViewRows ) {
             // For each tableRow (torrent), create and populate a <article> element based on the CardsView
@@ -254,12 +255,11 @@ function cardCovers() {
 
             let cardArticleElement = document.createElement('article')
             cardArticleElement.className = 'torrent-card'
-            cardArticleElement.setAttribute('data-coverup_cardcovers', 'true')
             cardArticleElement.innerHTML = `
     <header class="torrent-card__header">
         <div class="torrent-card__left-header">
             <span class="torrent-card__resolution">
-                🖥️ ${torrentResolution}
+                🌸 ${torrentResolution}
             </span>
             <span class="torrent-card__meta-separator">★</span>
             <span class="torrent-card__type">${torrentSource}</span>
