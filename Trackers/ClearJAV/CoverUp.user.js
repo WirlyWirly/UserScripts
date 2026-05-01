@@ -4,7 +4,7 @@
 
 // @name        CLEAR - CoverUp!
 // @author      WirlyWirly
-// @version     1.5
+// @version     1.51
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/CoverUp.user.js
 // @description Cover up low resolution posters with higher resolution covers!
 
@@ -17,20 +17,29 @@
 
 // @match   https://clearjav.com/
 // @match   https://clearjav.com/torrents*
+// @exclude https://clearjav.com/torrents/*
 
 // ----------------------------------- Script Links --------------------------------------
 
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/CoverUp.user.js
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/CoverUp.user.js
-//
+
 // ==/UserScript==
 
-// The dimensions of the CardCovers
-const cardWidthMinimum = '420px' // Default: 420px
-const coverHeight = '290px' // Default: 290px
+// The dimensions of the CoverCards
+let cardWidthMinimum = '420px' // Default: 420px
+let coverHeight = '290px' // Default: 290px
 
-// Other Ratios worth trying
-// 480px by 338px
+/* -- Other Ratios worth trying --
+UltraWide: 480px by 338px
+Mobile: 295px by 200px
+*/
+
+if ( window.screen.availWidth < 400 ) {
+    // This is a small screen, likely a mobile, so adjust CoverCard dimensions
+    cardWidthMinimum = '295px'
+    coverHeight = '200px'
+}
 
 // =================================== CODE ======================================
 
@@ -40,9 +49,9 @@ const coverHeight = '290px' // Default: 290px
 const pageURL = document.URL
 const pagePath = document.location.pathname
 
-// CardCover global variables
-let autoCardCovers = false
-let cardCoversButton = document.createElement('div')
+// CoverCard global variables
+let autoCoverCards = false
+let coverCardsButton = document.createElement('div')
 
 // The MutationObserver global variables
 let target, config
@@ -60,14 +69,14 @@ if ( pagePath.match(/\/$/) ) {
     let observer = new MutationObserver(homepageCoverUp)
     observer.observe(target, config)
 
-} else if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
+} else if ( pagePath.match(/\/torrents/) ) {
     // ---------- Search Page ----------
 
-    // Create the CardCovers button
-    cardCoversButton.textContent = 'CardCovers'
-    cardCoversButton.title = 'Click to Enable CardCovers'
-    cardCoversButton.classList.add('coverup_button')
-    cardCoversButton.setAttribute('style', `
+    // Create the CoverCards button
+    coverCardsButton.textContent = 'CoverCards'
+    coverCardsButton.title = 'Click to Enable CoverCards'
+    coverCardsButton.classList.add('coverup_button')
+    coverCardsButton.setAttribute('style', `
         background: #153245;
         border-radius: 5px;
         border: #B6D3E7 solid 1px;
@@ -76,35 +85,44 @@ if ( pagePath.match(/\/$/) ) {
         display: none;
         font-size: 100%;
         font-weight: Bold;
-        margin: 0px 8px 0px 0px;
-        padding: 4px 10px 4px 10px;
+        padding: 3px 8px;
     `)
 
     GM_addStyle(`div.coverup_button:hover {
         text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
     }`)
 
-    cardCoversButton.addEventListener('mouseup', function(event) {
-        // The actions to take when the CardCover button is clicked
+    coverCardsButton.addEventListener('mouseup', function(event) {
+        // The actions to take when the CoverCard button is clicked
 
-        if ( document.querySelector('div.torrent-search--card__results[data-coverup_cardcovers]') && event.button == 0 ) {
-            // This is already the CardCovers view, so disable autoCardCovers
-            autoCardCovers = false
-            this.textContent = 'CardCovers'
-            this.title = 'Click to Enable CardCovers'
+        if ( document.querySelector('div.torrent-search--card__results[data-coverup_covercards]') && event.button == 0 ) {
+            // This is already the CoverCards view
+
+            if ( autoCoverCards == true ) {
+                // Disable autoCoverCards
+                autoCoverCards = false
+                this.textContent = 'CoverCards'
+                this.title = 'Click to Enable CoverCards'
+
+            } else {
+                // Enable autoCoverCards
+                autoCoverCards = true
+                this.textContent = '🌸 CoverCards'
+                this.title = 'Click to Disable CoverCards'
+            }
 
         } else if ( event.button == 0 ) {
-            // This is NOT the CardCovers view, so call cardCovers() and enable autoCardCovers
-            cardCovers()
-            autoCardCovers = true
-            this.textContent = '🌸 CardCovers'
-            this.title = 'Click to Disable CardCovers'
+            // This is NOT the CoverCards view, so call CoverCards() and enable autoCoverCards
+            CoverCards()
+            autoCoverCards = true
+            this.textContent = '🌸 CoverCards'
+            this.title = 'Click to Disable CoverCards'
         }
 
     })
 
-    // Insert the CardCovers Button after the 'ClearJAV' logo
-    document.querySelector('a.top-nav__branding').insertAdjacentElement('afterend', cardCoversButton)
+    // Insert the CoverCards Button after the 'ClearJAV' logo
+    document.querySelector('a.top-nav__branding').insertAdjacentElement('afterend', coverCardsButton)
 
     // The MutationObserver target and config, used for handling pagination
     target = document.querySelector('section.torrent-search__results')
@@ -146,12 +164,12 @@ function homepageCoverUp() {
 
 
 function searchpageCoverUp() {
-    // Searchpage: Swap poster images for Cover images (+ enable CardCovers)
+    // Searchpage: Swap poster images for Cover images (+ enable CoverCards)
 
     // --- List View ---
     let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
     if ( allListViewRows.length > 0 ) {
-        cardCoversButton.style.display = ''
+        coverCardsButton.style.display = ''
 
         for ( let tableRow of allListViewRows ) {
             // For each tableRow (torrent), replace the Poster image with the Hover Cover
@@ -172,15 +190,15 @@ function searchpageCoverUp() {
             tableRow.setAttribute('data-coverup_done', 'true')
         }
 
-        // If autoCardCovers is enabled, call cardCovers()
-        autoCardCovers == true ? cardCovers() : null
+        // If autoCoverCards is enabled, call CoverCards()
+        autoCoverCards == true ? CoverCards() : null
 
     }
 
     // --- Grouped View ---
     let allGroupedViewArticles = target.querySelectorAll('div.torrent-search--grouped__results article:not([data-coverup_done="true"])')
     if ( allGroupedViewArticles.length > 0 ) {
-        cardCoversButton.style.display = 'none'
+        coverCardsButton.style.display = 'none'
         for ( let article of allGroupedViewArticles ) {
             // For each Article (torrent), replace the Poster image with the Hover Cover
 
@@ -194,22 +212,22 @@ function searchpageCoverUp() {
     }
 
     // --- Card View ---
-    let cardView = target.querySelector('div.torrent-search--card__results:not([data-coverup_cardcovers="true"])')
+    let cardView = target.querySelector('div.torrent-search--card__results:not([data-coverup_covercards="true"])')
     if ( cardView ) {
-        // This is the sites built-in CardView (not the CardCovers view)
-        cardCoversButton.style.display = 'none'
+        // This is the sites built-in CardView (not the CoverCards view)
+        coverCardsButton.style.display = 'none'
     }
 
     // --- Poster View ---
     let posterView = target.querySelector('div.torrent-search--poster__results')
     if ( posterView ) {
-        cardCoversButton.style.display = 'none'
+        coverCardsButton.style.display = 'none'
     }
 
 }
 
 
-function cardCovers() {
+function CoverCards() {
     // Convert the List view into a Card type view
 
     let listViewElement = document.querySelector('div.torrent-search--list__results')
@@ -217,13 +235,13 @@ function cardCovers() {
     // The listViewElement is null, probably already having been removed in a previous call
     if ( listViewElement == null ) { return }
 
-    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_cardcovers="true"])')
+    let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_covercards="true"])')
     if ( allListViewRows ) {
 
         // The element that will hold all the torrent <article> elements
         let articlesHolder = document.createElement('div')
         articlesHolder.className = 'panel__body torrent-search--card__results'
-        articlesHolder.setAttribute('data-coverup_cardcovers', 'true')
+        articlesHolder.setAttribute('data-coverup_covercards', 'true')
 
         for ( let tableRow of allListViewRows ) {
             // For each tableRow (torrent), create and populate a <article> element based on the CardsView
@@ -253,9 +271,9 @@ function cardCovers() {
 
             let torrentAgeElement = tableRow.querySelector('td.torrent-search--list__age > time').outerHTML
 
-            let cardArticleElement = document.createElement('article')
-            cardArticleElement.className = 'torrent-card'
-            cardArticleElement.innerHTML = `
+            let coverCardElement = document.createElement('article')
+            coverCardElement.className = 'torrent-card'
+            coverCardElement.innerHTML = `
     <header class="torrent-card__header">
         <div class="torrent-card__left-header">
             <span class="torrent-card__resolution">
@@ -316,13 +334,13 @@ function cardCovers() {
     </footer>
 `
 
-            articlesHolder.appendChild(cardArticleElement)
+            articlesHolder.appendChild(coverCardElement)
 
-            tableRow.setAttribute('data-coverup_cardcovers', 'true')
+            tableRow.setAttribute('data-coverup_covercards', 'true')
 
         }
 
-        // The styles that will be applied to CardCovers (and at the same time override normal CardView)
+        // The styles that will be applied to CoverCards (and at the same time override normal CardView)
         GM_addStyle(`
             div.torrent-search--card__results {
                 grid-gap: 1rem;
