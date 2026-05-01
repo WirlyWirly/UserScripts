@@ -10,7 +10,7 @@
 //              Written on LibreWolf via Violentmonkey
 
 // @namespace   WirlyWirly
-// @icon        https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/monkey.png?raw=true
+// @icon        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAq1BMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7+/u8vHu9PPu9PTu9fTu8vLu3+Duur/unqbukZrukJnu8PDu3d7tlp7tYW7tPk/tIjbtFSrtFCnu7Ozuub7tXGrtJzrtGC3tGi7tGy/u6ertl5/tO0ztMELtGS7tFSnuhY7u7e3u7+7uj5gMDmmvAAAAFXRSTlMABBMhJA5Sq+v6+BiN8f+K/U/usPX1jlc9AAABMUlEQVR4Ae3WBWLDIBSAYerext3doC73v9jcVyF58+U7wB8FHnpQqzWarXYFrWYD3el0e/3BsLRBv9ftoBuj8WRa0WQ8QqgzY6aVMbMOYrkpAMcinpkCMDwSpiACmgL97IAoyYqqKrIkVgqImm6Ylm1bpqFrYvmA43p+EEZxHIWB77lO2UCSZnlUYHIDF1GepUm5wHyxxJg8wXi5mJcJJIvVmryyXi0S+oCTLtfkjfUydWgDopth8g7OXJEyoHn5sUDuaXQBUfcjckTk6yJVQDKCghxRBIZEFZDNEJMjcGjKVAHFishRkaVQBVQ7Jkdttrs9KBAfvugRwC8R+BnhPxL8V4YvJvByhm8o8C0NvqnCt3X4wQI/2n7N8Q4eccBDFnjMgw+a4FEXPmzDx31Uq10D1+fkudO84EYAAAAASUVORK5CYII=
 
 // ----------------------------------- Matches --------------------------------------
 
@@ -262,7 +262,7 @@ function javScout(dvdId) {
             width: 165px;
             z-index: 3333;
             font-size: 16px;
-            bottom: 5em;
+            bottom: 1em;
             right: 1em;
             line-height: 1.46666667;
         }
