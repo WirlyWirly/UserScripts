@@ -35,11 +35,6 @@ UltraWide: 480px by 338px
 Mobile: 295px by 200px
 */
 
-if ( window.screen.availWidth < 400 ) {
-    // This is a small screen, likely a mobile, so adjust CoverCard dimensions
-    cardWidthMinimum = '295px'
-    coverHeight = '200px'
-}
 
 // =================================== CODE ======================================
 
@@ -49,9 +44,16 @@ if ( window.screen.availWidth < 400 ) {
 const pageURL = document.URL
 const pagePath = document.location.pathname
 
+
 // CoverCard global variables
 let autoCoverCards = false
 let coverCardsButton = document.createElement('div')
+
+if ( window.screen.availWidth < 400 ) {
+    // SmallScreen: Likely a mobile, so adjust CoverCard dimensions
+    cardWidthMinimum = '295px'
+    coverHeight = '200px'
+}
 
 // The MutationObserver global variables
 let target, config
