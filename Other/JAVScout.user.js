@@ -5,6 +5,7 @@
 // @name        JAVScout
 // @author      WirlyWirly
 // @version     1.0
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
 // @description Scout for JAV across various sites
 //              Written on LibreWolf via Violentmonkey
 
@@ -26,6 +27,8 @@
 
 // @match     https://r18.dev/videos/vod/movies/detail/-/id=*
 
+// @match     https://stashdb.org/scenes/*
+
 // ----------------------------------- Permissions --------------------------------------
 
 // @grant       GM_addStyle
@@ -36,11 +39,15 @@
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @homepage
-// @updateURL
-// @downloadURL
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/JAVScout.user.js
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/JAVScout.user.js
 
 // ==/UserScript==
+
+// The URL to your personal StashApp instance
+let localStashURL = 'http://192.168.1.105:32750'
+
+// =================================== CODE ======================================
 
 pageURL = document.URL
 
@@ -57,7 +64,7 @@ if ( pageURL.match(/clearjav/) ) {
         // Using each searchTemplate, generate and insert the hyperlink elements
 
         // Skip the 'ClearJAV' template item
-        if ( template.name.toLowerCase() == 'clearjav' ) { continue }
+        if ( template.name.toLowerCase() == 'clearjav' || template.name == '--divider--' ) { continue }
 
         let clearElement = document.createElement('article')
         clearElement.classList.add('meta__searchlink')
@@ -125,7 +132,7 @@ if ( pageURL.match(/clearjav/) ) {
         // Using each searchTemplate, generate and insert the hyperlink element
 
         // Skip the 'JAVLibrary' template item
-        if ( template.name.toLowerCase() == 'javlibrary' ) { continue }
+        if ( template.name.toLowerCase() == 'javlibrary' || template.name == '--divider--') { continue }
 
         let spanElement = document.createElement('span')
         spanElement.innerHTML = `<a href="${template.searchURL}" class="genre" target="_blank" title="Search ${template.name}" style="font-weight: bold;"><img src="${template.base64}" style="vertical-align: center; width: 12px;">  ${template.name}</a>`
@@ -164,7 +171,7 @@ if ( pageURL.match(/clearjav/) ) {
         // Using each searchTemplate, generate and insert the hyperlink elements
 
         // Skip the 'ClearJAV' template item
-        if ( template.name.toLowerCase() == 'r18' ) { continue }
+        if ( template.name.toLowerCase() == 'r18' || template.name == '--divider--' ) { continue }
 
         let tableRowElement = document.createElement('tr')
         tableRowElement.innerHTML = `
@@ -180,7 +187,18 @@ if ( pageURL.match(/clearjav/) ) {
 
     }
 
+} else if ( pageURL.match(/stashdb/) ) {
+    // --- StashDB ---
+
+    waitForElement('div.scene-performers + div strong').then(function(element) {
+        // Wait until the element containing the dvdId is available
+
+        dvdId = element.innerText
+        javScout(dvdId)
+    })
+
 }
+
 
 
 function javScout(dvdId) {
@@ -195,11 +213,20 @@ function javScout(dvdId) {
     let titleElement = document.createElement('div')
     titleElement.classList.add('sp_title')
     titleElement.innerHTML = `
-    <a href="" target="_blank" style="font-size: 14px; font-weight: bold; color: #ededed;">🇯🇵 JAVScout 🇯🇵</a>
+    <a href="https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js" target="_blank" style="font-size: 14px; font-weight: bold; color: #ededed; text-decoration: none">🇯🇵 JAVScout 🇯🇵</a>
     `
 
     floatingElement.appendChild(titleElement)
     for ( template of searchTemplatesArray ) {
+
+        if ( template.name == '--divider--' ) {
+            // This item indicates a divider
+            let dividerElement = document.createElement('div')
+            dividerElement.classList.add('sp_title')
+            floatingElement.appendChild(dividerElement)
+            continue
+
+        }
 
         // Skip the template of the current site
         if ( template.searchURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() == pageURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() ) { continue }
@@ -222,21 +249,22 @@ function javScout(dvdId) {
     GM_addStyle(`
         #javScout {
             background: rgba(25, 29, 42, 0.74);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
             border-radius: 5px;
             border: 1px solid rgb(44, 62, 80);
             box-shadow: 0px 0px 15px #2C3E50;
             color: #ffffff;
-            height: 275px;
-            max-width: 500px;
+            max-height: 350px;
+            max-width: 165px;
             overflow: auto auto;
             padding: 15px;
             position: fixed;
             width: 165px;
             z-index: 3333;
             font-size: 16px;
-            bottom: 1em;
+            bottom: 5em;
             right: 1em;
+            line-height: 1.46666667;
         }
 
         div.sp_title {
@@ -273,14 +301,30 @@ function searchTemplates(dvdId) {
 
     let r18dvdId = dvdId.replace(/-/, '00')
 
+    let stashIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEqWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjMyIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzIiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSIzMiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzIiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjYtMDQt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`
+
     let searchTemplatesArray = [
         // An array of objects, each object containing the required info to generate and present a external link
+
+        {
+            name: 'Stash',
+            searchURL: `${localStashURL.match(/(.+)\/?$/)[1]}/scenes?sortby=title&perPage=120&q=${dvdId}`,
+            color: '#685142',
+            base64: stashIcon,
+        },
 
         {
             name: 'ClearJAV',
             searchURL: `https://clearjav.com/torrents?imdbId=${dvdId}`,
             color: '#92CBFF',
             base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAF/0lEQVR42qVXeWwUVRj/vb233e22BUmRIi1XAatW5DQULBgVFEJLESNgE4lHQP8yKBKIIAnBgEEMGP4AbThTrghIyiUkXCXVKoQChiJFBQv0YNtu994dvzc7OzuzM9tCfGk7ne99832/992PYYVgyM91LxUgLATQF0mLSU8BeospdljPXAlhTQzCd413slez/C0tywQYVqlY9WTFaao9NWPijf5jgkKrvjCG6HKWt6W1iQg5+qdQaCWBsswUNujpDDpfNpEF2oRklXkuAyb2M6OmKYwbDyN6JkwSxTDQxWA2MNzuiMAf0aqzmximDzTjelsEV1oSDGSBNlmcgTF8XGTFoiIbzIyJChsIQNWNAOruR5BpY3BZ6JeenoCAAzeDyM8wYNMUB4ZnGSEQfzgK1N4L4citIA7dCqErJGAA8VS+6kBehhFufxRT9negzS8oATBSLmD9pHTMGGTRwo/7XnH8fzqjmLinA4dnOFD4hFnXyB1BAVvr/SgbbMFTpDwu4ps6HzZc9sdcFbfAR3TqT16wazSqdCveWnxRzDzUiXNzXEk8PeCndaUljBkHO0Uay9tKAIjj7Jsu5DqYFHCpP46va60RLD7ThSOlTg2H3jdKWnsAKNrhFqmyBU7PziAfGRJs0hetdNJedqYRueuPINb/5kXt25mqnajAYymF56Rovk8yx+1uj501DmD7aw5MoMhP/mjJeS8EypOV49NgMyXSsvxwJ+oeRHBilhODM40ygIqjnWLgbpvK6YkDcWBrfvGSlY34/UEYP1KQijEQT8NVL6Zh3nCrxtQra7yovBbAIJcRK8bbRZDVjUEsPNUl7r//jA2fj7HLwTmv2oPz/4bx00wnnu5lkuXcbo+ghKJfTJVEuUpYYOFzNiweZdcA+PKiFz9cDcjvI/uYxFz2hWNCHGYmuq+33aAAQGlIAEYoAFTfJtA/d2nkywBmD7Xgq+I0sahwkzDJD8sveLHjegCpahunFvczYVSOiUwbwcWmEIEjhaUZGJadcMHXdX5svOTT1to4gMn9zdj6ikMTuovPdmF/QzBV+YcuIlpHS10oyDLIMbPghAen/g4hWYwM4Hky7YE3nLEmImeCgEWnvaLPu6/r2nV8VgaGKIJzbnUnLlBspHRBPtX/U+UuDUPFUQ/O3A3pH17XGjHisTIXhmYZZOrGS35ygy81gGyq73VzM9X2pzXzkAeXm8NJCntuebunOTCur0m25iVKvVJKXX0AxMON1fBulqrt81Wyt506XFTX1UI3lA0vqftKhNw5cke72B/UAKRSzFf9O5lIN6srXtF2t/hR6hjQN8PSsXa8V2hT0T486cGxv0Kqb1TtuOYtF3LSE34LRgQUVLpVeni5Lh9iETOjUbSM/rCyoNCKZWPTVObk6czTWgtAej9exiNXyl36ueuJoriqHVbqttMGWDCnwIrRlO+cfacsTD8Mpg+04NuSdBWtkarh5H0d+jHApRyY7hTTMY662RtF7f0wJuWaxYqnXLwSjtzphl+RWWIRk+CMyTGj6nWHBtgEOhA/mKoO8KrHq9+2qQ4UP2nuvr9Lm9uu+fFFjU/8v4yCbVi2UUy1eJDxse60Tlp/RoVtz41gkgWktXZSGsoHW3UVKhcfxfgswDuchTx2gWKnF/UC3rrX/urDXooPG6VVfUWWeqyhx6fnurA3FYD+TgN2URvNpWesHyi1CwhRzK2nmr75ih/xSTZewpUTez1NPGtqfdj8sgNOC5P3Wv2xMc4XEuRyogLAFx86l4+z0xxnlRsSn2FPUjdbR5XspltdE5aMtuODZ9XppryrxJTH/nKr7WsIqlhlAMkT91CacnmXa/YK4nje7NMvRnxQmT/CCnQTOXyn8qqfWrtOKY4NJIn47f6ypYhzaZNPSfOHWzCLLFaQbdQo4NmyjuLie3mmUF+xFC5IUpeizjOJLotQ9Ic+VHcKe5vEYpVlNcAdiOLgn0GaoJVHgkpwD1ezx1yP1i4V28I9csFDupwKq/ROKvwPLI+CU7ycKq7ni4iW8wjHeiyWFFv3KJo2Nd7JXP0f9R/B2mW67fMAAAAASUVORK5CYII=',
+        },
+
+        {
+            name: 'Nyaa',
+            searchURL: `https://sukebei.nyaa.si/?s=size&o=asc&q=${dvdId}`,
+            color: '#116ce2',
+            base64: 'data:image/png;base64,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',
         },
 
         {
@@ -291,10 +335,7 @@ function searchTemplates(dvdId) {
         },
 
         {
-            name: 'Nyaa',
-            searchURL: `https://sukebei.nyaa.si/?s=size&o=asc&q=${dvdId}`,
-            color: '#116ce2',
-            base64: 'data:image/png;base64,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',
+            name: '--divider--'
         },
 
         {
@@ -322,7 +363,7 @@ function searchTemplates(dvdId) {
             name: 'JAVStash',
             searchURL: `https://javstash.org/search/${dvdId}`,
             color: '#685142',
-            base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEqWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjMyIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzIiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSIzMiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzIiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjYtMDQt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',
+            base64: stashIcon,
         },
 
         {
@@ -332,6 +373,12 @@ function searchTemplates(dvdId) {
             base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAWklEQVR42mNkoBAwUt2A/0AAlwQCsgwA6QOZMwQNgPkfZgBJgYisGcpnQHcATAyFxuF0FBrZVSQbQDUXwP2MrgYt4ZBnADYn4/ICeiyhuIBUwEhMQiE6HZALAGPMkvWSBic/AAAAAElFTkSuQmCC',
         },
 
+        {
+            name: 'StashDB',
+            searchURL: `https://stashdb.org/search/${dvdId}`,
+            color: '#685142',
+            base64: stashIcon,
+        },
 
     ]
 
