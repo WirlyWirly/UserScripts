@@ -2,7 +2,7 @@
 
 // ----------------------------------- MetaData --------------------------------------
 
-// @name        JAVScout
+// @name        🇯🇵 JAVScout
 // @author      WirlyWirly
 // @version     1.0
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
@@ -45,7 +45,7 @@
 // ==/UserScript==
 
 // The URL to your personal StashApp instance
-let localStashURL = 'http://192.168.1.105:32750'
+let stashAppURL = 'http://192.168.1.105:32750'
 
 // =================================== CODE ======================================
 
@@ -308,7 +308,7 @@ function searchTemplates(dvdId) {
 
         {
             name: 'Stash',
-            searchURL: `${localStashURL.match(/(.+)\/?$/)[1]}/scenes?sortby=title&perPage=120&q=${dvdId}`,
+            searchURL: `${stashAppURL.match(/(.+)\/?$/)[1]}/scenes?sortby=title&perPage=120&q=${dvdId}`,
             color: '#685142',
             base64: stashIcon,
         },
