@@ -4,7 +4,7 @@
 
 // @name        🇯🇵 JAVScout
 // @author      WirlyWirly
-// @version     1.1
+// @version     1.2
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
 // @description Scout for JAV across various sites
 //              Written on LibreWolf via Violentmonkey
@@ -24,6 +24,8 @@
 // @match     https://www.javlibrary.com/*
 
 // @match     https://javstash.org/scenes/*
+
+// @match     https://javtrailers.com/*
 
 // @match     https://r18.dev/videos/vod/movies/detail/-/id=*
 
@@ -156,10 +158,45 @@ if ( pageURL.match(/clearjav/) ) {
     })
 
 
+} else if ( pageURL.match(/javtrailers/) ) {
+    // --- JavTrailers ---
+
+    // The initial video page load does not require a MutationObserver
+    if ( document.querySelector('#info-row') ) {
+        let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
+        javScout(dvdId)
+    }
+
+    // The whole site uses pagination, so setup a MutationObserver
+    let observer = new MutationObserver(function(mutations) {
+        // The actions to perform when mutations are detected
+
+        try {
+            document.querySelector('#javScout') ? document.querySelector('#javScout').remove() : null
+            let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
+            javScout(dvdId)
+        } catch(error) {
+
+        }
+
+    })
+
+    let target = document.querySelector('div.layout-content')
+    let config = { childList: true, subTree: true }
+
+    observer.observe(target, config)
+
+
 } else if ( pageURL.match(/r18\.dev/) ) {
     // --- R18 ---
 
     dvdId = document.querySelector('#dvd-id').innerText // The dvdId, used to generate hyperlinks
+
+    if ( dvdId == '' ) {
+        // There is no dvdId, so try using the 'Content ID'
+        dvdId = document.querySelector('#content-id').innerText.replace(/00/, '-')
+    }
+
     javScout(dvdId)
 
 
@@ -187,6 +224,7 @@ if ( pageURL.match(/clearjav/) ) {
 
     }
 
+
 } else if ( pageURL.match(/stashdb/) ) {
     // --- StashDB ---
 
@@ -200,9 +238,11 @@ if ( pageURL.match(/clearjav/) ) {
 }
 
 
-
 function javScout(dvdId) {
     // Using the provided dvdId, create the floating JAVScout element
+
+    // The dvdId is null, so abort the javScout panel creation
+    if ( dvdId == '' ) { return }
 
     // The filled in searchTemplatesArray
     let searchTemplatesArray = searchTemplates(dvdId)
@@ -211,14 +251,14 @@ function javScout(dvdId) {
     let javScoutElement = document.createElement('div')
     javScoutElement.id = 'javScout'
 
-    // The 'JAVScout' div element
+    // The 'JAVScout' title element
     let titleElement = document.createElement('div')
     titleElement.classList.add('js_title')
     titleElement.innerHTML = `
-    <span style="font-size: 14px; font-weight: bold; color: #ededed">🇯🇵 JAVScout 🇯🇵</a>
+    <span>🇯🇵 JAVScout 🇯🇵</a>
     `
-
     javScoutElement.appendChild(titleElement)
+
     for ( template of searchTemplatesArray ) {
         // For each searchTemplate, create a <div> and append it to the main <div> element
 
@@ -236,13 +276,18 @@ function javScout(dvdId) {
         if ( template.searchURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() == pageURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() ) { continue }
 
         // Create the <div> for this searchTemplate
-        let searchElement = document.createElement('div')
-        searchElement.classList.add('js_item')
+        let searchElement = document.createElement('a')
+        searchElement.classList.add('js_a')
+        searchElement.href = template.searchURL
+        searchElement.target = "_blank"
+        searchElement.title = `Search ${template.name}`
+
+
         searchElement.innerHTML = `
-        <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" class="js_a">
-            <img src="${template.base64}" style="width: 16px; border-radius: 3px;">
+        <div class="js_item">
+            <img src="${template.base64}" style="width: 16px; border-radius: 3px; vertical-align: center;">
             ${template.name}
-        </a>
+        </div>
         `
 
         // Append the searchTemplate to the main <div> element
@@ -271,10 +316,13 @@ function javScout(dvdId) {
             font-size: 16px;
             bottom: 1rem;
             left: 1rem;
-            line-height: 1.5;
+            line-height: 1.75;
         }
 
         div.js_title {
+            color: #ededed;
+            font-weight: bold;
+            font-size: 14px;
             cursor: default;
             display: flex;
             justify-content: center;
@@ -288,8 +336,10 @@ function javScout(dvdId) {
         }
 
         div.js_item {
-            padding: 2px 0px;
+            border-radius: 3px;
             display: none;
+            padding-left: 4px;
+            text-decoration: none;
         }
 
         a.js_a {
@@ -297,8 +347,8 @@ function javScout(dvdId) {
             text-decoration: none;
         }
 
-        div.js_item:hover a.js_a {
-            color: #2ca5ca;
+        div.js_item:hover {
+            background: #2C3E50B5;
         }
 
         #javScout:hover {
@@ -391,6 +441,13 @@ function searchTemplates(dvdId) {
             searchURL: `https://javstash.org/search/${dvdId}`,
             color: '#685142',
             base64: stashIcon,
+        },
+
+        {
+            name: 'JavTrailers',
+            searchURL: `https://javtrailers.com/search/${dvdId}`,
+            color: '#FF4C4C',
+            base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEYklEQVR42rWXaWhdRRTH577Y2KTWimmKINZaNxRxQe59QXFBRdFirdgWxUoVSosFjWj1Q0TiB1cUlaK2/RJSTSvBoqJYcKNBUJv3QOr+QaS4EpNau1lj47vX39+ZR+67uUvTZeDPuZk3c85/zjlzzsQzhzFGgmBKFEXT+WwFHhj1PG9ve6UyerA6vEMw2orRC/m8AlwMZgORKIH9YAh8DT4GW2dVqyNHhMCI70+NjLmOz+XgUjCjYMs/4BvwKtgIkeFDJjDs+3MRj4BFYNoknVYDn4FuwrOF8ESTIoDxAPEi8CdpODl+B12QWA+J2kERwLhi3AvOy1m2C3wO9oELwKk5a3eDB5pKpZ62wcEolwDGT0ZsBJfnKPwRdHKq95FjJOdZyGfB9QWeuIOc+CCTAJnehLKn+FxV4NaHUPRMgrhC9S5oz9n3CVjI3qFUAijpQLxdoERXbh5KBhrI+/4J+PZDY69o1pD7V7H3uQkEdnR0eGGtpqRbWXD6f8ESlPQnyCsHPgKnF+xX3syfQGA4CGabKNIJzjTFQ4aWQuLX/08fBM2ErsvYK1sq2KtquXwiAd+/EbEJNKe4fLuxeXMaaHGu/BS8DvaCq8DNxpZmXbVfwE5wCpiZQmJDGgGd4PHEtAx3uRNrz9XgCTAntiYy40mt060G65jYGVlvdoN5Cb3fpRFYi1gRm1KsV+DmnsQ6leSXwDEpJ9vE1VxKwdkfW3+2sbcjnht7GgjsKJdLYRj28XlbbPo3cCUEvk8QkMIBcFIKgZWsX9Ogm6sdRtFrxpbz+qg1EPijXPZqYfgKn0ti0+pm16DwywSBixAqJm0pBCbUBxL0WBL0DT5viE2PpYXgBURnYvpJXNqNS8ecMr0DHpMhkz62Gs9bPKtS+Tmm91pjK2uc8EgagXuMTaD4UJ3vBW8Zm2gLwJ3GdkYlnzL9gLGZPsXNbQHrgK6oipL0npHQW0kjcJmxyTI95WR/O9nipJJMse5z39qr2zK37mJHTOvT6sLzaQRORGwGZVM81hKaTkJzILZ/kfNWa8FeddHFWb1AsX26QIHu+gKS7b3EXoVB9eL8gv2byZNbswjMQbxj8t8Bh0PgL2Nb8pt574G7EC+DqTmK1hCC+xIhWIhYb/JD0Ivhu9ur1dFMAly1lsgWjpsKTiKSG8x4Ej5sxpMwbQyC2zn9D/ojk0BGVUwbIfjT2GzXHW/OWatitgzj1fpEXgjUwRTfc4ztdE2mOLOzhurCALgf49viP2Q9yVTp1L263Bq9874ADxqbmEW9Pj70BuxByWpiPpT80XPulvQwqregHqPqhqpcqnSK1XyYf+u8oiS7xRE5PuMQuiHbnQf7SNRt8ad4AwGULjP25au2ehw419gHh06p2N6L8b5EeGa40Oiqqb22uRDtAT8Z+6/ZVxgewnCY5x4R2O1Okhxqv4+WPK9/Zgb7IzFEQO33EndiZbKahxpJf/INcHQIBME0HqHtdQK4bRdu23e0DdfHfz8+ho7azJPRAAAAAElFTkSuQmCC',
         },
 
         {

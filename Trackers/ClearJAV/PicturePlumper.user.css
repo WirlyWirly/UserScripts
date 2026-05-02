@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV - 📷 PicturePlumper
-@version    1.6
+@version    1.7
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description Customize the displayed size of torrent images!
@@ -106,11 +106,14 @@
     /* ========== Hover Cover ========== */
     /* List + Grouped: The cover that appears when hovering over the torrent title */
 
+	td.torrent-search--list__overview:hover div.torrent-search--hover__info, div.torrent-search--grouped__title-name:hover div.torrent-search--hover__info {
+        visibility: var(--both-hover-cover-enabled) !important;
+	}
+
     div.torrent-search--hover__info {
         height: unset;
         left: var(--both-hover-cover-x-offset) !important;
         top: var(--both-hover-cover-y-offset) !important;
-        visibility: var(--both-hover-cover-enabled) !important;
         width: unset;
         z-index: 10;
 
