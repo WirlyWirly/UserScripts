@@ -4,7 +4,7 @@
 
 // @name        🇯🇵 JAVScout
 // @author      WirlyWirly
-// @version     1.0
+// @version     1.1
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
 // @description Scout for JAV across various sites
 //              Written on LibreWolf via Violentmonkey
@@ -207,46 +207,53 @@ function javScout(dvdId) {
     // The filled in searchTemplatesArray
     let searchTemplatesArray = searchTemplates(dvdId)
 
-    let floatingElement = document.createElement('div')
-    floatingElement.id = 'javScout'
+    // The main element holding all the other div elements
+    let javScoutElement = document.createElement('div')
+    javScoutElement.id = 'javScout'
 
+    // The 'JAVScout' div element
     let titleElement = document.createElement('div')
-    titleElement.classList.add('sp_title')
+    titleElement.classList.add('js_title')
     titleElement.innerHTML = `
-    <a href="https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js" target="_blank" style="font-size: 14px; font-weight: bold; color: #ededed; text-decoration: none">🇯🇵 JAVScout 🇯🇵</a>
+    <span style="font-size: 14px; font-weight: bold; color: #ededed">🇯🇵 JAVScout 🇯🇵</a>
     `
 
-    floatingElement.appendChild(titleElement)
+    javScoutElement.appendChild(titleElement)
     for ( template of searchTemplatesArray ) {
+        // For each searchTemplate, create a <div> and append it to the main <div> element
 
         if ( template.name == '--divider--' ) {
-            // This item indicates a divider
+            // This template item is a divider
+
             let dividerElement = document.createElement('div')
-            dividerElement.classList.add('sp_title')
-            floatingElement.appendChild(dividerElement)
+            dividerElement.classList.add('js_divider')
+            javScoutElement.appendChild(dividerElement)
             continue
 
         }
 
-        // Skip the template of the current site
+        // If this template belongs to the current site, skip the <div> creation so that it is not included in the panel
         if ( template.searchURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() == pageURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() ) { continue }
 
+        // Create the <div> for this searchTemplate
         let searchElement = document.createElement('div')
-        searchElement.classList.add('sp_div')
+        searchElement.classList.add('js_item')
         searchElement.innerHTML = `
-        <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" class="sp_a">
+        <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" class="js_a">
             <img src="${template.base64}" style="width: 16px; border-radius: 3px;">
             ${template.name}
         </a>
         `
 
-        floatingElement.appendChild(searchElement)
+        // Append the searchTemplate to the main <div> element
+        javScoutElement.appendChild(searchElement)
 
     }
 
-    document.body.appendChild(floatingElement)
+    document.body.appendChild(javScoutElement)
 
     GM_addStyle(`
+
         #javScout {
             background: rgba(25, 29, 42, 0.74);
             backdrop-filter: blur(5px);
@@ -254,40 +261,60 @@ function javScout(dvdId) {
             border: 1px solid rgb(44, 62, 80);
             box-shadow: 0px 0px 15px #2C3E50;
             color: #ffffff;
-            max-height: 350px;
+            max-height: unset;
             max-width: 165px;
             overflow: auto auto;
-            padding: 15px;
+            padding: 10px 0px;
             position: fixed;
             width: 165px;
             z-index: 3333;
             font-size: 16px;
-            bottom: 1em;
-            right: 1em;
+            bottom: 1rem;
+            left: 1rem;
             line-height: 1.46666667;
         }
 
-        div.sp_title {
+        div.js_title {
+            cursor: default;
             display: flex;
             justify-content: center;
+        }
+
+        div.js_divider {
             border-bottom: 1px solid;
             border-bottom-color: #2C3E50;
-            padding-bottom: 8px;
-            margin-bottom:4px;
+            margin: 4px 0px;
+            display: none;
         }
 
-        div.sp_div {
+        div.js_item {
             padding: 2px 0px;
+            display: none;
         }
 
-        a.sp_a {
+        a.js_a {
             color: #ededed;
             text-decoration: none;
         }
 
-        div.sp_div:hover a.sp_a {
+        div.js_item:hover a.js_a {
             color: #2ca5ca;
         }
+
+        #javScout:hover {
+            padding: 15px;
+        }
+
+        #javScout:hover .js_title {
+            border-bottom: 1px solid #2C3E50;
+            margin-bottom:4px;
+            padding-bottom: 8px;
+        }
+
+        #javScout:hover .js_item, #javScout:hover .js_divider {
+            display: block;
+        }
+
 
     `)
 
