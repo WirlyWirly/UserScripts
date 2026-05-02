@@ -51,343 +51,20 @@ let stashAppURL = 'http://192.168.1.105:32750'
 
 // =================================== CODE ======================================
 
-pageURL = document.URL
-
-if ( pageURL.match(/clearjav/) ) {
-    // --- ClearJAV ---
-
-    metaElements = document.querySelector(`div.meta__chips > section.meta__chip-container[title="About this release"]`) // The parentElement of the meta <article> elements
-
-    dvdId = metaElements.querySelector('article.meta__language .meta-chip__value').innerText // The dvdId, used to generate hyperlinks
-    javScout(dvdId)
-
-    let searchTemplatesArray = searchTemplates(dvdId)
-    for ( let template of searchTemplatesArray ) {
-        // Using each searchTemplate, generate and insert the hyperlink elements
-
-        // Skip the 'ClearJAV' template item
-        if ( template.name.toLowerCase() == 'clearjav' || template.name == '--divider--' ) { continue }
-
-        let clearElement = document.createElement('article')
-        clearElement.classList.add('meta__searchlink')
-        clearElement.title = `Search ${template.name}`
-        clearElement.innerHTML = `
-            <a class="meta-chip" href="${template.searchURL}" target="_blank">
-                <i class="fas meta-chip__icon" style="background: none;">
-                    <img src="${template.base64}" style="border-radius: 5px; vertical-align: center; width: 32px">
-                </i>
-                <h2 class="meta-chip__name">${template.name}</h2>
-                <h3 class="meta-chip__value">search</h3>
-            </a>
-        `
-
-        metaElements.appendChild(clearElement)
-
-    }
-
-
-} else if ( pageURL.match(/javdb/) ) {
-    // --- javDB ---
-
-    dvdId = document.querySelector('nav.movie-panel-info a[href^="/video_codes/"]').parentElement.innerText
-    javScout(dvdId)
-
-
-} else if ( pageURL.match(/javdatabase/) ) {
-    // --- JAVDatabase ---
-
-    dvdId = pageURL.match(/movies\/(.+)\/$/)[1]
-    javScout(dvdId)
-
-
-} else if ( pageURL.match(/javlibrary/) ) {
-    // --- JAVLibrary ---
-
-    let dvdId = document.querySelector('#video_id td.text').innerText
-    javScout(dvdId)
-
-    let metaElements = document.querySelector('#video_info')
-
-    // The element where the searchLinks will be appended
-    let javlibraryElement = document.createElement('div')
-    javlibraryElement.id = 'video_searchlinks'
-    javlibraryElement.classList = 'item'
-    javlibraryElement.innerHTML = `
-    <table>
-        <tbody>
-            <tr>
-            <td class="header">Search:</td>
-                <td class="text">
-                </td>
-            <td class="icon"></td>
-            </tr>
-        </tbody>
-    </table>
-    `
-
-    metaElements.appendChild(javlibraryElement)
-
-    searchElements = javlibraryElement.querySelector('td.text')
-
-    let searchTemplatesArray = searchTemplates(dvdId)
-    for ( let template of searchTemplatesArray ) {
-        // Using each searchTemplate, generate and insert the hyperlink element
-
-        // Skip the 'JAVLibrary' template item
-        if ( template.name.toLowerCase() == 'javlibrary' || template.name == '--divider--') { continue }
-
-        let spanElement = document.createElement('span')
-        spanElement.innerHTML = `<a href="${template.searchURL}" class="genre" target="_blank" title="Search ${template.name}" style="font-weight: bold;"><img src="${template.base64}" style="vertical-align: center; width: 12px;">  ${template.name}</a>`
-        searchElements.appendChild(spanElement)
-
-    }
-
-    GM_addStyle(`#video_searchlinks a:hover {
-        text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
-    }`)
-
-
-} else if ( pageURL.match(/javstash/) ) {
-    // --- JAVStash ---
-
-    waitForElement('div.scene-performers + div strong').then(function(element) {
-        // Wait until the element containing the dvdId is available
-
-        dvdId = element.innerText
-        javScout(dvdId)
-    })
-
-
-} else if ( pageURL.match(/javtrailers/) ) {
-    // --- JavTrailers ---
-
-    // The initial video page load does not require a MutationObserver
-    if ( document.querySelector('#info-row') ) {
-        let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
-        javScout(dvdId)
-    }
-
-    // The whole site uses pagination, so setup a MutationObserver
-    let observer = new MutationObserver(function(mutations) {
-        // The actions to perform when mutations are detected
-
-        try {
-            document.querySelector('#javScout') ? document.querySelector('#javScout').remove() : null
-            let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
-            javScout(dvdId)
-        } catch(error) {
-
-        }
-
-    })
-
-    let target = document.querySelector('div.layout-content')
-    let config = { childList: true, subTree: true }
-
-    observer.observe(target, config)
-
-
-} else if ( pageURL.match(/r18\.dev/) ) {
-    // --- R18 ---
-
-    dvdId = document.querySelector('#dvd-id').innerText // The dvdId, used to generate hyperlinks
-
-    if ( dvdId == '' ) {
-        // There is no dvdId, so try using the 'Content ID'
-        dvdId = document.querySelector('#content-id').innerText.replace(/00/, '-')
-    }
-
-    javScout(dvdId)
-
-
-    // The parentElement of the meta <article> elements
-    metaElements = document.querySelector(`#details tbody`)
-
-    let searchTemplatesArray = searchTemplates(dvdId)
-    for ( let template of searchTemplatesArray ) {
-        // Using each searchTemplate, generate and insert the hyperlink elements
-
-        // Skip the 'ClearJAV' template item
-        if ( template.name.toLowerCase() == 'r18' || template.name == '--divider--' ) { continue }
-
-        let tableRowElement = document.createElement('tr')
-        tableRowElement.innerHTML = `
-            <th>Search</th>
-            <td>
-                <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" style="text-decoration: none;">
-                    <img src="${template.base64}" style="border-radius: 3px; max-height: 16px; max-width: 16px;"> ${template.name}
-                </a>
-            </td
-        `
-
-        metaElements.appendChild(tableRowElement)
-
-    }
-
-
-} else if ( pageURL.match(/stashdb/) ) {
-    // --- StashDB ---
-
-    waitForElement('div.scene-performers + div strong').then(function(element) {
-        // Wait until the element containing the dvdId is available
-
-        dvdId = element.innerText
-        javScout(dvdId)
-    })
-
-}
-
-
-function javScout(dvdId) {
-    // Using the provided dvdId, create the floating JAVScout element
-
-    // The dvdId is null, so abort the javScout panel creation
-    if ( dvdId == '' ) { return }
-
-    // The filled in searchTemplatesArray
-    let searchTemplatesArray = searchTemplates(dvdId)
-
-    // The main element holding all the other div elements
-    let javScoutElement = document.createElement('div')
-    javScoutElement.id = 'javScout'
-
-    // The 'JAVScout' title element
-    let titleElement = document.createElement('div')
-    titleElement.classList.add('js_title')
-    titleElement.innerHTML = `
-    <span>🇯🇵 JAVScout 🇯🇵</a>
-    `
-    javScoutElement.appendChild(titleElement)
-
-    for ( template of searchTemplatesArray ) {
-        // For each searchTemplate, create a <div> and append it to the main <div> element
-
-        if ( template.name == '--divider--' ) {
-            // This template item is a divider
-
-            let dividerElement = document.createElement('div')
-            dividerElement.classList.add('js_divider')
-            javScoutElement.appendChild(dividerElement)
-            continue
-
-        }
-
-        // If this template belongs to the current site, skip the <div> creation so that it is not included in the panel
-        if ( template.searchURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() == pageURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() ) { continue }
-
-        // Create the <div> for this searchTemplate
-        let searchElement = document.createElement('a')
-        searchElement.classList.add('js_a')
-        searchElement.href = template.searchURL
-        searchElement.target = "_blank"
-        searchElement.title = `Search ${template.name}`
-
-
-        searchElement.innerHTML = `
-        <div class="js_item">
-            <img src="${template.base64}" style="width: 16px; border-radius: 3px; vertical-align: center;">
-            ${template.name}
-        </div>
-        `
-
-        // Append the searchTemplate to the main <div> element
-        javScoutElement.appendChild(searchElement)
-
-    }
-
-    document.body.appendChild(javScoutElement)
-
-    GM_addStyle(`
-
-        #javScout {
-            background: rgba(25, 29, 42, 0.74);
-            backdrop-filter: blur(4px);
-            border-radius: 5px;
-            border: 1px solid rgb(44, 62, 80);
-            box-shadow: 0px 0px 15px #2C3E50;
-            color: #ededed;
-            max-height: unset;
-            max-width: 165px;
-            overflow: auto auto;
-            padding: 10px 0px;
-            position: fixed;
-            width: 165px;
-            z-index: 3333;
-            font-size: 16px;
-            bottom: 1rem;
-            left: 1rem;
-            line-height: 1.75;
-        }
-
-        div.js_title {
-            color: #ededed;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: default;
-            display: flex;
-            justify-content: center;
-        }
-
-        div.js_divider {
-            border-bottom: 1px solid;
-            border-bottom-color: #2C3E50;
-            margin: 4px 0px;
-            display: none;
-        }
-
-        div.js_item {
-            border-radius: 3px;
-            display: none;
-            padding-left: 4px;
-            text-decoration: none;
-        }
-
-        a.js_a {
-            color: #ededed;
-            text-decoration: none;
-        }
-
-        div.js_item:hover {
-            background: #2C3E50B5;
-        }
-
-        #javScout:hover {
-            padding: 15px;
-        }
-
-        #javScout:hover .js_title {
-            border-bottom: 1px solid #2C3E50;
-            margin-bottom:4px;
-            padding-bottom: 8px;
-        }
-
-        #javScout:hover .js_item, #javScout:hover .js_divider {
-            display: block;
-        }
-
-
-    `)
-
-}
-
-
 function searchTemplates(dvdId) {
-    // Use the provided 'dvdId' to populate and return the searchTemplates
+    // A search template for each JAV site, which will be used to generate the JAVScout panel
 
-    dvdId = dvdId.toLowerCase()
+    dvdId = dvdId.toLowerCase().trim()
 
-    let r18dvdId = dvdId.replace(/-/, '00')
-
-    let stashIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEqWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjMyIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzIiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSIzMiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzIiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjYtMDQt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`
 
     let searchTemplatesArray = [
-        // An array of objects, each object containing the required info to generate and present a external link
+        // Each object in this array is a search template, for which a entry in the JAVScout panel will be generated in this order
 
         {
             name: 'Stash',
-            searchURL: `${stashAppURL.match(/(.+)\/?$/)[1]}/scenes?sortby=title&perPage=120&q=${dvdId}`,
+            searchURL: `${stashAppURL.match(/(.+)\/?$/)[1]}/scenes?sortby=title&q=${dvdId}`,
             color: '#685142',
-            base64: stashIcon,
+            base64: stashBase64,
         },
 
         {
@@ -440,7 +117,7 @@ function searchTemplates(dvdId) {
             name: 'JAVStash',
             searchURL: `https://javstash.org/search/${dvdId}`,
             color: '#685142',
-            base64: stashIcon,
+            base64: stashBase64,
         },
 
         {
@@ -452,7 +129,7 @@ function searchTemplates(dvdId) {
 
         {
             name: 'R18',
-            searchURL: `https://r18.dev/videos/vod/movies/detail/-/id=${r18dvdId}/`,
+            searchURL: `https://r18.dev/videos/vod/movies/detail/-/id=${dvdId.replace(/-/, '00')}/`,
             color: '#FF5555',
             base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAWklEQVR42mNkoBAwUt2A/0AAlwQCsgwA6QOZMwQNgPkfZgBJgYisGcpnQHcATAyFxuF0FBrZVSQbQDUXwP2MrgYt4ZBnADYn4/ICeiyhuIBUwEhMQiE6HZALAGPMkvWSBic/AAAAAElFTkSuQmCC',
         },
@@ -461,7 +138,7 @@ function searchTemplates(dvdId) {
             name: 'StashDB',
             searchURL: `https://stashdb.org/search/${dvdId}`,
             color: '#685142',
-            base64: stashIcon,
+            base64: stashBase64,
         },
 
     ]
@@ -469,3 +146,315 @@ function searchTemplates(dvdId) {
     return searchTemplatesArray
 
 }
+
+let stashBase64 = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEqWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjMyIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzIiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSIzMiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzIiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjYtMDQt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`
+
+// =================================== Site Specific Handling ======================================
+// Based on the URL of the current page, specify the location of the dvdId and pass it to javScout(dvdId)
+
+pageURL = document.URL
+if ( pageURL.match(/clearjav/) ) {
+    // --- ClearJAV ---
+
+    metaElements = document.querySelector(`div.meta__chips > section.meta__chip-container[title="About this release"]`) // The parentElement of the meta <article> elements
+
+    dvdId = metaElements.querySelector('article.meta__language .meta-chip__value').innerText
+    javScout(dvdId)
+
+    let searchTemplatesArray = searchTemplates(dvdId)
+    for ( let template of searchTemplatesArray ) {
+        // Using each searchTemplate, generate and insert the quick-search elements
+
+        // Skip the 'ClearJAV' template item
+        if ( template.name.toLowerCase() == 'clearjav' || template.name == '--divider--' ) { continue }
+
+        let clearElement = document.createElement('article')
+        clearElement.classList.add('meta__searchlink')
+        clearElement.title = `Search ${template.name}`
+        clearElement.innerHTML = `
+            <a class="meta-chip" href="${template.searchURL}" target="_blank">
+                <i class="fas meta-chip__icon" style="background: none;">
+                    <img src="${template.base64}" style="border-radius: 5px; vertical-align: center; width: 32px">
+                </i>
+                <h2 class="meta-chip__name">${template.name}</h2>
+                <h3 class="meta-chip__value">search</h3>
+            </a>
+        `
+
+        metaElements.appendChild(clearElement)
+
+    }
+
+
+} else if ( pageURL.match(/javdb/) ) {
+    // --- JavDB ---
+
+    dvdId = document.querySelector('nav.movie-panel-info a[href^="/video_codes/"]').parentElement.innerText
+    javScout(dvdId)
+
+
+} else if ( pageURL.match(/javdatabase/) ) {
+    // --- JAVDatabase ---
+
+    dvdId = pageURL.match(/movies\/(.+)\/$/)[1]
+    javScout(dvdId)
+
+
+} else if ( pageURL.match(/javlibrary/) ) {
+    // --- JAVLibrary ---
+
+    let dvdId = document.querySelector('#video_id td.text').innerText
+    javScout(dvdId)
+
+    // The element where the searchLinks will be appended
+    let javlibraryElement = document.createElement('div')
+    javlibraryElement.id = 'video_searchlinks'
+    javlibraryElement.classList = 'item'
+    javlibraryElement.innerHTML = `
+    <table>
+        <tbody>
+            <tr>
+            <td class="header">Search:</td>
+                <td class="text">
+                </td>
+            <td class="icon"></td>
+            </tr>
+        </tbody>
+    </table>
+    `
+
+    document.querySelector('#video_info').appendChild(javlibraryElement)
+
+    searchElements = javlibraryElement.querySelector('td.text')
+
+    let searchTemplatesArray = searchTemplates(dvdId)
+    for ( let template of searchTemplatesArray ) {
+        // Using each searchTemplate, generate and insert the quick-search element
+
+        // Skip the 'JAVLibrary' template item
+        if ( template.name.toLowerCase() == 'javlibrary' || template.name == '--divider--') { continue }
+
+        let spanElement = document.createElement('span')
+        spanElement.innerHTML = `<a href="${template.searchURL}" class="genre" target="_blank" title="Search ${template.name}" style="font-weight: bold;"><img src="${template.base64}" style="vertical-align: center; width: 12px;">  ${template.name}</a>`
+        searchElements.appendChild(spanElement)
+
+    }
+
+    GM_addStyle(`#video_searchlinks a:hover {
+        text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
+    }`)
+
+
+} else if ( pageURL.match(/javstash/) ) {
+    // --- JAVStash ---
+
+    waitForElement('div.scene-performers + div strong').then(function(element) {
+        // Wait until the element containing the dvdId is available
+
+        dvdId = element.innerText
+        javScout(dvdId)
+    })
+
+
+} else if ( pageURL.match(/javtrailers/) ) {
+    // --- JavTrailers ---
+
+    // The initial video page load does not require a MutationObserver
+    if ( document.querySelector('#info-row') ) {
+        let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
+        javScout(dvdId)
+    }
+
+    //
+    // The whole site uses pagination, so setup a MutationObserver
+    let observer = new MutationObserver(function(mutations) {
+        // The actions to perform when mutations are detected
+
+        try {
+            document.querySelector('#javScout') ? document.querySelector('#javScout').remove() : null
+            let dvdId = document.querySelector('#info-row').innerText.match(/DVD ID: (.+)/)[1]
+            javScout(dvdId)
+        } catch(error) {
+
+        }
+
+    })
+
+    let target = document.querySelector('div.layout-content')
+    let config = { childList: true, subTree: true }
+
+    observer.observe(target, config)
+
+
+} else if ( pageURL.match(/r18\.dev/) ) {
+    // --- R18 ---
+
+    dvdId = document.querySelector('#dvd-id').innerText // The dvdId, used to generate hyperlinks
+
+    // There is no dvdId, so try using the 'Content ID'
+    dvdId == '' ? dvdId = document.querySelector('#content-id').innerText.replace(/00/, '-') : null
+
+    javScout(dvdId)
+
+
+    // The parentElement of the meta <article> elements
+    metaElements = document.querySelector(`#details tbody`)
+
+    let searchTemplatesArray = searchTemplates(dvdId)
+    for ( let template of searchTemplatesArray ) {
+        // Using each searchTemplate, generate and insert the quick-search elements
+
+        // Skip the 'ClearJAV' template item
+        if ( template.name.toLowerCase() == 'r18' || template.name == '--divider--' ) { continue }
+
+        let tableRowElement = document.createElement('tr')
+        tableRowElement.innerHTML = `
+            <th>Search</th>
+            <td>
+                <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" style="text-decoration: none;">
+                    <img src="${template.base64}" style="border-radius: 3px; max-height: 16px; max-width: 16px;"> ${template.name}
+                </a>
+            </td
+        `
+
+        metaElements.appendChild(tableRowElement)
+
+    }
+
+
+} else if ( pageURL.match(/stashdb/) ) {
+    // --- StashDB ---
+
+    waitForElement('div.scene-performers + div strong').then(function(element) {
+        // Wait until the element containing the dvdId is available
+
+        dvdId = element.innerText
+        javScout(dvdId)
+    })
+
+}
+
+
+function javScout(dvdId) {
+    // Using the provided dvdId, generate the floating JAVScout panel
+
+    // The dvdId is null, so abort the JAVScout panel creation
+    if ( dvdId == '' ) { return }
+
+    // The filled in searchTemplatesArray
+    let searchTemplatesArray = searchTemplates(dvdId)
+
+    // The main element holding all the other div elements
+    let javScoutElement = document.createElement('div')
+    javScoutElement.id = 'javScout'
+
+    // The 'JAVScout' title element
+    let titleElement = document.createElement('div')
+    javScoutElement.appendChild(titleElement)
+    titleElement.outerHTML = `<div class="js_title"><span>🇯🇵 JAVScout 🇯🇵</a></div>`
+
+    for ( template of searchTemplatesArray ) {
+        // For each searchTemplate, create a <div> and append it to the main <div> element
+
+        if ( template.name == '--divider--' ) {
+            // This template item is a divider
+
+            let dividerElement = document.createElement('div')
+            dividerElement.classList.add('js_divider')
+            javScoutElement.appendChild(dividerElement)
+            continue
+
+        } else if ( template.searchURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() == pageURL.match(/https?:\/\/(\w+\.)?(\w+)\./)[2].toLowerCase() ) {
+            // This template belongs to the current site, so don't add it to the JAVScout panel
+            continue
+        }
+
+        // Create and populate the <a> element for this searchTemplate
+        let searchElement = document.createElement('a')
+        javScoutElement.appendChild(searchElement)
+
+        searchElement.outerHTML = `
+        <a href="${template.searchURL}" target="_blank" title="Search ${template.name}" class="js_link">
+            <div class="js_item">
+                <img src="${template.base64}" style="width: 16px; border-radius: 3px; vertical-align: center;">
+                ${template.name}
+            </div>
+        </a>`
+
+    }
+
+    document.body.appendChild(javScoutElement)
+
+}
+
+
+// The CSS styles of the JAVScout panel
+GM_addStyle(`
+
+#javScout {
+    background: rgba(25, 29, 42, 0.74);
+    backdrop-filter: blur(4px);
+    border-radius: 5px;
+    border: 1px solid rgb(44, 62, 80);
+    box-shadow: 0px 0px 15px #2C3E50;
+    color: #ededed;
+    max-height: unset;
+    max-width: 165px;
+    overflow: auto auto;
+    padding: 10px 0px;
+    position: fixed;
+    width: 165px;
+    z-index: 3333;
+    font-size: 16px;
+    bottom: 1rem;
+    left: 1rem;
+    line-height: 1.75;
+}
+
+div.js_title {
+    color: #ededed;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: default;
+    display: flex;
+    justify-content: center;
+}
+
+div.js_divider {
+    border-bottom: 1px solid;
+    border-bottom-color: #2C3E50;
+    margin: 4px 0px;
+    display: none;
+}
+
+div.js_item {
+    border-radius: 3px;
+    display: none;
+    padding-left: 4px;
+    text-decoration: none;
+}
+
+a.js_link {
+    color: #ededed;
+    text-decoration: none;
+}
+
+div.js_item:hover {
+    background: #2C3E50B5;
+}
+
+#javScout:hover {
+    padding: 15px;
+}
+
+#javScout:hover .js_item, #javScout:hover .js_divider {
+    display: block;
+}
+
+#javScout:hover .js_title {
+    border-bottom: 1px solid #2C3E50;
+    margin-bottom:4px;
+    padding-bottom: 8px;
+}
+
+`)
