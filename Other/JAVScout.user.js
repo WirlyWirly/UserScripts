@@ -256,11 +256,11 @@ function javScout(dvdId) {
 
         #javScout {
             background: rgba(25, 29, 42, 0.74);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
             border-radius: 5px;
             border: 1px solid rgb(44, 62, 80);
             box-shadow: 0px 0px 15px #2C3E50;
-            color: #ffffff;
+            color: #ededed;
             max-height: unset;
             max-width: 165px;
             overflow: auto auto;
@@ -271,7 +271,7 @@ function javScout(dvdId) {
             font-size: 16px;
             bottom: 1rem;
             left: 1rem;
-            line-height: 1.46666667;
+            line-height: 1.5;
         }
 
         div.js_title {
