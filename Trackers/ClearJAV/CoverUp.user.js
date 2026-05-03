@@ -434,6 +434,5 @@ if ( pagePath.match(/\/torrents/) ) {
             color: rgb(226, 101, 101);
         }
 
-
     `)
 }
