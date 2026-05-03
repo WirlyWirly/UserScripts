@@ -48,11 +48,13 @@ const pagePath = document.location.pathname
 // CoverCard global variables
 let autoCoverCards = false
 let coverCardsButton = document.createElement('div')
+coverCardsButton.textContent = '🌸 CoverCards'
 
 if ( window.screen.availWidth < 400 ) {
     // SmallScreen: Likely a mobile, so adjust CoverCard dimensions
     cardWidthMinimum = '295px'
     coverHeight = '200px'
+    coverCardsButton.textContent = '🌸'
 }
 
 // The MutationObserver global variables
@@ -75,7 +77,6 @@ if ( pagePath.match(/\/$/) ) {
     // ---------- Search Page ----------
 
     // Create the CoverCards button
-    coverCardsButton.textContent = '🌸 CoverCards'
     coverCardsButton.title = 'Click to Enable CoverCards'
     coverCardsButton.classList.add('coverup_button')
 
@@ -345,6 +346,10 @@ if ( pagePath.match(/\/torrents/) ) {
 
         /* --- CoverCards Button --- */
 
+        div.top-nav__left {
+            column-gap: 15px;
+        }
+
         .coverup_button {
             background: #153245;
             border-radius: 5px;
@@ -352,11 +357,9 @@ if ( pagePath.match(/\/torrents/) ) {
             color: #B6D3E7;
             cursor: pointer;
             display: block;
-            font-size: 80%;
+            font-size: 100%;
             font-weight: Bold;
-            margin: auto 0;
-            padding: 4px 4px;
-            max-width: 100px;
+            padding: 3px 5px;
         }
 
         .coverup_button:hover {
