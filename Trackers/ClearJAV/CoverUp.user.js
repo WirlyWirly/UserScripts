@@ -228,6 +228,7 @@ function CoverCards() {
 
         // The element that will hold all the torrent <article> elements
         let articlesHolder = document.createElement('div')
+        articlesHolder.id = 'coverCardsView'
         articlesHolder.className = 'panel__body torrent-search--card__results'
         articlesHolder.setAttribute('data-coverup_covercards', 'true')
 
@@ -242,6 +243,7 @@ function CoverCards() {
             let torrentSize = tableRow.querySelector('td.torrent-search--list__size').innerText
 
             let seederCount = tableRow.querySelector('td.torrent-search--list__seeders').innerText
+
             let leecherCount = tableRow.querySelector('td.torrent-search--list__leechers').innerText
             let completedCount = tableRow.querySelector('td.torrent-search--list__completed').innerText
 
@@ -272,9 +274,11 @@ function CoverCards() {
         <span class="torrent-card__type">${torrentSource}</span>
         <span class="torrent-card__meta-separator">★</span>
         <span class="torrent-card__size">${torrentSize}</span>
+        <span class="torrent-card__meta-separator">★</span>
+        <span class="torrent-card__age">${torrentAgeElement}</span>
     </div>
     <div class="torrent-card__right-header">
-        <a class="torrent-card__seeds torrent__seeder-count" href="https://clearjav.com/torrents/${torrentId}/peers">
+        <a class="torrent-card__seeds torrent__seeder-count ${tableRow.querySelector('td.torrent-activity-indicator--seeding') ? 'torrent-activity-indicator--seeding' : null }" href="https://clearjav.com/torrents/${torrentId}/peers">
             <i class="fas fa-arrow-up"></i>
             ${seederCount}
         </a>
@@ -284,7 +288,7 @@ function CoverCards() {
             ${leecherCount}
         </a>
         <span class="torrent-card__meta-separator">•</span>
-        <a class="torrent-card__completed torrent__times-completed-count" href="https://clearjav.com/torrents/${torrentId}/history">
+        <a class="torrent-card__completed torrent__times-completed-count ${tableRow.querySelector('td.torrent-activity-indicator--completed') ? 'torrent-activity-indicator--completed' : null }" href="https://clearjav.com/torrents/${torrentId}/history">
             <i class="fas fa-check"></i>
             ${completedCount}
         </a>
@@ -307,13 +311,12 @@ function CoverCards() {
         </div>
 <footer class="torrent-card__footer">
     <div class="torrent-card__left-footer">
-        <address class="torrent-card__uploader">
+        <address class="torrent-card__uploader" style="margin-right: 12px">
             <span class="user-tag" style="background-image: none;">
                 ${uploaderElement}
             </span>
         </address>
-        <span class="torrent-card__meta-separator">★</span>
-        ${torrentAgeElement}
+        ${tableRow.querySelector('span.torrent-icons').outerHTML}
     </div>
     <div class="torrent-card__right-footer">
                         ${bookmarkElement}
@@ -380,12 +383,12 @@ if ( pagePath.match(/\/torrents/) ) {
 
         /* --- CoverCards View --- */
 
-        div.torrent-search--card__results {
+        #coverCardsView {
             grid-gap: 1rem;
             grid-template-columns: repeat(auto-fit,minmax(${cardWidthMinimum}, 1fr));
         }
 
-        article.torrent-card {
+        #coverCardsView article.torrent-card {
            min-width: ${cardWidthMinimum};
            border-radius: 8px;
            height: unset;
@@ -393,22 +396,27 @@ if ( pagePath.match(/\/torrents/) ) {
            grid-template-areas: "header header" "poster poster" "body body" "footer footer";
         }
 
-        aside.torrent-card__aside {
+        #coverCardsView aside.torrent-card__aside {
             background-size: 100% 100%;
         }
 
-        aside.torrent-card__aside .torrent-card__image {
+        #coverCardsView aside.torrent-card__aside .torrent-card__image {
             object-fit: contain;
         }
 
-        figure.torrent-card__figure {
+        #coverCardsView figure.torrent-card__figure {
             width: unset;
             height: ${coverHeight};
             backdrop-filter: blur(20px)
         }
 
-        div.torrent-card__body {
+        #coverCardsView div.torrent-card__body {
             padding: 13px 13px;
+        }
+
+        #coverCardsView h2.torrent-card__title a {
+            font-size: 16px;
+            font-weight: normal;
         }
 
         span.torrent-card__resolution {
@@ -426,10 +434,6 @@ if ( pagePath.match(/\/torrents/) ) {
             color: rgb(226, 101, 101);
         }
 
-        h2.torrent-card__title a {
-            font-size: 16px;
-            font-weight: normal;
-        }
 
     `)
 }
