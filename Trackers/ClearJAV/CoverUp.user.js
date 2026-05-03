@@ -4,7 +4,7 @@
 
 // @name        CLEAR - CoverUp!
 // @author      WirlyWirly
-// @version     1.51
+// @version     1.6
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/CoverUp.user.js
 // @description Cover up low resolution posters with higher resolution covers!
 
@@ -75,24 +75,9 @@ if ( pagePath.match(/\/$/) ) {
     // ---------- Search Page ----------
 
     // Create the CoverCards button
-    coverCardsButton.textContent = 'CoverCards'
+    coverCardsButton.textContent = '🌸 CoverCards'
     coverCardsButton.title = 'Click to Enable CoverCards'
     coverCardsButton.classList.add('coverup_button')
-    coverCardsButton.setAttribute('style', `
-        background: #153245;
-        border-radius: 5px;
-        border: #B6D3E7 solid 1px;
-        color: #B6D3E7;
-        cursor: pointer;
-        display: none;
-        font-size: 100%;
-        font-weight: Bold;
-        padding: 3px 8px;
-    `)
-
-    GM_addStyle(`div.coverup_button:hover {
-        text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
-    }`)
 
     coverCardsButton.addEventListener('mouseup', function(event) {
         // The actions to take when the CoverCard button is clicked
@@ -103,22 +88,22 @@ if ( pagePath.match(/\/$/) ) {
             if ( autoCoverCards == true ) {
                 // Disable autoCoverCards
                 autoCoverCards = false
-                this.textContent = 'CoverCards'
                 this.title = 'Click to Enable CoverCards'
+                this.classList.remove('coverCardsView')
 
             } else {
                 // Enable autoCoverCards
                 autoCoverCards = true
-                this.textContent = '🌸 CoverCards'
                 this.title = 'Click to Disable CoverCards'
+                this.classList.add('coverCardsView')
             }
 
         } else if ( event.button == 0 ) {
             // This is NOT the CoverCards view, so call CoverCards() and enable autoCoverCards
             CoverCards()
             autoCoverCards = true
-            this.textContent = '🌸 CoverCards'
             this.title = 'Click to Disable CoverCards'
+            this.classList.add('coverCardsView')
         }
 
     })
@@ -171,7 +156,7 @@ function searchpageCoverUp() {
     // --- List View ---
     let allListViewRows = target.querySelectorAll('div.torrent-search--list__results tbody > tr:not([data-coverup_done="true"])')
     if ( allListViewRows.length > 0 ) {
-        coverCardsButton.style.display = ''
+        coverCardsButton.style.display = 'block'
 
         for ( let tableRow of allListViewRows ) {
             // For each tableRow (torrent), replace the Poster image with the Hover Cover
@@ -272,68 +257,70 @@ function CoverCards() {
             uploaderElement != null ? uploaderElement = uploaderElement.outerHTML : uploaderElement = `<span class="user-tag fas fa-eye-slash torrent-search--list__uploader"> (Anonymous) </span>`
 
             let torrentAgeElement = tableRow.querySelector('td.torrent-search--list__age > time').outerHTML
+            let bookmarkElement = tableRow.querySelector('button[x-data^="bookmark"]').outerHTML
 
             let coverCardElement = document.createElement('article')
             coverCardElement.className = 'torrent-card'
             coverCardElement.innerHTML = `
-    <header class="torrent-card__header">
-        <div class="torrent-card__left-header">
-            <span class="torrent-card__resolution">
-                🌸 ${torrentResolution}
-            </span>
-            <span class="torrent-card__meta-separator">★</span>
-            <span class="torrent-card__type">${torrentSource}</span>
-            <span class="torrent-card__meta-separator">★</span>
-            <span class="torrent-card__size">${torrentSize}</span>
-        </div>
-        <div class="torrent-card__right-header">
-            <a class="torrent-card__seeds torrent__seeder-count" href="https://clearjav.com/torrents/${torrentId}/peers">
-                <i class="fas fa-arrow-up"></i>
-                ${seederCount}
-            </a>
-            <span class="torrent-card__meta-separator">•</span>
-            <a class="torrent-card__leeches torrent__leecher-count" href="https://clearjav.com/torrents/${torrentId}/peers">
-                <i class="fas fa-arrow-down"></i>
-                ${leecherCount}
-            </a>
-            <span class="torrent-card__meta-separator">•</span>
-            <a class="torrent-card__completed torrent__times-completed-count" href="https://clearjav.com/torrents/${torrentId}/history">
-                <i class="fas fa-check"></i>
-                ${completedCount}
-            </a>
-        </div>
-    </header>
-    <aside class="torrent-card__aside" style="background-image: url('${coverURL}');">
-        <a class="torrent-card__similar-link" href="https://clearjav.com/movies/${moviesId}">
-            <figure class="torrent-card__figure">
-                <img class="torrent-card__image" src="${coverURL}" alt="Similar Torrents" loading="lazy">
-            </figure>
+<header class="torrent-card__header">
+    <div class="torrent-card__left-header">
+        <span class="torrent-card__resolution">
+            🖥️ ${torrentResolution}
+        </span>
+        <span class="torrent-card__meta-separator">★</span>
+        <span class="torrent-card__type">${torrentSource}</span>
+        <span class="torrent-card__meta-separator">★</span>
+        <span class="torrent-card__size">${torrentSize}</span>
+    </div>
+    <div class="torrent-card__right-header">
+        <a class="torrent-card__seeds torrent__seeder-count" href="https://clearjav.com/torrents/${torrentId}/peers">
+            <i class="fas fa-arrow-up"></i>
+            ${seederCount}
         </a>
-    </aside>
-    <div class="torrent-card__body">
-        <h2 class="torrent-card__title" title="${torrentTitle}">
-            <a class="torrent-card__link max-2-lines" href="https://clearjav.com/movies/${moviesId}">
-                ${torrentTitle}
-            </a>
-        </h2>
+        <span class="torrent-card__meta-separator">•</span>
+        <a class="torrent-card__leeches torrent__leecher-count" href="https://clearjav.com/torrents/${torrentId}/peers">
+            <i class="fas fa-arrow-down"></i>
+            ${leecherCount}
+        </a>
+        <span class="torrent-card__meta-separator">•</span>
+        <a class="torrent-card__completed torrent__times-completed-count" href="https://clearjav.com/torrents/${torrentId}/history">
+            <i class="fas fa-check"></i>
+            ${completedCount}
+        </a>
+    </div>
+</header>
+<aside class="torrent-card__aside" style="background-image: url('${coverURL}');">
+    <a class="torrent-card__similar-link" href="https://clearjav.com/movies/${moviesId}">
+        <figure class="torrent-card__figure">
+            <img class="torrent-card__image" src="${coverURL}" alt="Similar Torrents" loading="lazy">
+        </figure>
+    </a>
+</aside>
+<div class="torrent-card__body">
+    <h2 class="torrent-card__title" title="${torrentTitle}">
+        <a class="torrent-card__link max-2-lines" href="https://clearjav.com/movies/${moviesId}">
+            ${torrentTitle}
+        </a>
+    </h2>
 
-            </div>
-    <footer class="torrent-card__footer">
-        <div class="torrent-card__left-footer">
-            <address class="torrent-card__uploader">
-                <span class="user-tag" style="background-image: none;">
-                    ${uploaderElement}
-                </span>
-            </address>
-            <span class="torrent-card__meta-separator">★</span>
-            ${torrentAgeElement}
         </div>
-        <div class="torrent-card__right-footer">
-                            <a class="form__standard-icon-button" href="https://clearjav.com/torrents/download/${torrentId}">
-                    <i class="fas fa-download"></i>
-                </a>
-                    </div>
-    </footer>
+<footer class="torrent-card__footer">
+    <div class="torrent-card__left-footer">
+        <address class="torrent-card__uploader">
+            <span class="user-tag" style="background-image: none;">
+                ${uploaderElement}
+            </span>
+        </address>
+        <span class="torrent-card__meta-separator">★</span>
+        ${torrentAgeElement}
+    </div>
+    <div class="torrent-card__right-footer">
+                        ${bookmarkElement}
+                        <a class="form__standard-icon-button" href="https://clearjav.com/torrents/download/${torrentId}">
+                <i class="fas fa-download"></i>
+            </a>
+                </div>
+</footer>
 `
 
             articlesHolder.appendChild(coverCardElement)
@@ -342,46 +329,104 @@ function CoverCards() {
 
         }
 
-        // The styles that will be applied to CoverCards (and at the same time override normal CardView)
-        GM_addStyle(`
-            div.torrent-search--card__results {
-                grid-gap: 1rem;
-                grid-template-columns: repeat(auto-fit,minmax(${cardWidthMinimum}, 1fr));
-            }
-
-            article.torrent-card {
-               min-width: ${cardWidthMinimum};
-               border-radius: 8px;
-               height: unset;
-               grid-template-rows: 40px ${coverHeight} 55px 40px;
-               grid-template-areas: "header header" "poster poster" "body body" "footer footer";
-            }
-
-            aside.torrent-card__aside {
-                background-size: 100% 100%;
-            }
-
-            aside.torrent-card__aside .torrent-card__image {
-                object-fit: contain;
-            }
-
-            figure.torrent-card__figure {
-                width: unset;
-                height: ${coverHeight};
-                backdrop-filter: blur(20px)
-            }
-
-            div.torrent-card__body {
-                padding: 13px 13px;
-            }
-
-
-        `)
-
         // Insert the new articles and remove the table rows
         listViewElement.insertAdjacentElement('beforebegin', articlesHolder)
         listViewElement.remove()
 
     }
 
+}
+
+
+if ( pagePath.match(/\/torrents/) ) {
+    // Apply the styles of the CoverUp button and CoverCards view
+
+    GM_addStyle(`
+
+        /* --- CoverCards Button --- */
+
+        .coverup_button {
+            background: #153245;
+            border-radius: 5px;
+            border: #B6D3E7 solid 1px;
+            color: #B6D3E7;
+            cursor: pointer;
+            display: block;
+            font-size: 80%;
+            font-weight: Bold;
+            margin: auto 0;
+            padding: 4px 4px;
+            max-width: 100px;
+        }
+
+        .coverup_button:hover {
+            box-shadow: 0px 0px 15px #153245;
+            text-shadow: 0px 0px 1px #000000, 0px 0px 5px #B6D3E7 !important;
+        }
+
+        .coverup_button.coverCardsView {
+            background: #5e2247;
+            border: rgb(231, 182, 214) solid 1px;
+            color: rgb(231, 182, 214);
+        }
+
+        .coverup_button.coverCardsView:hover {
+            box-shadow: 0px 0px 15px #5e2247;
+            text-shadow: 0px 0px 1px #000000, 0px 0px 5px rgb(231, 182, 214) !important;
+        }
+
+        /* --- CoverCards View --- */
+
+        div.torrent-search--card__results {
+            grid-gap: 1rem;
+            grid-template-columns: repeat(auto-fit,minmax(${cardWidthMinimum}, 1fr));
+        }
+
+        article.torrent-card {
+           min-width: ${cardWidthMinimum};
+           border-radius: 8px;
+           height: unset;
+           grid-template-rows: 40px ${coverHeight} 55px 40px;
+           grid-template-areas: "header header" "poster poster" "body body" "footer footer";
+        }
+
+        aside.torrent-card__aside {
+            background-size: 100% 100%;
+        }
+
+        aside.torrent-card__aside .torrent-card__image {
+            object-fit: contain;
+        }
+
+        figure.torrent-card__figure {
+            width: unset;
+            height: ${coverHeight};
+            backdrop-filter: blur(20px)
+        }
+
+        div.torrent-card__body {
+            padding: 13px 13px;
+        }
+
+        span.torrent-card__resolution {
+            font-weight: bold;
+            color: rgb(100, 196, 218);
+        }
+
+        span.torrent-card__type {
+            font-weight: bold;
+            color: rgb(122, 218, 100);
+        }
+
+        span.torrent-card__size {
+            font-weight: bold;
+            color: rgb(226, 101, 101);
+        }
+
+        h2.torrent-card__title a {
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+    `)
 }
