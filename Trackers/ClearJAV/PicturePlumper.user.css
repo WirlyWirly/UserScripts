@@ -43,14 +43,14 @@
 
 @advanced text header-both "🔽 List & Group 🔽" 'List & Group Options'
 @advanced dropdown both-hover-cover-enabled "Hover Cover Enabled" {
-    Option1 "False" <<<EOT
-    hidden EOT;
-    Option2 "True" <<<EOT
+    Option1 "True" <<<EOT
     visible EOT;
+    Option2 "False" <<<EOT
+    hidden EOT;
 }
-@advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [500]
-@advanced number both-hover-cover-x-offset "Hover Cover X-Offset [Percentile]" [30]
-@advanced number both-hover-cover-y-offset "Hover Cover Y-Offset [Percentile]" [110]
+@advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [600]
+@advanced number both-hover-cover-x-offset "Hover Cover X-Offset [Percentile]" [65]
+@advanced number both-hover-cover-y-offset "Hover Cover Y-Offset [Percentile]" [120]
 
 ==/UserStyle== */
 
@@ -124,7 +124,8 @@
         top: var(--both-hover-cover-y-offset) !important;
         width: unset;
         z-index: 10;
-        transform: translateY(-100%) scale(1.0)
+        transform: translateY(-100%) scale(1.0);
+        transition: transform .2s ease-in-out,opacity .5s ease-in-out;
 
     }
 
