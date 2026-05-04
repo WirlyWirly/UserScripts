@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV - 📷 PicturePlumper
-@version    1.8
+@version    1.9
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description Customize the displayed size of torrent images!
@@ -35,8 +35,8 @@
 @advanced text header-listview "🔽 List 🔽" 'List Options'
 @advanced number torrents-list-poster-column-width "Poster Column Width [Pixels]" [400]
 @advanced number torrents-list-hover-poster-width "Hover Poster Max-Width [Pixels]" [800]
-@advanced number torrents-list-hover-poster-x-offset "Hover Poster X-Offset [Percentile]" [27]
-@advanced number torrents-list-hover-poster-y-offset "Hover Poster Y-Offset [Percentile]" [50]
+@advanced number torrents-list-hover-poster-x-offset "Hover Poster X-Offset [Pixels]" [0]
+@advanced number torrents-list-hover-poster-y-offset "Hover Poster Y-Offset [Pixels]" [0]
 
 @advanced text header-groupedview "🔽 Group 🔽" 'Group Options'
 @advanced number torrents-grouped-height "Poster Max-Height [Pixels]" [200]
@@ -48,9 +48,9 @@
     Option2 "True" <<<EOT
     visible EOT;
 }
-@advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [600]
+@advanced number both-hover-cover-size "Hover Cover Max-Size [Pixels]" [500]
 @advanced number both-hover-cover-x-offset "Hover Cover X-Offset [Percentile]" [30]
-@advanced number both-hover-cover-y-offset "Hover Cover Y-Offset [Percentile]" [120]
+@advanced number both-hover-cover-y-offset "Hover Cover Y-Offset [Percentile]" [110]
 
 ==/UserStyle== */
 
@@ -58,20 +58,23 @@
     :root {
         /* Global Variables */
 
+        /* RandomJAV */
         --randomtorrents-height: /*[[randomtorrents-height]]*/px;
         --randomtorrents-bg-color: /*[[randomtorrents-bg-color]]*/;
         --randomtorrents-cover-size: /*[[randomtorrents-cover-size]]*/;
         --randomtorrents-font-size: /*[[randomtorrents-font-size]]*/pt;
         --randomtorrents-opacity: /*[[randomtorrents-opacity]]*/%;
 
-        --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
-
+        /* List View */
         --torrents-list-poster-column-width: /*[[torrents-list-poster-column-width]]*/px;
         --torrents-list-hover-poster-width: /*[[torrents-list-hover-poster-width]]*/px;
-        --torrents-list-hover-poster-x-offset: /*[[torrents-list-hover-poster-x-offset]]*/%;
-        --torrents-list-hover-poster-y-offset: /*[[torrents-list-hover-poster-y-offset]]*/%;
+        --torrents-list-hover-poster-x-offset: /*[[torrents-list-hover-poster-x-offset]]*/px;
+        --torrents-list-hover-poster-y-offset: /*[[torrents-list-hover-poster-y-offset]]*/px;
 
-        /* The cover that is displayed when hovering over the torrent title */
+        /* Grouped View */
+        --torrents-grouped-height: /*[[torrents-grouped-height]]*/px;
+
+        /* Hover Cover: The cover that is displayed when hovering over the torrent title */
         --both-hover-cover-enabled: /*[[both-hover-cover-enabled]]*/;
         --both-hover-cover-size: /*[[both-hover-cover-size]]*/px;
         --both-hover-cover-x-offset: /*[[both-hover-cover-x-offset]]*/%;
@@ -115,10 +118,13 @@
         box-shadow: 0px 0px 10px #000000;
         height: unset;
         left: var(--both-hover-cover-x-offset) !important;
+        max-height: var(--both-hover-cover-size);
+        max-width: var(--both-hover-cover-size);
         padding: unset;
         top: var(--both-hover-cover-y-offset) !important;
         width: unset;
         z-index: 10;
+        transform: translateY(-100%) scale(1.0)
 
     }
 
@@ -175,8 +181,9 @@
     div.meta__poster-popup {
         border-radius: 6px;
         box-shadow: 0px 0px 10px #000000;
-        left: var(--torrents-list-hover-poster-x-offset);
-        top: var(--torrents-list-hover-poster-y-offset);
+        left: calc(var(--torrents-list-poster-column-width) + var(--torrents-list-hover-poster-x-offset));
+        top: calc(50% + var(--torrents-list-hover-poster-y-offset));
+        transform: translate(65px, -50%);
     }
 
     div.meta__poster-popup-card {
