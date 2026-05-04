@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV - 📷 PicturePlumper
-@version    1.7
+@version    1.8
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description Customize the displayed size of torrent images!
@@ -111,8 +111,11 @@
 	}
 
     div.torrent-search--hover__info {
+        border-radius: 6px;
+        box-shadow: 0px 0px 10px #000000;
         height: unset;
         left: var(--both-hover-cover-x-offset) !important;
+        padding: unset;
         top: var(--both-hover-cover-y-offset) !important;
         width: unset;
         z-index: 10;
@@ -157,8 +160,9 @@
     }
 
     img.torrent-search--list__poster-img {
-        width: calc(var(--torrents-list-poster-column-width) - 10px);
+        border-radius: 5px;
         height: unset;
+        width: calc(var(--torrents-list-poster-column-width) - 10px);
 
         @media (width < 768px) {
             /* mobile devices */
@@ -169,11 +173,14 @@
     /* --- Hover Poster --- */
 
     div.meta__poster-popup {
-        top: var(--torrents-list-hover-poster-y-offset);
+        border-radius: 6px;
+        box-shadow: 0px 0px 10px #000000;
         left: var(--torrents-list-hover-poster-x-offset);
+        top: var(--torrents-list-hover-poster-y-offset);
     }
 
     div.meta__poster-popup-card {
+        border-radius: 6px;
         width: auto;
     }
 
@@ -181,6 +188,9 @@
         height: unset;
     }
 
+    div.meta__poster-popup-backdrop-overlay {
+        background: unset;
+    }
     div.meta__poster-popup-content {
         width: auto;
         min-width: 0px;
@@ -191,6 +201,10 @@
         max-width: var(--torrents-list-hover-poster-width);
         width: auto;
         height: auto;
+    }
+
+    div.meta__poster-popup-header h3, div.meta__poster-popup-header span.meta__poster-popup-year {
+        font-size: 16px;
     }
 
 }
