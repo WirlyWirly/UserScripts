@@ -9,6 +9,7 @@
 @homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/PicturePlumper.user.css
 @supportURL  https://clearjav.com/forums/topics/134
 
+@advanced number search-results-width "Search Max-Width [Pixels]" [1800]
 @advanced text header-randomtorrents "🔽 Random Torrents 🔽" 'Random Torrents Options'
 @advanced number randomtorrents-height "Table Height [Pixels]" [850]
 @advanced dropdown randomtorrents-columns "Table Columns" {
@@ -58,6 +59,8 @@
     :root {
         /* Global Variables */
 
+        --search-results-width: /*[[search-results-width]]*/px;
+
         /* RandomJAV */
         --randomtorrents-height: /*[[randomtorrents-height]]*/px;
         --randomtorrents-bg-color: /*[[randomtorrents-bg-color]]*/;
@@ -80,6 +83,11 @@
         --both-hover-cover-x-offset: /*[[both-hover-cover-x-offset]]*/%;
         --both-hover-cover-y-offset: /*[[both-hover-cover-y-offset]]*/%;
 
+    }
+
+    section.torrent-search__results {
+        max-width: var(--search-results-width);
+        margin: auto;
     }
 
     /* ========== Random Torrents ========== */
