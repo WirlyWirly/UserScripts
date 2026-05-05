@@ -4,7 +4,7 @@
 
 // @name        ABS - MatchMate
 // @author      WirlyWirly
-// @version     1.0
+// @version     0.1
 // @homepage
 // @description Additional AudioBookShelf match tab features
 //              Written on LibreWolf via Violentmonkey
@@ -47,10 +47,8 @@ async function main() {
     matchTabButton.addEventListener('mouseup', async function(event) {
         // The match tab of the edit panel was clicked
 
-        if ( event.button == 0 ) {
-            await waitForElement('#match-wrapper', editPanel)
-            matchTabObservation()
-        }
+        await waitForElement('#match-wrapper', editPanel)
+        matchTabObservation()
 
     })
 
@@ -58,12 +56,15 @@ async function main() {
 
 main()
 
+
+// =================================== FUNCTIONS ======================================
+
 async function matchTabObservation() {
-    // Setup Mutation observation in the match tab
+    // Setup Mutation observation in the match tab and act on any new results
 
     let matchTab = document.getElementById('match-wrapper')
 
-    // The Title search button
+    // Create the 'Title' search button
     let titleSearchButton = document.createElement('button')
     titleSearchButton.innerText = 'Title'
     titleSearchButton.setAttribute('class', 'abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
@@ -114,8 +115,9 @@ async function matchTabObservation() {
 
 }
 
+
 async function titleSearch() {
-    // The 'Title' search button was clicked
+    // The 'Title' search button of the match tab was clicked
 
     // The floating Edit panel
     let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
@@ -123,28 +125,29 @@ async function titleSearch() {
     // Switch to the details tab
     editPanel.querySelector('div[role="tablist"] :nth-child(1)').click()
 
-    // Wait until the details tab is ready, then parse the search info
+    // Wait until the details tab is ready, then get the book title
     let detailsTab = await waitForElement('#formWrapper', editPanel)
     let title = editPanel.querySelector('#formWrapper input[placeholder="Title"]').value
     //let author = editPanel.querySelector('#formWrapper input[placeholder="Author"]').value
 
-    // Return to the match tab and perform the search
+    // Return to the match tab and wait until it's ready
     editPanel.querySelector('div[role="tablist"] :nth-child(5)').click()
     let matchTab = await waitForElement('#match-wrapper', editPanel)
+
+    // Start the match tab observation
     matchTabObservation()
 
-
     setTimeout(() => {
+        // Update the Search title and click the search button
         let matchTab = document.getElementById('match-wrapper')
         let searchField = matchTab.querySelector('form input[placeholder="Search.."]')
-        searchField.click()
-        searchField.dispatchEvent(new KeyboardEvent('change', {'key': 'a'}));
         searchField.value = title
 
         matchTab.querySelector('form > div > button').click()
-    }, 1000)
+    }, 1500)
 
 }
+
 
 async function saveMatch(matchButton) {
     // The 'Save' button of a bookResult was clicked
@@ -176,6 +179,7 @@ async function saveMatch(matchButton) {
 
 }
 
+
 async function audibleLookup(asinButton) {
     // The 'Audible' lookup button was clicked
 
@@ -201,6 +205,7 @@ async function audibleLookup(asinButton) {
     bookURL ? window.open( bookURL, '_blank') : asinButton.innerText = 'No ASIN'
 
 }
+
 
 GM_addStyle(`
 
