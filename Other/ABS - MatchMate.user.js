@@ -34,8 +34,8 @@
 
 let matchWindowHeight = '75%' // Percentile
 let currentCoverWidth = '75px' // Pixels
-let audibleSearchSite = 'audible.com'
 let afterSaveDirection = 'Previous' // Previous | Next | false
+let audibleSearchTemplate = 'https://www.audible.com/pd/%asin%'
 
 // =================================== CODE ======================================
 
@@ -240,17 +240,17 @@ async function audibleLookup(asinButton) {
     // Wait until the submit button is available, indicating the form is available, then get the ASIN
     let submitButton = await waitForElement('button.bg-success[type="submit"]', editPanel.querySelector('#match-wrapper'))
 
-    let bookURL
+    let asinURL
     try {
         let asinValue = editPanel.querySelector('#match-wrapper input[placeholder="ASIN"]').value
-        bookURL = `https://duckduckgo.com/?q=\\${asinValue}+site%3A${audibleSearchSite}`
+        asinURL = audibleSearchTemplate.replace(/%asin%/, asinValue)
     } catch(error) {}
 
     // Click the back arrow to return to match results
     let backArrowElement = editPanel.querySelector('#match-wrapper div.absolute div.cursor-pointer')
     backArrowElement.click()
 
-    bookURL ? window.open( bookURL, '_blank') : asinButton.innerText = 'No ASIN'
+    asinURL ? window.open(asinURL, '_blank') : asinButton.innerText = 'No ASIN'
 
 }
 
