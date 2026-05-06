@@ -132,6 +132,7 @@ async function matchTabObservation() {
                 // Save Button
                 let saveMatchButton = document.createElement('button')
                 saveMatchButton.innerText = 'Save'
+                saveMatchButton.title = 'Save this match then continue to the next book'
                 saveMatchButton.classList.add('saveMatch', 'matchMateButton')
                 saveMatchButton.addEventListener('mouseup', function(event) {
                     event.button == 0 ? saveMatch(this) : null
