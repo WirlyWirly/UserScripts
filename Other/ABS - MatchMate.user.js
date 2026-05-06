@@ -125,7 +125,7 @@ async function matchTabObservation() {
                     floatingElement.classList.remove('active')
                 })
 
-            }, 1000)
+            }, 500)
 
             for ( let matchResult of allMatchResults ) {
 
@@ -192,7 +192,7 @@ async function titleSearch() {
         searchField.value = title
 
         matchTab.querySelector('form > div > button').click()
-    }, 1500)
+    }, 500)
 
 }
 
