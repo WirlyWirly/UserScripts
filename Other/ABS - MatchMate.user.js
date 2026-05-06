@@ -75,7 +75,7 @@ async function matchTabObservation() {
     titleSearchButton.setAttribute('class', 'abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
     titleSearchButton.title = 'Fill the search field with the current title'
     matchTab.querySelector('form > div').appendChild(titleSearchButton)
-    titleSearchButton.addEventListener('mouseup', function(event) {
+    titleSearchButton.addEventListener('click', function(event) {
         event.button == 0 ? titleSearch() : null
     })
 
@@ -88,15 +88,16 @@ async function matchTabObservation() {
             // There are new match results
             allMatchResults.forEach(element => {element.classList.add('mmProcessing')})
 
-            let oldImages = matchTab.querySelectorAll('div:has(> img.currentCover)')
-            if ( oldImages.length > 0 ) {
-                oldImages.forEach(element => {element.remove()})
+            // Remove a previous cover if present
+            let previousCover = matchTab.querySelectorAll('div:has(> img.currentCover)')
+            if ( previousCover.length > 0 ) {
+                previousCover.forEach(element => {element.remove()})
             }
 
             // Get the current cover
             allMatchResults[0].click()
 
-            // Wait until the submit button is available, indicating the form is available, then get the coverURL
+            // Wait until the submit button is available, indicating the form details are ready
             let submitButton = await waitForElement('button.bg-success[type="submit"]', matchTab)
             let coverURL = matchTab.querySelector('form img[src^="/audiobookshelf/api/items/"]').src
 
@@ -104,28 +105,26 @@ async function matchTabObservation() {
             let backArrowElement = matchTab.querySelector('div.absolute div.cursor-pointer')
             backArrowElement.click()
 
-            setTimeout(() => {
-                let currentCoverElement = document.createElement('div')
-                currentCoverElement.title = 'The current cover for this book'
-                currentCoverElement.classList.add('currentCover')
+            let currentCoverElement = document.createElement('div')
+            currentCoverElement.title = 'The current cover for this book'
+            currentCoverElement.classList.add('currentCover')
 
-                matchTab.querySelector('form > div').firstChild.insertAdjacentElement('beforebegin', currentCoverElement)
+            matchTab.querySelector('form > div').firstChild.insertAdjacentElement('beforebegin', currentCoverElement)
 
-                currentCoverElement.innerHTML = `<img class="currentCover" src="${coverURL}">`
+            currentCoverElement.innerHTML = `<img class="currentCover" src="${coverURL}">`
 
-                currentCoverElement.addEventListener('mouseover', function(event) {
-                    let floatingElement = document.getElementById('mmFloating')
-                    floatingElement.querySelector('img').src = this.querySelector('img').src
-                    floatingElement.classList.add('active')
-                })
+            currentCoverElement.addEventListener('mouseover', function(event) {
+                let floatingElement = document.getElementById('mmFloating')
+                floatingElement.querySelector('img').src = this.querySelector('img').src
+                floatingElement.classList.add('active')
+            })
 
-                currentCoverElement.addEventListener('mouseout', function(event) {
-                    let floatingElement = document.getElementById('mmFloating')
-                    floatingElement.querySelector('img').src = ''
-                    floatingElement.classList.remove('active')
-                })
+            currentCoverElement.addEventListener('mouseout', function(event) {
+                let floatingElement = document.getElementById('mmFloating')
+                floatingElement.querySelector('img').src = ''
+                floatingElement.classList.remove('active')
+            })
 
-            }, 500)
 
             for ( let matchResult of allMatchResults ) {
 
@@ -154,8 +153,11 @@ async function matchTabObservation() {
 
             }
 
+        } else {
+            setTimeout(() => {
+               matchTab.querySelector('form + div + div').style.display != 'none' ? titleSearch() : null
+            }, 1000)
         }
-
     })
 
     let target = document.getElementById('match-wrapper')
@@ -176,7 +178,7 @@ async function titleSearch() {
 
     // Wait until the details tab is ready, then get the book title
     let detailsTab = await waitForElement('#formWrapper', editPanel)
-    let title = editPanel.querySelector('#formWrapper input[placeholder="Title"]').value
+    let bookTitle = editPanel.querySelector('#formWrapper input[placeholder="Title"]').value
     //let author = editPanel.querySelector('#formWrapper input[placeholder="Author"]').value
 
     // Return to the match tab and wait until it's ready
@@ -190,8 +192,10 @@ async function titleSearch() {
         // Update the Search title and click the search button
         let matchTab = document.getElementById('match-wrapper')
         let searchField = matchTab.querySelector('form input[placeholder="Search.."]')
-        searchField.value = title
+        searchField.value = bookTitle
+        searchField.style.boxShadow = '0px 0px 5px #ce813e'
 
+        // -- NOT WORKING --
         matchTab.querySelector('form > div > button').click()
     }, 500)
 
