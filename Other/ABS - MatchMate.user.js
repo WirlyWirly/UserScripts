@@ -140,7 +140,7 @@ async function matchTabObservation() {
                 // Audible Button
                 let asinButton = document.createElement('button')
                 asinButton.innerText = '🔎 Audible'
-                asinButton.title = 'Search Audible using this ASIN'
+                asinButton.title = 'The Audible page of the ASIN'
                 asinButton.classList.add('asinSearch', 'matchMateButton')
                 asinButton.addEventListener('mouseup', function(event) {
                     event.button == 0 ? audibleLookup(this) : null
