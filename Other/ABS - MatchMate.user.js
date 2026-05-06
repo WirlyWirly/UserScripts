@@ -41,6 +41,10 @@ let matchWindowHeight = '75%' // Percentile
 
 async function main() {
 
+    let floatingElement = document.createElement('div')
+    document.body.appendChild(floatingElement)
+    floatingElement.outerHTML = `<div id="mmFloating"><img src=""></div>`
+
     let editPanel = await waitForElement('div.relative:has(#formWrapper)')
 
     let matchTabButton = editPanel.querySelector('div.absolute[role="tablist"] :nth-child(5)')
@@ -69,6 +73,7 @@ async function matchTabObservation() {
     let titleSearchButton = document.createElement('button')
     titleSearchButton.innerText = 'Title'
     titleSearchButton.setAttribute('class', 'abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
+    titleSearchButton.title = 'Fill the search field with the current title'
     matchTab.querySelector('form > div').appendChild(titleSearchButton)
     titleSearchButton.addEventListener('mouseup', function(event) {
         event.button == 0 ? titleSearch() : null
@@ -99,12 +104,28 @@ async function matchTabObservation() {
             let backArrowElement = matchTab.querySelector('div.absolute div.cursor-pointer')
             backArrowElement.click()
 
-            let currentCoverElement = document.createElement('div')
-
             setTimeout(() => {
+                let currentCoverElement = document.createElement('div')
+                currentCoverElement.title = 'The current cover for this book'
+                currentCoverElement.classList.add('currentCover')
+
                 matchTab.querySelector('form > div').firstChild.insertAdjacentElement('beforebegin', currentCoverElement)
-                currentCoverElement.outerHTML = `<div class="currentCover"><img class="currentCover"src="${coverURL}"></div>`
-            }, 300)
+
+                currentCoverElement.innerHTML = `<img class="currentCover" src="${coverURL}">`
+
+                currentCoverElement.addEventListener('mouseover', function(event) {
+                    let floatingElement = document.getElementById('mmFloating')
+                    floatingElement.querySelector('img').src = this.querySelector('img').src
+                    floatingElement.classList.add('active')
+                })
+
+                currentCoverElement.addEventListener('mouseout', function(event) {
+                    let floatingElement = document.getElementById('mmFloating')
+                    floatingElement.querySelector('img').src = ''
+                    floatingElement.classList.remove('active')
+                })
+
+            }, 1000)
 
             for ( let matchResult of allMatchResults ) {
 
@@ -242,7 +263,7 @@ GM_addStyle(`
     }
 
     #match-wrapper div:has(> div > img:not(.currentCover)) {
-        /* cover size */
+        /* result cover size */
         width: unset;
         height: unset;
         max-width: 192px;
@@ -257,14 +278,13 @@ GM_addStyle(`
         max-width: ${currentCoverWidth.match(/^(\d+)(px)?$/)[1]}px;
     }
 
-    div.currentCover:hover {
+    #mmFloating.active {
         box-shadow: 0px 0px 13px #000000;
         left: 50%;
-        max-width: 600px;
+        max-width: 500px;
         position: fixed;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: max-content;
         z-index: 999;
     }
 
