@@ -5,7 +5,7 @@
 // @name        ABS - MatchMate
 // @author      WirlyWirly
 // @version     0.1
-// @homepage
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/ABS%20-%20MatchMate.user.js
 // @description Additional AudioBookShelf match tab features
 //              Written on LibreWolf via Violentmonkey
 
@@ -27,8 +27,8 @@
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @updateURL
-// @downloadURL
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/ABS%20-%20MatchMate.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/ABS%20-%20MatchMate.user.js?raw=true
 
 // ==/UserScript==
 
