@@ -8,14 +8,12 @@
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/ABS%20-%20MatchMate.user.js
 // @description Additional AudioBookShelf match tab features
 //              Written on LibreWolf via Violentmonkey
-
 // @namespace   UserScript
-// @icon        https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/monkey.png?raw=true
 
 // ----------------------------------- Matches --------------------------------------
 
-// @match     http://192.168.1.105:80/audiobookshelf/*
-// @include   /https?://.+/audiobookshelf/.*/
+// @match       http://192.168.1.105:80/audiobookshelf/*
+// @include     /https?://.+/audiobookshelf/.*/
 
 // ----------------------------------- Permissions --------------------------------------
 
@@ -23,20 +21,21 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @require   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/waitForElement.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/waitForElement.js
 
 // ----------------------------------- Script Links --------------------------------------
+
+// @icon        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASsSURBVFhHrVb/b1NVFH9/yn7VGJ3REJVgjEjQX8wi+oNGQxOjETUGQYYkGoZEDcuGssAcbGOyoWNRHDAYcRu0K7ixtF3btZlt17puq92wGwMqwojJ8X7uu7e97737OlA/yWc7595zPud+7zMY6F5YXV1NdXV15PP5aKW4QDfzUQv/XvmT9yEGsToNF2obS/R4PBSJRGg5O0JZfyNFul6mUPsLWsZ6NvMYxCIHuTpNG7WNVFVVxWe0mBrgwrqClYgc5EIDWroags7GmpoaWsynKXmuViueGfqM8uPHLUSbLhYay4U819TVYrQ2YNn+WspolxqFsNduQB9i7HnQgqbLlpQdjFJXXAoAK8WrNHflME32vlfqh4029AGVNDQrYRrYJyx7peK62alE7GJqkMe6DQLbYTsTpoHDos5Ksjg/wQWz/v2OPjdioAAGY+/DmUAtywCwNzix9uBU/04udH1m1NG3GuXAdZNCLeU8GPzO6q4aCgOxHo+jbzWiMKBbBdRCTT4AvFq62YM41ZiJ9OX1k3uLgwfCRkH0qTPGOcDBlL5KvJ78xcTTmR7cQ8G25y0Md27iM4Ao/IkTm0tXEC/d7GgLtwHY8qAiRmrIAyl9ldPDDfzZNnAgAh0v0ZXDGy2c7NvBk+djvZT8eU/JB27kJygX7BIeWWwA+chBrvTtDH/3hnkY79xcoF+aNzgYP/URTwYwq+TA58JjA/g9SrOBTuGxFVBsINj1urBM6PRBwFjORWi4ab2DaX8zD5DI+A8Ji92KXJSyY8eEx66oYgPRk9uEZSIxWK+tgdrG8lyELn71rINoV5HylQeAvunRclHVBsZ/+FBYJirVMK7Nhmmg4RkHr9kGkPAeFBbxvszIt8Jjq6PYQKBnq7BMIF5bg9U2lmbCdH7f0w4usU4Vv15oEhbxvqnLHcIjiw2MdX8gLBOI19ZgtY1b1+ep74t1Dl449AotsgCJ+GB5AGhPXjoqPLLYwMjx8gAQCy1dDYBfw3P1G+nU3rVaFrJhununSIGfdvMEAG2J4Xbhse1RbMB7xMP/z0b7tZrgQNMm8xriMRjprqWTu5/U8syXG2i0eyf5O8ynFShMj9Okt0147L1XbAB5yEGuXU8y2LvXfIjwHE6Pn6WeT56oSG/7u0Ke6A82gPjFclHVBnT5dl79LSQ/Xs0fo9P7XqTvd61x5VDrO0KeeHJsqFV47MdKsQFdvkrUKv0Y4Q9+GtOBPuqsfdyVZ79+TcgTLWRCFDjTKDx27Zh993ZReKTNV4laypcR/8MPxOnGV6lj+2OuvHSijubToVLcTNxHU0wMNtrQhxg1x87zzW85P0hAfCbls0k69vE6at36aIn5dFDM6/6RjXktWtAuLOT0n2Qg/xyfS9DRHWup5f1HOIP931B+Kviv6O36tKQDTWi7fpRK4jwUWOCRbU/RwS0P/y+EFjRX/SyXxChz2QT92OChA28/9J8IDSy7ZuaS2ka+Tzgs8cu91Fb7HO1/88H7InKQCw3bntupbSwRy4Y7mwoNUX/rLjqwZQ3Vex7QsmX7eh6DWOS4LLmd2kYH8Wrh6cSMbt+6QTOTYxaiDX2IES/cPdCgfwDT6KzLhtlSxwAAAABJRU5ErkJggg==
 
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/ABS%20-%20MatchMate.user.js?raw=true
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/ABS%20-%20MatchMate.user.js?raw=true
 
 // ==/UserScript==
 
-let currentCoverWidth = '75px'
+let matchWindowHeight = '75%' // Percentile
+let currentCoverWidth = '75px' // Pixels
 let audibleSearchSite = 'audible.com'
 let afterSaveDirection = 'Previous' // Previous | Next | false
-
-let matchWindowHeight = '75%' // Percentile
 
 // =================================== CODE ======================================
 
