@@ -31,11 +31,11 @@
 
 // ==/UserScript==
 
-let asinSearchSite = 'audible.com'
-let matchWindowHeight = '75%' // Percentile
-let maxCoverWidth = '192px' // Pixels
+let currentCoverWidth = '75px'
+let audibleSearchSite = 'audible.com'
 let afterSaveDirection = 'Previous' // Previous | Next | false
 
+let matchWindowHeight = '75%' // Percentile
 
 // =================================== CODE ======================================
 
@@ -56,13 +56,14 @@ async function main() {
 
 main()
 
-
 // =================================== FUNCTIONS ======================================
 
 async function matchTabObservation() {
     // Setup Mutation observation in the match tab and act on any new results
 
-    let matchTab = document.getElementById('match-wrapper')
+    // The floating Edit panel
+    let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
+    let matchTab = editPanel.querySelector('#match-wrapper')
 
     // Create the 'Title' search button
     let titleSearchButton = document.createElement('button')
@@ -76,10 +77,34 @@ async function matchTabObservation() {
     let observer = new MutationObserver(async function(mutations) {
         // Actions to take when there are changes in the match tab
 
-        let allMatchResults = matchTab.querySelectorAll('div.matchListWrapper div.cursor-pointer:not(.matchButtonDone)')
+        let allMatchResults = matchTab.querySelectorAll('div.matchListWrapper div.cursor-pointer:not(.mmProcessing, .mmDone)')
 
         if ( allMatchResults.length > 0  ) {
             // There are new match results
+            allMatchResults.forEach(element => {element.classList.add('mmProcessing')})
+
+            let oldImages = matchTab.querySelectorAll('div:has(> img.currentCover)')
+            if ( oldImages.length > 0 ) {
+                oldImages.forEach(element => {element.remove()})
+            }
+
+            // Get the current cover
+            allMatchResults[0].click()
+
+            // Wait until the submit button is available, indicating the form is available, then get the coverURL
+            let submitButton = await waitForElement('button.bg-success[type="submit"]', matchTab)
+            let coverURL = matchTab.querySelector('form img[src^="/audiobookshelf/api/items/"]').src
+
+            // Click the back arrow to return to match results
+            let backArrowElement = matchTab.querySelector('div.absolute div.cursor-pointer')
+            backArrowElement.click()
+
+            let currentCoverElement = document.createElement('div')
+
+            setTimeout(() => {
+                matchTab.querySelector('form > div').firstChild.insertAdjacentElement('beforebegin', currentCoverElement)
+                currentCoverElement.outerHTML = `<div class="currentCover"><img class="currentCover"src="${coverURL}"></div>`
+            }, 300)
 
             for ( let matchResult of allMatchResults ) {
 
@@ -91,9 +116,10 @@ async function matchTabObservation() {
                     event.button == 0 ? saveMatch(this) : null
                 })
 
-                // ASIN Button
+                // Audible Button
                 let asinButton = document.createElement('button')
                 asinButton.innerText = '🔎 Audible'
+                asinButton.title = 'Search Audible using this ASIN'
                 asinButton.classList.add('asinSearch', 'matchMateButton')
                 asinButton.addEventListener('mouseup', function(event) {
                     event.button == 0 ? audibleLookup(this) : null
@@ -102,7 +128,8 @@ async function matchTabObservation() {
                 matchResult.insertAdjacentElement('afterend', asinButton)
                 matchResult.insertAdjacentElement('afterend', saveMatchButton)
 
-                matchResult.classList.add('matchButtonDone')
+                matchResult.classList.add('mmDone')
+
             }
 
         }
@@ -189,13 +216,13 @@ async function audibleLookup(asinButton) {
     // Click the book item, which will load the new data
     asinButton.parentElement.querySelector('div').click()
 
-    // Wait until the submit button is available, then get the ASIN
+    // Wait until the submit button is available, indicating the form is available, then get the ASIN
     let submitButton = await waitForElement('button.bg-success[type="submit"]', editPanel.querySelector('#match-wrapper'))
 
     let bookURL
     try {
         let asinValue = editPanel.querySelector('#match-wrapper input[placeholder="ASIN"]').value
-        bookURL = `https://duckduckgo.com/?q=\\${asinValue}+site%3A${asinSearchSite}`
+        bookURL = `https://duckduckgo.com/?q=\\${asinValue}+site%3A${audibleSearchSite}`
     } catch(error) {}
 
     // Click the back arrow to return to match results
@@ -214,12 +241,31 @@ GM_addStyle(`
         height: ${matchWindowHeight.match(/^(\d+)%?$/)[1]}% !important;
     }
 
-    #match-wrapper div:has(> div > img) {
+    #match-wrapper div:has(> div > img:not(.currentCover)) {
         /* cover size */
         width: unset;
         height: unset;
-        max-width: ${maxCoverWidth.match(/^(\d+)(px)?$/)[1]}px;
+        max-width: 192px;
 
+    }
+
+    div:has(> div.currentCover) {
+        align-items: end;
+    }
+
+    div.currentCover {
+        max-width: ${currentCoverWidth.match(/^(\d+)(px)?$/)[1]}px;
+    }
+
+    div.currentCover:hover {
+        box-shadow: 0px 0px 13px #000000;
+        left: 50%;
+        max-width: 600px;
+        position: fixed;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: max-content;
+        z-index: 999;
     }
 
     #match-wrapper div:has( > p.text-xs) {
