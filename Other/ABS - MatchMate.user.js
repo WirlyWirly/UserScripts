@@ -9,20 +9,21 @@
 // @description A buddy to help out when matching book in AudioBookShelf
 //              Written on LibreWolf via Violentmonkey
 // @namespace   UserScript
+// @run-at      document-end
 
 // ----------------------------------- Matches --------------------------------------
 
 // @match       http://192.168.1.105:80/audiobookshelf/*
-// @include     /https?://.+/audiobookshelf/.*/
+// @include     /https?://.+/audiobookshelf/.+/
 
 // ----------------------------------- Permissions --------------------------------------
 
 // @grant       GM_addStyle
-// @grant       GM_info
-// @grant       GM_setValue
 // @grant       GM_getValue
-// @grant       GM_registerMenuCommand
+// @grant       GM_info
 // @grant       GM_listValues
+// @grant       GM_registerMenuCommand
+// @grant       GM_setValue
 
 // ----------------------------------- Dependencies --------------------------------------
 
@@ -142,8 +143,18 @@ async function matchTabObservation() {
                 saveTagButton.title = `Save this match, add the custom tags, then continue to the next book`
                 saveTagButton.classList.add('saveMatchTags', 'matchMateButton')
                 saveTagButton.addEventListener('mouseup', function(event) {
-                    event.button == 0 ? saveMatch(this, saveTagsList) : null
-                    observer.disconnect()
+
+                    if ( event.button == 0 ) {
+
+                        if ( apiKey == '' ) {
+                            window.alert('MatchMate\n\nThis button requires a valid ApiKey\n\nSet the ApiKey from the settings panel then try again')
+                            return
+                        } else {
+                            observer.disconnect()
+                            saveMatch(this, saveTagsList)
+                        }
+                    }
+
                 })
 
                 // Save Button
@@ -214,7 +225,7 @@ async function titleSearch() {
         let searchField = matchTab.querySelector('form input[placeholder="Search.."]')
         searchField.value = bookTitle
         searchField.style.boxShadow = '0px 0px 8px rgb(58, 225, 34)'
-        searchField.parentElement.previousElementSibling.innerText = 'Title is loaded! Click the input, add a space, then hit Search!'
+        searchField.parentElement.previousElementSibling.innerText = 'Title is loaded! Click this input, add a space, then hit Search!'
 
         matchTab.querySelector('button.mmTitleSearch').innerText = 'Edit then Search'
         // -- NOT WORKING --
@@ -273,7 +284,7 @@ async function saveMatch(matchButton, additionalTags = false) {
     matchTabObservation()
 
     // If enabled, change the match window to the previous\next book
-    if ( afterSaveDirection != false ) {
+    if ( afterSaveDirection != 'None' ) {
 
         setTimeout(async () =>{
             // check that there is a previous\next book
@@ -314,7 +325,7 @@ async function audibleLookup(asinButton) {
 // =================================== GM_CONFIG ======================================
 
 let configFrame = document.createElement('div')
-document.body.append(configFrame)
+document.body.appendChild(configFrame)
 let reloadWindow
 GM_config.init({
     'id': 'matchMate',
@@ -323,6 +334,7 @@ GM_config.init({
         <a id="matchMateHeader" href="${GM_info.script.homepage}" target="_blank">MatchMate</a><br>
         <div>★ Hover over emojis for details ★</div>
     `,
+
     'fields': {
         'matchPanelWidth': {
             'label': '↔️ Match Panel Width',
@@ -348,7 +360,7 @@ GM_config.init({
         'afterSaveDirection': {
             'label': '🧭 After Save Direction',
             'type': 'select',
-            'options': ['Previous', 'Next', false],
+            'options': ['Previous', 'Next', 'None'],
             'default': 'Previous',
             'title': 'The direction that will be navigated in after the match is saved\n\nℹ️ This corresponse to the navigation arrows on each end of the edit panel'
         },
@@ -376,8 +388,7 @@ GM_config.init({
 
     },
     'events': {
-        'open': function(doc) {
-
+        'open': function() {
             reloadWindow = false
 
         },
@@ -413,8 +424,8 @@ GM_config.init({
             }
         }
     }
-
 })
+
 
 // Register the settings panel to be opened from the UserScript manager dialouge
 GM_registerMenuCommand('Settings', () => {
@@ -428,8 +439,7 @@ let currentCoverWidth = GM_config.get('currentCoverWidth')
 let afterSaveDirection = GM_config.get('afterSaveDirection')
 let saveTagsList = GM_config.get('saveTagsList').split(',')
 let apiKey = GM_config.get('apiKey')
-let audibleTemplate = 'https://www.audible.com/pd/%asin%'
-
+let audibleTemplate = GM_config.get('audibleTemplate')
 
 // =================================== Styling ======================================
 
