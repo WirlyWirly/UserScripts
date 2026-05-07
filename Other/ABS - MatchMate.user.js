@@ -4,7 +4,7 @@
 
 // @name        ABS - MatchMate
 // @author      WirlyWirly
-// @version     0.2
+// @version     0.3
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/ABS%20-%20MatchMate.user.js
 // @description A buddy to help out when matching book in AudioBookShelf
 //              Written on LibreWolf via Violentmonkey
@@ -45,7 +45,7 @@ let pageURL = document.URL
 let absURL = pageURL.match(/^(.+?\/audiobookshelf)\//)[1]
 
 async function main() {
-    // Observer the <body> children until the edit panel is loaded and then apply the main event listener to the Match tab
+    // Observer the <body> children until the edit panel is loaded, and then apply the main event listener to the Match tab
 
     let modalOverlay = await waitForElement('body > div.modal', document.body, false)
     let editPanel = await waitForElement('div.relative:has(#formWrapper)', modalOverlay)
@@ -62,9 +62,9 @@ async function main() {
     })
 
     // The top-most element that will be used to display the enlarged cover image
-    let enlargeElement = document.createElement('div')
-    document.body.appendChild(enlargeElement)
-    enlargeElement.outerHTML = `<div id="mmFloating"><img src=""></div>`
+    let hoverCoverElement = document.createElement('div')
+    document.body.appendChild(hoverCoverElement)
+    hoverCoverElement.outerHTML = `<div id="mmHoverCover"><img src="" style="border-radius: 10px; max-height: 100%; max-width: 100%"></div>`
 
 }
 
@@ -74,7 +74,6 @@ async function main() {
 async function matchTabObservation() {
     // Setup Mutation observation in the match tab and act on any new results
 
-    // The floating Edit panel
     let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
     let matchTab = editPanel.querySelector('#match-wrapper')
 
@@ -84,8 +83,14 @@ async function matchTabObservation() {
     titleSearchButton.setAttribute('class', 'mmTitleSearch abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
     titleSearchButton.title = 'Fill the search field with the current title'
     matchTab.querySelector('form > div').appendChild(titleSearchButton)
-    titleSearchButton.addEventListener('click', function(event) {
-        event.button == 0 ? titleSearch() : null
+    titleSearchButton.addEventListener('mouseup', function(event) {
+        // The actions to take when the 'Title' button is clicked
+
+        if ( event.button == 0 ) {
+            observer.disconnect()
+            titleSearch()
+        }
+
     })
 
     let observer = new MutationObserver(async function(mutations) {
@@ -103,7 +108,7 @@ async function matchTabObservation() {
                 previousCover.forEach(element => {element.remove()})
             }
 
-            // Get the current cover
+            // --- Use the first match to get the current cover ---
             allMatchResults[0].click()
 
             // Wait until the submit button is available, indicating the form details are ready
@@ -115,27 +120,46 @@ async function matchTabObservation() {
             backArrowElement.click()
 
             let currentCoverElement = document.createElement('div')
-            currentCoverElement.title = 'The current cover for this book'
-            currentCoverElement.classList.add('currentCover')
-
             matchTab.querySelector('form > div').firstChild.insertAdjacentElement('beforebegin', currentCoverElement)
 
+            currentCoverElement.title = 'The current cover for this book'
+            currentCoverElement.classList.add('currentCover')
             currentCoverElement.innerHTML = `<img class="currentCover" src="${coverURL}">`
 
             currentCoverElement.addEventListener('mouseover', function(event) {
-                let enlargeElement = document.getElementById('mmFloating')
-                enlargeElement.querySelector('img').src = this.querySelector('img').src
-                enlargeElement.classList.add('active')
+                let { clientX, clientY } = event
+                enlargeCover(this.parentElement.querySelector('img').src, clientX, clientY)
             })
 
             currentCoverElement.addEventListener('mouseout', function(event) {
-                let enlargeElement = document.getElementById('mmFloating')
-                enlargeElement.querySelector('img').src = ''
-                enlargeElement.classList.remove('active')
+                let hoverCoverElement = document.getElementById('mmHoverCover')
+                hoverCoverElement.classList.remove('active')
             })
 
-
             for ( let matchResult of allMatchResults ) {
+
+                setTimeout(() => {
+                    // Match Cover Dimensions
+                    let matchCover = matchResult.querySelector('img')
+
+                    let dimensionsElement = document.createElement('div')
+                    dimensionsElement.classList.add('mmMatchDimensions')
+                    dimensionsElement.innerText = `${matchCover.naturalWidth} x ${matchCover.naturalHeight}`
+                    matchCover.parentElement.insertAdjacentElement('afterend', dimensionsElement)
+
+                    dimensionsElement.addEventListener('mouseover', function(event) {
+
+                        let { clientX, clientY } = event
+                        enlargeCover(this.parentElement.querySelector('img').src, clientX, clientY)
+
+                    })
+
+                    dimensionsElement.addEventListener('mouseout', function(event) {
+                        let hoverCoverElement = document.getElementById('mmHoverCover')
+                        hoverCoverElement.classList.remove('active')
+                    })
+
+                }, 500)
 
                 // Save + Tag Button
                 let saveTagButton = document.createElement('button')
@@ -186,13 +210,22 @@ async function matchTabObservation() {
 
         } else {
             setTimeout(() => {
-               matchTab.querySelector('form + div + div').style.display != 'none' ? titleSearch() : null
+                // If there are no results, try a Title search
+
+                let matchWrapper = document.getElementById('match-wrapper').querySelector('div.matchListWrapper')
+
+                // Make sure a Title search has not already been made
+                if ( !matchWrapper.classList.contains('mmTitleSearchReady') && matchWrapper.childElementCount == 0 ) {
+                    observer.disconnect()
+                    titleSearch()
+                }
+
             }, 1000)
         }
     })
 
-    let target = document.getElementById('match-wrapper')
-    let config = { childList: true, subtree: true }
+    let target = document.getElementById('match-wrapper').querySelector('div.matchListWrapper')
+    let config = { childList: true }
     observer.observe(target, config)
 
 }
@@ -224,13 +257,38 @@ async function titleSearch() {
         let matchTab = document.getElementById('match-wrapper')
         let searchField = matchTab.querySelector('form input[placeholder="Search.."]')
         searchField.value = bookTitle
-        searchField.style.boxShadow = '0px 0px 8px rgb(58, 225, 34)'
-        searchField.parentElement.previousElementSibling.innerText = 'Title is loaded! Click this input, add a space, then hit Search!'
 
-        matchTab.querySelector('button.mmTitleSearch').innerText = 'Edit then Search'
+        // Update the Search field label
+        searchField.parentElement.previousElementSibling.innerText = '📖 The title is ready! Click this input, add a space, then hit Search!'
+        searchField.parentElement.previousElementSibling.style.textShadow = '0px 0px 8px rgb(22, 84, 0)'
+
+        // Add a class to indicate that a title search has already been done
+        matchTab.querySelector('div.matchListWrapper').classList.add('mmTitleSearchReady')
+
         // -- NOT WORKING --
         matchTab.querySelector('form > div > button').click()
     }, 500)
+
+}
+
+
+function enlargeCover(imgURL, clientX, clientY) {
+
+    let hoverCoverElement = document.getElementById('mmHoverCover')
+    hoverCoverElement.querySelector('img').src = imgURL
+    hoverCoverElement.classList.add('active')
+
+    let positionY =
+      clientY + hoverCoverElement.scrollHeight >= window.innerHeight
+        ? window.innerHeight - hoverCoverElement.scrollHeight - 20
+        : clientY + 20;
+    let positionX =
+      clientX + hoverCoverElement.scrollWidth >= window.innerWidth
+        ? window.innerWidth - hoverCoverElement.scrollWidth - 20
+        : clientX + 20;
+
+    hoverCoverElement.style.top = `${positionY}px`
+    hoverCoverElement.style.left = `${positionX}px`
 
 }
 
@@ -350,11 +408,25 @@ GM_config.init({
             'title': 'The height of the edit panel when the Match tab is active'
         },
 
-        'currentCoverWidth': {
-            'label': '🖼️ Current Cover Width',
+        'currentCoverHeight': {
+            'label': '🖼️ Current Cover Height',
             'type': 'text',
             'default': '75px',
-            'title': 'The width of the current cover displayed above the match results'
+            'title': 'The maximum height of the current cover displayed above the match results'
+        },
+
+        'matchCoverHeight': {
+            'label': '🖼️ Match Cover Height',
+            'type': 'text',
+            'default': '192px',
+            'title': 'The maximum height of the cover displayed by each match result'
+        },
+
+        'hoverCoverHeight': {
+            'label': '🖼️ Hover Cover Height',
+            'type': 'text',
+            'default': '700px',
+            'title': 'The maximum height of a cover when hovered over'
         },
 
         'afterSaveDirection': {
@@ -362,7 +434,7 @@ GM_config.init({
             'type': 'select',
             'options': ['Previous', 'Next', 'None'],
             'default': 'Previous',
-            'title': 'The direction that will be navigated in after the match is saved\n\nℹ️ This corresponse to the navigation arrows on each end of the edit panel'
+            'title': 'The direction that will be navigated after the match is saved\n\nPrevious: Down the list\nNext: Up the list\n\nℹ️ This direction corresponds to the navigation arrows on each end of the edit panel'
         },
 
         'saveTagsList': {
@@ -432,17 +504,22 @@ GM_registerMenuCommand('Settings', () => {
     GM_config.open()
 })
 
-// Get the saved settings
-let matchPanelWidth = GM_config.get('matchPanelWidth')
+// Get the saved GM_config settings
 let matchPanelHeight = GM_config.get('matchPanelHeight')
-let currentCoverWidth = GM_config.get('currentCoverWidth')
+let matchPanelWidth = GM_config.get('matchPanelWidth')
+
+let currentCoverHeight = GM_config.get('currentCoverHeight')
+let matchCoverHeight = GM_config.get('matchCoverHeight')
+let hoverCoverHeight = GM_config.get('hoverCoverHeight')
+
 let afterSaveDirection = GM_config.get('afterSaveDirection')
+
 let saveTagsList = GM_config.get('saveTagsList').split(',')
 let apiKey = GM_config.get('apiKey')
 let audibleTemplate = GM_config.get('audibleTemplate')
 
-// =================================== Styling ======================================
 
+// =================================== Styling ======================================
 
 // Styling the GM_config panel
 GM_addStyle(`
@@ -562,70 +639,45 @@ GM_addStyle(`
 `)
 
 
-// Styling the matchTab
 GM_addStyle(`
 
+    /* ---------- Edit Panel ---------- */
     div.relative:has(> div > #match-wrapper) {
         /* edit panel size */
         height: ${matchPanelHeight} !important;
         width: ${matchPanelWidth} !important;
     }
 
-    #match-wrapper div:has(> div > img:not(.currentCover)) {
-        /* result cover size */
-        width: unset;
-        height: unset;
-        max-width: 192px;
-
-    }
-
-    div.matchListWrapper h1 {
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    div.matchListWrapper div.rounded-full:has(> p) {
-        background-color: #00000080;
-    }
-
-    div.matchListWrapper div.rounded-full > p {
-        color: white;
-        font-size: .8rem;
-        padding: 3px 5px 3px 5px;
-    }
-
-    div:has(> div.currentCover) {
-        align-items: end;
-    }
+    /* ---------- Search Bar Row ---------- */
 
     div.currentCover {
-        max-width: ${currentCoverWidth.match(/^(\d+)(px)?$/)[1]}px;
+        /* current cover size */
+        max-height: ${currentCoverHeight};
         box-shadow: 0px 0px 10px #000000;
         margin-right: 10px;
         margin-top: -12px;
     }
 
-    #mmFloating.active {
-        box-shadow: 0px 0px 13px #000000;
-        left: 50%;
-        max-width: 700px;
-        position: fixed;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 999;
+    img.currentCover {
+        /* current cover size */
+        max-height: inherit;
+        max-width: inherit;
     }
 
-    #match-wrapper div:has( > p.text-xs) {
-        /* synopsis size */
-        max-height: 100%;
-        overflow: initial;
+    div:has(> div.currentCover) {
+        /* search bar vertical item alignment */
+        align-items: end;
     }
 
     #match-wrapper form div:has( > div > div > input[placeholder="Author"]) {
+        /* search author size */
         width: 110px;
     }
 
+    /* ---------- Match Results Grid ---------- */
+
     div.matchListWrapper {
+        /* MatchTab grid view */
         display: grid;
         grid-template-columns: auto auto;
         height: unset;
@@ -634,15 +686,67 @@ GM_addStyle(`
         scrollbar-width: thin;
     }
 
-    div.mmProcessing > :nth-child(2) {
+    #match-wrapper div:has(> div > img:not(.currentCover)) {
+        /* match cover size */
+        height: unset;
+        max-height: ${matchCoverHeight};
+        max-width: ${matchCoverHeight};
+        min-width: unset;
+        position: relative;
+        width: unset;
+
+    }
+
+    div.mmMatchDimensions {
+        /* cover dimensions */
+        background: #0000006e;
+        border-radius: 25px;
+        font-size: x-small;
+        left: 3px;
+        padding: 1px 7px;
+        position: absolute;
+        top: 5px;
         width: fit-content;
-        max-height: 192px;
+    }
+
+
+    div.mmProcessing > :nth-child(2) {
+        /* match data size */
+        width: fit-content;
+        max-height: ${matchCoverHeight};
         overflow: auto;
         scrollbar-width: thin;
         scrollbar-color: #555 #0000;
     }
 
+    div.matchListWrapper h1 {
+        /* match titles */
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    div.matchListWrapper div.rounded-full:has(> p) {
+        /* match series */
+        background-color: #00000080;
+    }
+
+    div.matchListWrapper div.rounded-full > p {
+        /* match series */
+        color: white;
+        font-size: .8rem;
+        padding: 3px 5px 3px 5px;
+    }
+
+    #match-wrapper div:has( > p.text-xs) {
+        /* match synopsis size */
+        max-height: 100%;
+        overflow: initial;
+    }
+
+    /* ---------- MatchMate Buttons ---------- */
+
     button.matchMateButton {
+        /* matchMate Button sizes */
         border-radius: var(--radius-md);
         border: none;
         cursor: pointer;
@@ -654,6 +758,7 @@ GM_addStyle(`
     }
 
     button.saveMatch {
+
         background-color: #153245;
         border: #B6D3E7 solid 1px;
         color: #B6D3E7;
@@ -681,6 +786,23 @@ GM_addStyle(`
 
     button.asinSearch:hover {
         background-color: #7C3400;
+    }
+
+    /* ---------- Enlarged Cover Hover ---------- */
+
+    #mmHoverCover {
+        display: none;
+    }
+
+    #mmHoverCover.active {
+        /* enlarged img panel */
+        border-radius: 10px;
+        box-shadow: 0px 0px 13px #000000;
+        display: unset;
+        max-height: ${hoverCoverHeight};
+        max-width: ${hoverCoverHeight};
+        position: fixed;
+        z-index: 999;
     }
 
 `)
