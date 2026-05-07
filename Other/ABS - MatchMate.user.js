@@ -147,7 +147,7 @@ async function matchTabObservation() {
                     if ( event.button == 0 ) {
 
                         if ( apiKey == '' ) {
-                            window.alert('MatchMate\n\nThis button requires a valid ApiKey\n\nSet the ApiKey from the settings panel then try again')
+                            window.alert('❌ MatchMate ❌\n\nThis button requires a valid ApiKey\n\nProvide an ApiKey from the settings panel then try again')
                             return
                         } else {
                             observer.disconnect()
@@ -369,7 +369,7 @@ GM_config.init({
             'label': '🏷️ SaveTags List',
             'type': 'text',
             'default': '',
-            'title': "A comma seperated list of tags to apply to the book when clicking the 'Save + 🏷️' button\n\nℹ️ Setting a unique tag is a simple way to later distinguish the books that have been saved by MatchMate"
+            'title': "A comma seperated list of tags to apply to the book when clicking the 'Save + 🏷️' button\n\nℹ️ Setting a unique tag is a simple way to later distinguish books that have already been matched"
         },
 
         'apiKey': {
