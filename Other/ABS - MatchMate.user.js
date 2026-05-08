@@ -4,7 +4,7 @@
 
 // @name        ABS - MatchMate
 // @author      WirlyWirly
-// @version     0.3
+// @version     0.4
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/ABS%20-%20MatchMate.user.js
 // @description A buddy to help out when matching book in AudioBookShelf
 //              Written on LibreWolf via Violentmonkey
@@ -45,19 +45,35 @@ let pageURL = document.URL
 let absURL = pageURL.match(/^(.+?\/audiobookshelf)\//)[1]
 
 async function main() {
-    // Observer the <body> children until the edit panel is loaded, and then apply the main event listener to the Match tab
 
-    let modalOverlay = await waitForElement('body > div.modal', document.body, false)
+    // Observer the <body> child elements until the <div> of the edit panel [data-v-779b4e02] is loaded
+    let modalOverlay = await waitForElement('body > div.modal[data-v-779b4e02]', document.body, false)
     let editPanel = await waitForElement('div.relative:has(#formWrapper)', modalOverlay)
 
-    let matchTabButton = editPanel.querySelector('div.absolute[role="tablist"] :nth-child(5)')
+    // Set identifiers for the edit panel and important elements
+    modalOverlay.id = 'modalOverlay'
+    modalOverlay.querySelector('div > h1').id = 'bookTitle'
+
+    editPanel.id = 'editPanel'
+    editPanel.querySelector('div[role="tablist"]').id = 'editPanelTabs'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(1)').id = 'detailsTab'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(2)').id = 'coverTab'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(3)').id = 'chaptersTab'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(4)').id = 'filesTab'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(5)').id = 'matchTab'
+    editPanel.querySelector('div.absolute[role="tablist"] :nth-child(6)').id = 'toolsTab'
+
+    editPanel.querySelector('button[aria-label="Previous"]').id = 'cyclePrevious'
+    editPanel.querySelector('button[aria-label="Next"]').id = 'cycleNext'
+
+    let matchTabButton = editPanel.querySelector('#matchTab')
     matchTabButton.addEventListener('mouseup', async function(event) {
         // The match tab of the edit panel was clicked
 
         await waitForElement('#match-wrapper', editPanel)
 
         // Check if this match tab does not have a 'Title' button, indicating it needs a MutationObserver
-        !editPanel.querySelector('button.mmTitleSearch') ? matchTabObservation() : null
+        !editPanel.querySelector('#buttonTitle') ? matchTabObservation() : null
 
     })
 
@@ -74,38 +90,135 @@ async function main() {
 async function matchTabObservation() {
     // Setup Mutation observation in the match tab and act on any new results
 
-    let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
+    let editPanel = document.querySelector('#editPanel')
     let matchTab = editPanel.querySelector('#match-wrapper')
+
+    // Add identifiers to the various elements
+    matchTab.querySelector('form').id = 'searchForm'
+    matchTab.querySelector('#searchForm input[placeholder="Search.."]').id = 'inputTitle'
+    matchTab.querySelector('#searchForm input[placeholder="Search.."]').parentElement.previousElementSibling.id = 'labelInputTitle'
+    matchTab.querySelector('#searchForm input[placeholder="Author"]').id = 'inputAuthor'
+    matchTab.querySelector('#searchForm button[type="Submit"]').id = 'buttonSearch'
+    matchTab.querySelector('div.matchListWrapper').id = 'resultsList'
+    //matchTab.querySelector('#searchForm button[aria-label^="Provider"]').id = 'buttonProvider'
 
     // Create the 'Title' search button
     let titleSearchButton = document.createElement('button')
+    titleSearchButton.id = 'buttonTitle'
     titleSearchButton.innerText = 'Title'
-    titleSearchButton.setAttribute('class', 'mmTitleSearch abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
+    titleSearchButton.setAttribute('class', 'abs-btn rounded-md shadow-md relative border border-gray-600 mt-5 ml-1 text-white bg-primary px-8 py-2')
     titleSearchButton.title = 'Fill the search field with the current title'
     matchTab.querySelector('form > div').appendChild(titleSearchButton)
     titleSearchButton.addEventListener('mouseup', function(event) {
         // The actions to take when the 'Title' button is clicked
-
-        if ( event.button == 0 ) {
-            observer.disconnect()
-            titleSearch()
-        }
+        titleSearch()
 
     })
+
+    // When manually cycled, clean up the Match tab
+    editPanel.querySelector('#cyclePrevious').addEventListener('mouseup', () => { cleanMatchTab() } )
+    editPanel.querySelector('#cycleNext').addEventListener('mouseup', () => { cleanMatchTab() } )
 
     let observer = new MutationObserver(async function(mutations) {
         // Actions to take when there are changes in the match tab
 
-        let allMatchResults = matchTab.querySelectorAll('div.matchListWrapper div.cursor-pointer:not(.mmProcessing, .mmDone)')
+        let allMatchResults = matchTab.querySelectorAll('#resultsList > div > div.cursor-pointer:not(.matchMateResult)')
 
         if ( allMatchResults.length > 0  ) {
+            console.log(allMatchResults)
             // There are new match results
-            allMatchResults.forEach(element => {element.classList.add('mmProcessing')})
 
-            // Remove a previous cover if present
-            let previousCover = matchTab.querySelectorAll('div:has(> img.currentCover)')
-            if ( previousCover.length > 0 ) {
-                previousCover.forEach(element => {element.remove()})
+            // Remove a previous cover image if present
+            matchTab.querySelectorAll('div.currentCover').forEach((element) => { element.remove() })
+
+            for ( let result of allMatchResults ) {
+                // For each match, generate the new elements (buttons|coverDimensions)
+
+                // Add classes\identifiers to the various elements in a match result
+                result.classList.add('matchMateResult')
+                result.parentElement.classList.add('resultContainer')
+
+                result.querySelector(':nth-child(1)').classList.add('resultCover')
+                result.querySelector('.resultCover img').classList.add('resultCoverImg')
+
+                result.querySelector(':nth-child(2)').classList.add('resultMeta')
+                result.querySelector('.resultMeta > :nth-child(1)').classList.add('resultTitle')
+                result.querySelector('.resultMeta > :nth-child(2)').classList.add('resultDetails')
+                try{ result.querySelector('.resultMeta > div:has( > div.rounded-full > p)').classList.add('resultSeries') } catch(error) {}
+                result.querySelector('.resultMeta > div.overflow-hidden:has(> p)').classList.add('resultSynopsis')
+
+                setTimeout(() => {
+
+                    // Create the Cover Dimensions element
+                    let matchCover = result.querySelector('.resultCoverImg')
+                    let dimensionsElement = document.createElement('div')
+                    dimensionsElement.classList.add('resultCoverDimensions')
+                    dimensionsElement.innerText = `${matchCover.naturalWidth} x ${matchCover.naturalHeight}`
+                    matchCover.parentElement.insertAdjacentElement('afterend', dimensionsElement)
+
+                    dimensionsElement.addEventListener('mouseover', function(event) {
+                        // Display the enlarged result cover
+                        let { clientX, clientY } = event
+                        viewHoverCover(this.parentElement.querySelector('.resultCoverImg').src, clientX, clientY)
+                    })
+
+                    dimensionsElement.addEventListener('mouseout', function(event) {
+                        // Stop displaying the enlarged result cover
+                        let hoverCoverElement = document.getElementById('mmHoverCover')
+                        hoverCoverElement.classList.remove('active')
+                    })
+
+                }, 500)
+
+                // The element that will contain the MatchMate buttons
+                let buttonHolder = document.createElement('div')
+                buttonHolder.classList.add('mmButtonHolder')
+
+                // Save + Tag Button
+                let saveTagButton = document.createElement('button')
+                saveTagButton.innerText = `Save + 🏷️`
+                saveTagButton.title = `Save this match result, add the custom tags, then continue to the next book`
+                saveTagButton.classList.add('saveMatchTags', 'matchMateButton')
+                saveTagButton.addEventListener('mouseup', function(event) {
+
+                    if ( event.button == 0 ) {
+
+                        if ( apiKey == '' ) {
+                            window.alert('❌ MatchMate ❌\n\nThis button requires a valid ApiKey\n\nProvide an ApiKey from the settings panel then try again')
+                            return
+                        } else {
+                            observer.disconnect()
+                            saveResult(this, saveTagsList)
+                        }
+                    }
+
+                })
+
+                // Save Button
+                let saveResultButton = document.createElement('button')
+                saveResultButton.innerText = 'Save Match'
+                saveResultButton.title = "Save this match result then continue to the next book\n\nℹ️ This is the same as clicking the 'Submit' button of the match result"
+                saveResultButton.classList.add('saveResult', 'matchMateButton')
+                saveResultButton.addEventListener('mouseup', function(event) {
+                    event.button == 0 ? saveResult(this) : null
+                    observer.disconnect()
+                })
+
+                // Audible Button
+                let asinButton = document.createElement('button')
+                asinButton.innerText = 'Audible'
+                asinButton.title = 'Open the Audible page of this match result\n\nℹ️ Only works if the result has an ASIN'
+                asinButton.classList.add('asinSearch', 'matchMateButton')
+                asinButton.addEventListener('mouseup', function(event) {
+                    event.button == 0 ? audibleLookup(this) : null
+                })
+
+                buttonHolder.appendChild(saveTagButton)
+                buttonHolder.appendChild(saveResultButton)
+                buttonHolder.appendChild(asinButton)
+
+                result.parentElement.appendChild(buttonHolder)
+
             }
 
             // --- Use the first match to get the current cover ---
@@ -128,7 +241,7 @@ async function matchTabObservation() {
 
             currentCoverElement.addEventListener('mouseover', function(event) {
                 let { clientX, clientY } = event
-                enlargeCover(this.parentElement.querySelector('img').src, clientX, clientY)
+                viewHoverCover(this.parentElement.querySelector('img').src, clientX, clientY)
             })
 
             currentCoverElement.addEventListener('mouseout', function(event) {
@@ -136,87 +249,15 @@ async function matchTabObservation() {
                 hoverCoverElement.classList.remove('active')
             })
 
-            for ( let matchResult of allMatchResults ) {
-
-                setTimeout(() => {
-                    // Match Cover Dimensions
-                    let matchCover = matchResult.querySelector('img')
-
-                    let dimensionsElement = document.createElement('div')
-                    dimensionsElement.classList.add('mmMatchDimensions')
-                    dimensionsElement.innerText = `${matchCover.naturalWidth} x ${matchCover.naturalHeight}`
-                    matchCover.parentElement.insertAdjacentElement('afterend', dimensionsElement)
-
-                    dimensionsElement.addEventListener('mouseover', function(event) {
-
-                        let { clientX, clientY } = event
-                        enlargeCover(this.parentElement.querySelector('img').src, clientX, clientY)
-
-                    })
-
-                    dimensionsElement.addEventListener('mouseout', function(event) {
-                        let hoverCoverElement = document.getElementById('mmHoverCover')
-                        hoverCoverElement.classList.remove('active')
-                    })
-
-                }, 500)
-
-                // Save + Tag Button
-                let saveTagButton = document.createElement('button')
-                saveTagButton.innerText = `Save + 🏷️`
-                saveTagButton.title = `Save this match, add the custom tags, then continue to the next book`
-                saveTagButton.classList.add('saveMatchTags', 'matchMateButton')
-                saveTagButton.addEventListener('mouseup', function(event) {
-
-                    if ( event.button == 0 ) {
-
-                        if ( apiKey == '' ) {
-                            window.alert('❌ MatchMate ❌\n\nThis button requires a valid ApiKey\n\nProvide an ApiKey from the settings panel then try again')
-                            return
-                        } else {
-                            observer.disconnect()
-                            saveMatch(this, saveTagsList)
-                        }
-                    }
-
-                })
-
-                // Save Button
-                let saveMatchButton = document.createElement('button')
-                saveMatchButton.innerText = 'Save Match'
-                saveMatchButton.title = "Save this match then continue to the next book\n\nℹ️ This is the same as clicking the 'Submit' button of the match"
-                saveMatchButton.classList.add('saveMatch', 'matchMateButton')
-                saveMatchButton.addEventListener('mouseup', function(event) {
-                    event.button == 0 ? saveMatch(this) : null
-                    observer.disconnect()
-                })
-
-                // Audible Button
-                let asinButton = document.createElement('button')
-                asinButton.innerText = 'Audible'
-                asinButton.title = 'Open the Audible page of this match\n\nℹ️ Only works if the match has an ASIN'
-                asinButton.classList.add('asinSearch', 'matchMateButton')
-                asinButton.addEventListener('mouseup', function(event) {
-                    event.button == 0 ? audibleLookup(this) : null
-                })
-
-                matchResult.insertAdjacentElement('afterend', asinButton)
-                matchResult.insertAdjacentElement('afterend', saveMatchButton)
-                matchResult.insertAdjacentElement('afterend', saveTagButton)
-
-                matchResult.classList.add('mmDone')
-
-            }
-
         } else {
+
             setTimeout(() => {
                 // If there are no results, try a Title search
 
-                let matchWrapper = document.getElementById('match-wrapper').querySelector('div.matchListWrapper')
+                let resultsList = document.getElementById('resultsList')
 
-                // Make sure a Title search has not already been made
-                if ( !matchWrapper.classList.contains('mmTitleSearchReady') && matchWrapper.childElementCount == 0 ) {
-                    observer.disconnect()
+                // Make sure a title search has not already been readied AND that there are 0 results
+                if ( !resultsList.classList.contains('titleSearchReady') && resultsList.childElementCount == 0 ) {
                     titleSearch()
                 }
 
@@ -224,55 +265,62 @@ async function matchTabObservation() {
         }
     })
 
-    let target = document.getElementById('match-wrapper').querySelector('div.matchListWrapper')
-    let config = { childList: true }
+    let target = matchTab.querySelector('#resultsList')
+    let config = { childList: true , attributeFilter: ['style'] }
     observer.observe(target, config)
 
 }
 
 
-async function titleSearch() {
-    // The 'Title' search button of the match tab was clicked
+function cleanMatchTab() {
+    // Clean the match tab of book-specific changes
 
-    // The floating Edit panel
-    let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
+    let matchTab = document.getElementById('match-wrapper')
 
-    // Switch to the details tab
-    editPanel.querySelector('div[role="tablist"] :nth-child(1)').click()
+    if ( matchTab ) {
+        // Remove a previous cover image if present
+        matchTab.querySelectorAll('div.currentCover').forEach((element) => { element.remove() })
 
-    // Wait until the details tab is ready, then get the book title
-    let detailsTab = await waitForElement('#formWrapper', editPanel)
-    let bookTitle = editPanel.querySelector('#formWrapper input[placeholder="Title"]').value
-    //let author = editPanel.querySelector('#formWrapper input[placeholder="Author"]').value
+        // Remove 'Title' search styling and indicators
+        let labelTitle = matchTab.querySelector('#labelInputTitle')
+        if ( labelTitle.classList.contains('titleSearchReady') ) {
+            labelTitle.innerText = 'Search Title or ASIN'
+            labelTitle.classList.remove('titleSearchReady')
+            matchTab.querySelector('#resultsList').classList.remove('titleSearchReady')
+        }
 
-    // Return to the match tab and wait until it's ready
-    editPanel.querySelector('div[role="tablist"] :nth-child(5)').click()
-    let matchTab = await waitForElement('#match-wrapper', editPanel)
-
-    // Start the match tab observation
-    matchTabObservation()
-
-    setTimeout(() => {
-        // Update the Search title and click the search button
-        let matchTab = document.getElementById('match-wrapper')
-        let searchField = matchTab.querySelector('form input[placeholder="Search.."]')
-        searchField.value = bookTitle
-
-        // Update the Search field label
-        searchField.parentElement.previousElementSibling.innerText = '📖 The title is ready! Click this input, add a space, then hit Search!'
-        searchField.parentElement.previousElementSibling.style.textShadow = '0px 0px 8px rgb(22, 84, 0)'
-
-        // Add a class to indicate that a title search has already been done
-        matchTab.querySelector('div.matchListWrapper').classList.add('mmTitleSearchReady')
-
-        // -- NOT WORKING --
-        matchTab.querySelector('form > div > button').click()
-    }, 500)
+    }
 
 }
 
 
-function enlargeCover(imgURL, clientX, clientY) {
+async function titleSearch() {
+    // The 'Title' search button of the match tab was clicked or there were no results during the search
+
+    let bookTitle = document.getElementById('bookTitle').innerText
+
+    // Update the search field of the Match tab and click the search button
+    let matchTab = document.getElementById('match-wrapper')
+    let titleField = matchTab.querySelector('#inputTitle')
+    titleField.value = bookTitle
+
+    // Remove a previous cover image if present
+    matchTab.querySelectorAll('div.currentCover').forEach((element) => { element.remove() })
+
+    // Update the Search field label
+    matchTab.querySelector('#labelInputTitle').innerText = '📖 No Results? Try a title search! Click this input, add a space, then hit Search!'
+    matchTab.querySelector('#labelInputTitle').classList.add('titleSearchReady')
+
+    // Add a class to indicate that a title search has already been readied
+    matchTab.querySelector('#resultsList').classList.add('titleSearchReady')
+
+    // -- NOT WORKING --
+    matchTab.querySelector('#buttonSearch').click()
+
+}
+
+
+function viewHoverCover(imgURL, clientX, clientY) {
 
     let hoverCoverElement = document.getElementById('mmHoverCover')
     hoverCoverElement.querySelector('img').src = imgURL
@@ -293,15 +341,14 @@ function enlargeCover(imgURL, clientX, clientY) {
 }
 
 
-async function saveMatch(matchButton, additionalTags = false) {
+async function saveResult(matchButton, additionalTags = false) {
     // The 'Save' button of a bookResult was clicked
 
     // The floating Edit panel
-    let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
+    let editPanel = document.getElementById('editPanel')
 
     // Click the book item, which will load the new data
-    matchButton.parentElement.querySelector('div').click()
-
+    matchButton.closest('div.resultContainer').querySelector('div.matchMateResult').click()
 
     // Wait until the submit button is available, then click it
     let submitButton = await waitForElement('button.bg-success[type="submit"]', editPanel.querySelector('#match-wrapper'))
@@ -314,7 +361,7 @@ async function saveMatch(matchButton, additionalTags = false) {
     // Wait until the details tab is ready, indicating the match has been saved
     await waitForElement('#formWrapper', editPanel)
 
-    // PATH additional tag(s)
+    // API: Additional tag(s)
     if ( additionalTags ) {
 
         // GET the newly saved tags
@@ -337,18 +384,16 @@ async function saveMatch(matchButton, additionalTags = false) {
 
     }
 
-    editPanel.querySelector('div[role="tablist"] :nth-child(5)').click()
+    editPanel.querySelector('#matchTab').click()
     await waitForElement('#match-wrapper', editPanel)
     matchTabObservation()
 
-    // If enabled, change the match window to the previous\next book
-    if ( afterSaveDirection != 'None' ) {
-
-        setTimeout(async () =>{
-            // check that there is a previous\next book
-            editPanel.querySelector(`button[aria-label="${afterSaveDirection}"]`) ? editPanel.querySelector(`button[aria-label="${afterSaveDirection}"]`).click() : null
-        }, 500)
-    }
+    setTimeout(async () =>{
+        // If enabled, cycle the match tab to the previous\next book
+        cleanMatchTab()
+        afterSaveDirection == 'Previous' ? editPanel.querySelector('#cyclePrevious').click() : null
+        afterSaveDirection == 'Next' ? editPanel.querySelector('#cycleNext').click() : null
+    }, 500)
 
 }
 
@@ -357,10 +402,10 @@ async function audibleLookup(asinButton) {
     // The 'Audible' lookup button was clicked
 
     // The floating Edit panel
-    let editPanel = document.querySelector('div.relative:has(> div[role="tablist"]')
+    let editPanel = document.getElementById('editPanel')
 
     // Click the book item, which will load the new data
-    asinButton.parentElement.querySelector('div').click()
+    asinButton.closest('div.resultContainer').querySelector('div.matchMateResult').click()
 
     // Wait until the submit button is available, indicating the form is available, then get the ASIN
     let submitButton = await waitForElement('button.bg-success[type="submit"]', editPanel.querySelector('#match-wrapper'))
@@ -669,6 +714,10 @@ GM_addStyle(`
         align-items: end;
     }
 
+    #labelInputTitle.titleSearchReady {
+     text-shadow: 0px 0px 8px rgb(22, 84, 0);
+    }
+
     #match-wrapper form div:has( > div > div > input[placeholder="Author"]) {
         /* search author size */
         width: 110px;
@@ -682,11 +731,13 @@ GM_addStyle(`
         grid-template-columns: auto auto;
         height: unset;
         max-height: calc(100% - 80px);
-        scrollbar-color: #0000 #555;
+        scrollbar-color: #7a7a7a #0000;
         scrollbar-width: thin;
+        padding: 0px 5px 0px 0px;
+        gap: 5px;
     }
 
-    #match-wrapper div:has(> div > img:not(.currentCover)) {
+    .resultCover {
         /* match cover size */
         height: unset;
         max-height: ${matchCoverHeight};
@@ -697,7 +748,7 @@ GM_addStyle(`
 
     }
 
-    div.mmMatchDimensions {
+    .resultCoverDimensions {
         /* cover dimensions */
         background: #0000006e;
         border-radius: 25px;
@@ -710,8 +761,8 @@ GM_addStyle(`
     }
 
 
-    div.mmProcessing > :nth-child(2) {
-        /* match data size */
+    .resultMeta {
+        /* match metadata size */
         width: fit-content;
         max-height: ${matchCoverHeight};
         overflow: auto;
@@ -719,31 +770,43 @@ GM_addStyle(`
         scrollbar-color: #555 #0000;
     }
 
-    div.matchListWrapper h1 {
+    .resultTitle h1 {
         /* match titles */
         font-weight: 600;
         font-size: 1.1rem;
     }
 
-    div.matchListWrapper div.rounded-full:has(> p) {
+    .resultSeries > div.rounded-full {
         /* match series */
         background-color: #00000080;
     }
 
-    div.matchListWrapper div.rounded-full > p {
+    .resultSeries p {
         /* match series */
         color: white;
         font-size: .8rem;
         padding: 3px 5px 3px 5px;
     }
 
-    #match-wrapper div:has( > p.text-xs) {
+    .resultSynopsis {
         /* match synopsis size */
         max-height: 100%;
         overflow: initial;
     }
 
+    .resultContainer {
+        border: none;
+    }
+
     /* ---------- MatchMate Buttons ---------- */
+
+
+    div.mmButtonHolder {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        margin: 5px 15px 5px 0px;
+        gap: 15px
+    }
 
     button.matchMateButton {
         /* matchMate Button sizes */
@@ -752,19 +815,17 @@ GM_addStyle(`
         cursor: pointer;
         font-size: medium;
         padding: 3px;
-        width: 30%;
-        margin: 8px 0px 5px 15px;
-
+        width: unset;
     }
 
-    button.saveMatch {
+    button.saveResult {
 
         background-color: #153245;
         border: #B6D3E7 solid 1px;
         color: #B6D3E7;
     }
 
-    button.saveMatch:hover {
+    button.saveResult:hover {
         background-color: #224f6d;
     }
 
