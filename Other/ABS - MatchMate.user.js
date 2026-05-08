@@ -125,7 +125,6 @@ async function matchTabObservation() {
         let allMatchResults = matchTab.querySelectorAll('#resultsList > div > div.cursor-pointer:not(.matchMateResult)')
 
         if ( allMatchResults.length > 0  ) {
-            console.log(allMatchResults)
             // There are new match results
 
             // Remove a previous cover image if present
