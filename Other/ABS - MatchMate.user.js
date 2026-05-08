@@ -249,14 +249,14 @@ async function matchTabObservation() {
             })
 
         } else {
+            // If there are no results after 1000ms, populate the search field with the books Title
 
             setTimeout(() => {
-                // If there are no results, try a Title search
 
                 let resultsList = document.getElementById('resultsList')
 
                 // Make sure a title search has not already been readied AND that there are 0 results
-                if ( !resultsList.classList.contains('titleSearchReady') && resultsList.childElementCount == 0 ) {
+                if ( resultsList && !resultsList.classList.contains('titleSearchReady') && resultsList.childElementCount == 0 ) {
                     titleSearch()
                 }
 
@@ -307,7 +307,7 @@ async function titleSearch() {
     matchTab.querySelectorAll('div.currentCover').forEach((element) => { element.remove() })
 
     // Update the Search field label
-    matchTab.querySelector('#labelInputTitle').innerText = '📖 No Results? Try a title search! Click this input, add a space, then hit Search!'
+    matchTab.querySelector('#labelInputTitle').innerText = '📖 No Results? Try a title search! Just add a space then hit Search!'
     matchTab.querySelector('#labelInputTitle').classList.add('titleSearchReady')
 
     // Add a class to indicate that a title search has already been readied
