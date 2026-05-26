@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name 		MAM - FancyFreeleech
 // @author 		WirlyWirly
-// @namespace 		https://github.com/WirlyWirly
-// @version 		1.2
+// @namespace 	https://github.com/WirlyWirly
+// @version 	2.0
 
 // @match 		https://www.myanonamouse.net/freeleech.php
 
@@ -13,77 +13,83 @@
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/MyAnonaMouse/FancyFreeleech.user.js?raw=true
 
 // @description Fancy up the list of freeleech torrents
-// @grant 		none
+// @grant 		GM_addStyle
 // @run-at 		document-end
 // ==/UserScript==
 
 // ----------------------------------- CODE --------------------------------------
 
-// Retrieve all <a> elements in the torrent list
-let mainListElement = document.querySelector('#mainBody .biglink').parentElement.parentElement
-let allListLinks = mainListElement.getElementsByTagName('a')
+// Retrieve all category elements in the torrent list
+let allCategories = document.querySelectorAll('#freeleechList div.media_cat > div.category')
 
-// Create an object that will hold an array for each category
-let torrentCategories = {}
-let categoriesDisplayOrder = []
+for ( let category of allCategories ) {
+    // For each category in the list, make it so clicking the <h3> header will toggle the 'hideTorrents' class
 
-let categoryId = ''
-for (link of allListLinks) {
-    if (link.classList[0] == 'biglink') {
-        // Link is a category, create an array for this category
-        categoryId = link.href.match(/cat\]\[\]=(\d+)/)[1]
-        torrentCategories[categoryId] = [link]
-        categoriesDisplayOrder.push(categoryId)
+    // Hide the category torrents by default by pre-applying the class
+    category.classList.add('hideTorrents')
 
-    } else if (link.classList[0] == 'fLeech') {
-        // Link is a torrent, add the link to the latest category
-        torrentCategories[categoryId].push(link)
-    }
+    let headerText = category.querySelector('h3')
+    headerText.classList.add('categoryHeader')
+
+    headerText.addEventListener('click', function(event) {
+        let category = this.parentElement
+        category.classList.contains('hideTorrents') ? category.classList.remove('hideTorrents') : category.classList.add('hideTorrents')
+    })
+
+    // Update the <h3> header text of this category
+    let torrentCount = category.querySelectorAll('div.freeleechItem').length
+    let emoji = '📘'
+
+    let mediaTypeText = category.parentElement.querySelector('div.torrentInfo').innerText
+    mediaTypeText.match(/audiobook/i) ? emoji = '🎧' : null
+    mediaTypeText.match(/comic/i) ? emoji = '🦸‍♂️' : null
+    mediaTypeText.match(/ebook/i) ? emoji = '📘' : null
+    mediaTypeText.match(/manga/i) ? emoji = '🌸' : null
+    mediaTypeText.match(/musicology/i) ? emoji = '🎵' : null
+    mediaTypeText.match(/radio/i) ? emoji = '🎙️' : null
+
+    headerText.innerText = `${emoji} ${headerText.innerText} [${torrentCount}]`
+
+
 }
 
-// Clear the current list elements
-mainListElement.closest('div.blockCon').setAttribute('style', 'width:98%')
-mainListElement.innerHTML = ''
 
-// Append the categories and torrents back onto the page
-for (categoryId of categoriesDisplayOrder) {
-    for (link of torrentCategories[categoryId]) {
-        if (link.classList[0] == 'biglink') {
-            // This link is a category link, edit and create a header out of it 
+GM_addStyle(`
 
-            // Create the category text title
-            let categoryTitle = document.createElement('a')
-            categoryTitle.href = 'javascript:void(0)'
-            categoryTitle.setAttribute('class', `biglink MAM-FF-${categoryId}`)
-            categoryTitle.textContent = link.innerText
-
-            categoryTitle.addEventListener('click', function() {
-                // When the category title is clicked, toggle the display of related torrent links 
-                let torrentElements = mainListElement.querySelectorAll(`a.fLeech.${this.classList[1]}`)
-                for (torrentLink of torrentElements) {
-                    if (torrentLink.style.display == 'none') {
-                        torrentLink.setAttribute('style', 'display: table')
-                    } else {
-                        torrentLink.setAttribute('style', 'display: none')
-                    }
-                }
-            })
-
-            // Remove the original category text, so that only the icon will redirect to the browse page
-            link.innerHTML = `<span class="cat${categoryId}">&nbsp;</span>`
-
-            mainListElement.appendChild(link)
-            mainListElement.appendChild(categoryTitle)
-
-        } else {
-            // The link is a torrent link, prepare it for hiding
-            link.setAttribute('class', `fLeech MAM-FF-${categoryId}`)
-            link.setAttribute('style', 'display: none')
-            mainListElement.appendChild(link)
-        }
-
+    h3.categoryHeader {
+        cursor: pointer;
+        margin-top: 20px;
+        font-size: 20px;
+        padding: 10px;
+        background-color: #4847475c;
     }
 
-    mainListElement.appendChild(document.createElement('br'))
-    mainListElement.appendChild(document.createElement('br'))
-}
+    h3.categoryHeader:hover {
+        color: #34aed4;
+    }
+
+    div.hideTorrents div.freeleechItem {
+        display: None;
+    }
+
+    div.category > div:nth-child(even) {
+        background-color: #000000ab;
+    }
+
+    #freeleechList div.freeleechItem.hasPoster {
+        /* Torrent <div> */
+        padding: 10px 0px 10px 130px !important;
+        min-height: 125px !important;
+    }
+
+    #freeleechList div.freeleechItem.hasPoster img.flThumb {
+        /* Torrent <img> */
+        top: 10px !important;
+        max-width: 125px;
+        max-height: 125px;
+        border: 1px solid black;
+        box-shadow: 0px 0px 5px black;
+        border-radius: 5px;
+    }
+
+`)
