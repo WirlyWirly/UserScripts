@@ -4,7 +4,7 @@
 
 // @name        🇯🇵 JAVScout
 // @author      WirlyWirly
-// @version     1.2
+// @version     1.3
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
 // @description Scout for JAV across various sites
 //              Written on LibreWolf via Violentmonkey
@@ -86,6 +86,38 @@ function searchTemplates(dvdId) {
             searchURL: `https://emparadise.rs/torrents.php?searchtext=${dvdId}`,
             color: '#6D88F8',
             base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACxklEQVR42nWTW0gUURjH/7Mze3HXa26r2dqG2YO1thSJPhQLhWj5sKIhRWiFFWEYCFEPwWZP9ZKVvURkXiKh0HDJkKLIBXuoKNwuVBjppmu1m7aie9Odmc45tqM+dODMnDnM9zv/7/v+h8u2n5SxfCQlQ2syQ23MgSxLkCSJvecDk4hP/4IqGlrxO5cA0EdS/hZwsWlEfoxAkskOCdTnl0AwWghIZLDIxFdg8hu45QAanGwtxtRgG5pqdsHhcMBiscDj8cDlcuHe87fgdx4HBB0DLUz9BDf+hUEYQJtnhTpJjdosH5xOJyN3dnXhUF0dW1NQaeV+COVnIBOITJSIgXEI/glwWeVnZWNJGeZGh9F5ZBvsdjsL0q7Kwc2rlxSI2+3G3oZmpNjrSU1EgNZm9CM488ErsiFvM8JjHhzNDysKTHkF2LF1Ex709ioFq6quxlDqbnBqHQNIv33gLI3dsjo5neVmG2lXAmgKdCQUJPZO3XZDt6GYAcRIiChouEMAaazCC+4b8L0awP/GmNeLwqpG6Av3gCMHitEwuJwTHTKvTyWFETE3/Ah9zYeVOlDJD58NQZqbYt9ChhkasxUGa9mighgBZB9rI4CUxfYExlC7xo+WlhYWcK21Fedu9aOmKFdJhe69UG0Hx2sgzkfBrd53UeazLaw1VMW6T3fxevCxItlaUY+SXB2eDvQrgAt9nyFkrocUChJA6WlZRRxIAdR54Tcu9F9uUtLYaCvC90k/YgGv0s7K893gCYAL+heNFDeuhSrDxAAy8Tr3sh1Perpgs9mYiplgkK0TCpw978EbjNBGZpesLJpyoTKkkeIQk1DIu140HKhgSuikJ9N5veM+4gUOaEMzS1ZOXCYx3QSeeIJBaFv/+BDzfSDOk9nkMy0QDCZoo7MrL9PyXouChvhYD0mj+xdIr7QM1UKEzBjUYnyFN/4ChwdYKVTfJS4AAAAASUVORK5CYII=',
+        },
+
+        {
+            name: '--divider--'
+        },
+
+        {
+            name: 'JavGuru',
+            searchURL: `https://jav.guru/?s=${dvdId}`,
+            color: '#246FD1',
+            base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAzElEQVR42mNkoBAwjhqAaoBK/sX/MPadifpEGY7TAGwAm6GM6BpVxDkgEqxcDNw8vGD21y+fGf7//sZw5+UPDENQDEDXzMvBBOZ//vEPpyFwhkfbzf8gSUIAZAmyIXADkL3huqqRYdqztQwMTy+B+VmmEL5qwSW4ITuq1LEbcLsUogEEpp2uhxsA46t2owYoVgNOBJ0Bi1msMwHTyHycBsAMARmAD4AMwBqIVDMARP98e4fh+/snDK9nOoDFRdMPMHAKyjCwC6ugOB8EAFEJbhH0FiKaAAAAAElFTkSuQmCC',
+        },
+
+        {
+            name: 'MissAV',
+            searchURL: `https://missav.ws/en/search/${dvdId}`,
+            color: '#FE628E',
+            base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC2klEQVR42sWXT0gUcRTHv29mdHddJQ3tz8HoEhQERR3KTkYng6BDeMgOuXnyVofqkix20Azs5sm0Q5QJFRHYqT9qahRGhVlkoKmk6WIb+9+d+f2a38As68I6s+su8zntsG/e+877vfd+vx/BJguX/Nu93NXghXJKAz9EQG0pV6rFf+ukBrhuIoM+R6C+jFDiRe1d/5odv2RlELjo3++VPFcVyI0yJK8dpxpYRIU2GGGxrup7/u95CZhq9ZfvjbnbPVJJK3Fy2c1UOpx4IsaSPXOeeNvBHn/YtoBAy80DFcw9WAL5YD6BM0lCmwpJ8cbq3hvfLAWstrQfrdTKhmSSdhQiuInG2UpQjp6u6W2bzCpAfPk2zfOm0MHTRfyTY/XpmUgJEGu+L+6dKFTasyGWY8YdqTNrIiUg3NzZXUall4sZ3CTK1++U91+/khIgWq1KrviUb7XniuiOv1rosGhRQ0DMd6vPhZJmyxd3VoHO14P9+gMMfYAUT+YtIoFkv6fvmo/EhNvFy+ftDJnk2eMoPVNn/GbBMPjjt5Am9DnDec4CxLBapvAeWvN1NFXCdd/OS+vnTsDVcGyjo5lF8AevIc8HchYRROICJXy3+/TKt0x/NgECzhjY6BToyRgoHLctQO+Ifor6uibdUI5sRYAJC0XBno1DHvmqp4ZZ+otD/UgxX9eKC0pNIQSYaHNL4APDkGeWNrVLQF0lrbmbEVnvirkIEHA9A2rHQyizK9ltuN6RxRIgvKudA5B/Lm8uoBhLwBZXwR8NQ5pe2NTOWIJCFiGP6mX1/B2UV18AVbP0ZxRhIdoQehtq49PgT8cgB6N2XBkYbbjlQTSrV/rgCKQfv20HNjEGUb6jmIue17+YRqdBzLrnM0mNYvFgezPaXQXWdBK0oI/dofeQQvanXiapzUg8OL4dCxw9kAgcP5IJHD2Umjh6LE/PhGMXExNHr2YbsuHU5TSTYl3P/wPKRcYY5O9/KgAAAABJRU5ErkJggg==',
+        },
+
+        {
+            name: 'Supjav',
+            searchURL: `https://supjav.com/?s=${dvdId}`,
+            color: '#D8201D',
+            base64: 'data:image/webp;base64,UklGRkoBAABXRUJQVlA4TD4BAAAvIAAIAP+guG0bNyh/k1zvh7Zt20YRKVt0QFG1bdvISbnK/Xdqb/7j/58DgUCgUCBw4AVBgYJAUHEok6HQVZfElt0SV+LIq5gnq1DJJ1Qg44IjN5IUqZZ5s2G2e7Di/+9cpntE/yfAzGabw8u3czOz1VlvPK/NFnrz0vbvOpje/kdSqTW/peN6DK+rwAD0r3MmKTg8lR7xKDW1qgcpQk0wOF7DjR7ooiQ5g3SBpgATUG6ECaALSlClDtRDVYLhhlQcKCqQpIlBziTJb6ScpVBhVI9LCWqCKgXoZWohSppATi91kOuNAkWmCsOl6WCI0OoCrgGmmB0PMoWRm57k4EAv7jaSSaG/6qNUHK9QMrQjTI1uvLJC1N0XjUx6T4DuXTnHNz35E87v271rZ7PTe85zs/nhHceFXS8221cvzAw=',
+        },
+
+        {
+            name: 'JAVMost',
+            searchURL: `https://www.javmost.ws/search/${dvdId}/`,
+            color: '#246FD1',
+            base64: 'data:image/png;base64,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',
         },
 
         {
