@@ -4,7 +4,7 @@
 
 // @name        🇯🇵 JAVScout
 // @author      WirlyWirly
-// @version     1.3
+// @version     1.4
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
 // @description Scout for JAV across various sites
 //              Written on LibreWolf via Violentmonkey
@@ -21,15 +21,17 @@
 
 // @match     https://www.javdatabase.com/movies/*
 
+// @include   /https:\/\/+jav\.guru\/\d+/
+
 // @match     https://www.javlibrary.com/*
 
-// @match     https://javstash.org/scenes/*
+// @match     https://javstash.org/*
 
 // @match     https://javtrailers.com/*
 
 // @match     https://r18.dev/videos/vod/movies/detail/-/id=*
 
-// @match     https://stashdb.org/scenes/*
+// @match     https://stashdb.org/*
 
 // ----------------------------------- Permissions --------------------------------------
 
@@ -231,6 +233,11 @@ if ( pageURL.match(/clearjav/) ) {
     dvdId = pageURL.match(/movies\/(.+)\/$/)[1]
     javScout(dvdId)
 
+} else if ( pageURL.match(/jav\.guru\/\d+\//) ) {
+    // --- JavGuru ---
+
+    let dvdId = document.querySelector('div.infoleft').innerText.match(/Code: (.+)/)
+    dvdId ? javScout(dvdId[1]) : null
 
 } else if ( pageURL.match(/javlibrary/) ) {
     // --- JAVLibrary ---
@@ -280,13 +287,33 @@ if ( pageURL.match(/clearjav/) ) {
 } else if ( pageURL.match(/javstash/) ) {
     // --- JAVStash ---
 
-    waitForElement('div.scene-performers + div strong').then(function(element) {
-        // Wait until the element containing the dvdId is available
+    function scenePage() {
+        // This is a scene page
 
-        dvdId = element.innerText
-        javScout(dvdId)
+        waitForElement('div.card-footer').then((element) => {
+            let dvdId = element.innerText.match(/Studio Code: (.+)/)
+            dvdId ? javScout(dvdId[1]) : null
+        })
+
+    }
+
+    let observer = new MutationObserver(function(mutations) {
+        // The actions to perform when mutations are detected
+
+        document.URL.match(/\/scenes\//) ? scenePage() : null
+
     })
 
+    waitForElement('main.MainContent').then((element) => {
+
+        let target = element
+        let config = { childList: true, subTree: true }
+        observer.observe(target, config)
+
+
+    })
+
+    document.URL.match(/\/scenes\//) ? scenePage() : null
 
 } else if ( pageURL.match(/javtrailers/) ) {
     // --- JavTrailers ---
@@ -357,12 +384,33 @@ if ( pageURL.match(/clearjav/) ) {
 } else if ( pageURL.match(/stashdb/) ) {
     // --- StashDB ---
 
-    waitForElement('div.scene-performers + div strong').then(function(element) {
-        // Wait until the element containing the dvdId is available
+    function scenePage() {
+        // This is a scene page
 
-        dvdId = element.innerText
-        javScout(dvdId)
+        waitForElement('div.card-footer').then((element) => {
+            let dvdId = element.innerText.match(/Studio Code: (.+)/)
+            dvdId ? javScout(dvdId[1]) : null
+        })
+
+    }
+
+    let observer = new MutationObserver(function(mutations) {
+        // The actions to perform when mutations are detected
+
+        document.URL.match(/\/scenes\//) ? scenePage() : null
+
     })
+
+    waitForElement('main.MainContent').then((element) => {
+
+        let target = element
+        let config = { childList: true, subTree: true }
+        observer.observe(target, config)
+
+
+    })
+
+    document.URL.match(/\/scenes\//) ? scenePage() : null
 
 }
 
@@ -373,12 +421,17 @@ function javScout(dvdId) {
     // The dvdId is null, so abort the JAVScout panel creation
     if ( dvdId == '' ) { return }
 
+    // There is already a javScout panel, so remove it
+    let existingScout = document.querySelector('#javScout')
+    existingScout ? existingScout.remove() : null
+
     // The filled in searchTemplatesArray
     let searchTemplatesArray = searchTemplates(dvdId)
 
     // The main element holding all the other div elements
     let javScoutElement = document.createElement('div')
     javScoutElement.id = 'javScout'
+    javScoutElement.setAttribute('data-dvdid', dvdId)
 
     // The 'JAVScout' title element
     let titleElement = document.createElement('div')
