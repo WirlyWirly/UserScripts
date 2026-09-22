@@ -7,3 +7,5 @@ A WirlyWirly collection of [UserScripts](https://openuserjs.org/about/Userscript
 
 All UserScripts are written in [NeoVim](https://neovim.io/) and tested on [LibreWolf](https://librewolf.net/) via [Violentmonkey](https://violentmonkey.github.io/)
 
+⚠️ UserScripts missing a `@homepage` are still under development and not ready for general use
+

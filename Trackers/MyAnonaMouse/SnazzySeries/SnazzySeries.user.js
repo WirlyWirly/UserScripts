@@ -7,6 +7,8 @@
 // @description Series pages, but done all snazzy-like!
 
 // @match 		https://www.myanonamouse.net/tor/browse.php*series*
+// @include		/^https://www\.myanonamouse\.net/tor/search\.php.*series%22%3A%7B%22id%22%3A%5B\d+.*/
+// @include		/^https://www\.myanonamouse\.net/tor/search\.php.*"series"%3A{"id"%3A[\d+.*/
 
 // @icon 		https://www.myanonamouse.net/favicon.ico
 
@@ -388,8 +390,8 @@ var observer = new MutationObserver(function(mutations) {
     }
 })
 
-if (document.URL.match(/.+series=\d+/) || document.URL.match(/^.+seriesID%5D=\d+/)) {
-    // Only run SnazzySeries when URL contains a series number
+if (document.URL.match(/.+series=\d+/) || document.URL.match(/^.+seriesID%5D=\d+/) || document.URL.match(/series%22%3A%7B%22id%22%3A%5B\d+/)) {
+    // Old Search: Series Page
 
     // Target element to observe for changes
     var target = document.getElementById("ssr")
@@ -400,4 +402,5 @@ if (document.URL.match(/.+series=\d+/) || document.URL.match(/^.+seriesID%5D=\d+
 
     // Mutation observer to watch for page changes
     observer.observe(target, config)
-}
+
+} 
