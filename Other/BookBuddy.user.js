@@ -2,15 +2,16 @@
 
 // ----------------------------------- MetaData --------------------------------------
 
-// @name        📖 BookBuddy
+// @name        BookBuddy
 // @author      WirlyWirly
 // @version     0.1
-// @homepage    
-// @description Your buddy when searching for books
+// @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/BookBuddy.user.js
+// @description Your buddy when searching for books across different sites
 //              Written on LibreWolf via Violentmonkey
 
-// @namespace   WirlyWirly
+// @namespace   https://github.com/WirlyWirly
 // @icon        data:image/png;base64,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
+// @run-at      document-end
 
 // ----------------------------------- Matches --------------------------------------
 
@@ -19,6 +20,9 @@
 
 // AudioBookBay
 // @match   https://audiobookbay.lu/abss/*
+
+// AudiobookDB
+// @match   https://audiobookdb.org/*
 
 // Audiobookshelf
 // @include /^.+/audiobookshelf/item/.+/
@@ -35,6 +39,9 @@
 // Hardcover
 // @match   https://hardcover.app/books/*
 
+// Libby
+// @match https://libbyapp.com/*
+
 // MyAnonaMouse
 // @include /^https://www.myanonamouse.net/t/\d+.*/
 
@@ -47,22 +54,25 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @require   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/waitForElement.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/waitForElement.js
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @updateURL   
-// @downloadURL 
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/BookBuddy.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Other/BookBuddy.user.js?raw=true
 
 // ==/UserScript==
 
 // The URL to your personal StashApp instance
 
+// =================================== Configurations ======================================
+
+// The URL of a Libby library
+let libbyLibraryURL = 'https://libbyapp.com/library/__YOURLIBRARY__'
 
 // The URL of an Audiobookshelf library
 let audiobookshelfURL = 'http://192.168.1.105:32060/audiobookshelf/library/465c95ac-e562-4ac0-b82a-66a2c3c2df86'
 
-// =================================== CODE ======================================
 
 // =================================== Site Specific Handling ======================================
 // Based on the URL of the current page, parse the necessary bookData to generate the floating BookBuddy panel
@@ -97,8 +107,20 @@ if ( pageURL.match(/audible/) ) {
 
     createSearchPanel(bookData)
 
+} else if ( pageURL.match(/audiobookdb/) ) {
+    // --- AudiobookDB ---
+
+    // pagination
+
+    // The title of the book
+    bookData.title = document.querySelector('div.book-detail h1').innerText
+
+    createSearchPanel(bookData)
+
 } else if ( pageURL.match(/audiobookshelf/) ) {
     // --- AudioBookShelf ---
+
+    // pagination
 
     // The title of the book
     bookData.title = document.querySelector('#itemTitle').innerText
@@ -116,6 +138,8 @@ if ( pageURL.match(/audible/) ) {
 } else if ( pageURL.match(/bibliotik/) ) {
     // --- Bibliotik ---
 
+    // pagination
+
     // The title of the book
     bookData.title = document.querySelector('#title').innerText
 
@@ -132,8 +156,20 @@ if ( pageURL.match(/audible/) ) {
 } else if ( pageURL.match(/hardcover/) ) {
     // --- Hardcover ---
 
+    // pagination
+
     // The title of the book
     bookData.title = document.querySelector('h1').innerText
+
+    createSearchPanel(bookData)
+
+} else if ( pageURL.match(/libby/) ) {
+    // --- Libby ---
+
+    // pagination
+
+    // The title of the book
+    bookData.title = document.querySelector('h1.screen-title-details-title').innerText
 
     createSearchPanel(bookData)
 
@@ -176,6 +212,10 @@ function searchTemplates({
     year == null ? year = '' : null
     publisher == null ? publisher = '' : null
 
+    // Convert a libbyLibraryURL to searchURL
+    let libbyData = libbyLibraryURL.match(/(http.+)\/library\/(.+)\/?$/)
+    libbySearchURL = `${libbyData[1]}/search/${libbyData[2]}`
+    
     let searchTemplatesArray = [
         // Each object in this array is a search template, for which a entry in the bookBuddy panel will be generated in this order
 
@@ -219,6 +259,13 @@ function searchTemplates({
         },
 
         {
+            name: 'AudiobookDB',
+            searchURL: `https://audiobookdb.org/search?q=${title}`,
+            color: '#B516A5',
+            base64: 'data:image/png;base64,UklGRpABAABXRUJQVlA4WAoAAAAQAAAAHwAAHwAAQUxQSJQAAAABgFrb1vLohlFRA4xVsCMbxSi5gzSRFRfHMA1MBahIjRzFDE99ENQRMQEAkK1LrYVVYF4T0f07iQ+VXPYTCf9FLstaAo03tj6+zpY/GzqF43FTMDd/NwT4JpuCInO9IQCDDSn6r5tJXP3TJpwjYksx5N5oI6EH4pbw8UEbEj7+JlzWEwn/Da67VwlzFaPSk9pM6gEAVlA4INYAAABwBwCdASogACAAAAAAJagCdMuN4T4B+AH7Af4DoENAuy2GBfMPyK/pO8AZ4B/AOkg9ADrAP0R9GD2AP2x9FD//hHLBwAD+/xNLf+0+pOFrhZvUnC3ehdnCXOFq23w0L/8nzXDG0pKSeXWsM+IObZzkeC3hYQz2f//mdGGBZ8Yof7AwT3f//M6MLxz//4eWubFoRfiQX45Vnifo//4eWuQk1kJ2qUuoX9gDIpBw9EhH9BLz1NIYxGyDhTFSiYLQJNm37RjdPE3rjP0n0RigHK9l+TN7NbAA',
+        },
+
+        {
             name: 'AudioBookshelf',
             searchURL: `${audiobookshelfURL.match(/(.+)\/?$/)[1]}/search?q=${title}`,
             color: '#CD9D49',
@@ -245,6 +292,13 @@ function searchTemplates({
             color: '#6D88F8',
             base64: 'data:image/png;base64,UklGRsoDAABXRUJQVlA4WAoAAAAQAAAAHwAAHwAAQUxQSL0AAAABgGLb2rLl+R1I7kmjuzQyi+bQYAI0d4jeiA7JdQ7uLsktuT7ofS8ziIgJEGZ2Q7Dw7eXXqnrEiurRPzMZufOKzpp41N+pqUHOuZoHQaHXSmyFapQKzf1bFacUcePsIMJRaJCTgcRzRhHhKLTM8UKKOC2IcF6gZ4pCzZxixJOzgghHoRFOApLOGUKEo9A25d4NKaEceyJidrvVHSnwB/R+slQeIqZVf90dTuUJ0334x/VmV5Kw3bI6R8p8xRgAVlA4IOYCAAAQFACdASogACAAAAAAJbACdMoRwN4x+Gf6wf2Dn6dp+42TN8x/5z8Sd0w+2btAeYD9QP1V3wDgAP1G9L79Vfg6/ZL/VfyD4AP45/Mbti+S/Sr2A3fI9f+dfkPntvxE/Yz/R5hv+H/khqi/9u/JXXX/7n7QPiC/l/sd9qfzp/oPcC/kn8r/tP5S/vr4YPQi/XY6Z45DtK659JYXoRFWRkyH4T/jKs1mKekAAP7+t1swAuuAVUa0VxeSUJxaHb5J9Eno8P9fzGR7VLpv3gFCGPw0ITnV4/57NXs3KY5LQ/GjuCp7cRXmpSfj9///5nZ+vLCgTlYT2Pvw523n0C+5/0xFJsBMQPWouFU+KcZ0vsI/mP5L9asFrg4BYdaMoH7vhbkTI775z/biA17HtzQWwDxtMvfSrKL//4UH/4eBbaO7f/px+mv8+TBsAM7416vK/PDl1N48q6luAjXHktlxorGc0Q95oSOF/5M3YGfq+OAtFfLuZrockPgi35CrMyxHSGogZqoW5s/b7CFgwb4nJefT4zsxoNQR+66fYtZK1eW2giKooie///wWpqmoBaopdXJHoo6i1mb1flmWC340sc5BEbou8YU7KzixEA3NnDPJF+Q7Yn/w2SVlTrjj0fqLdNfXrEK582SUIhewzYZ4brqZxilxE9syee/N4yCCkBBiRcYXXp/vM37UPgP58S1w4dCtU09CoxO0DkjJX5yQo38r1dKtxnhWo+Yr+VA4nX+pP9/KjoDmHXLtmUD8crUQ5JEFzWmoaUTbgYfEwMwf84CnQF8bcV7ij0EMynyXOnm0kIJ8FqsaQALv5L9pLXXJaWyN39CeBlqhF2Lj8Odj0OYe5ap0TNxYHpT/Ja//qzHYCoLTjvUT90f/W1dSgCVAUM0q7/o5DuaQB839jnoR0vldqeTuW3ISNSf/VCJH/1MxOlVgsk3L4AB16W5/nvoPaBzaRc+nmwUpYSoATO3S+cC1sHoiIcAA',
         },
+
+        {
+            name: 'Libby',
+            searchURL: `${libbySearchURL}/search/query-${title}/page-1`,
+            color: '#A81C49',
+            base64: 'data:image/png;base64,UklGRgIEAABXRUJQVlA4WAoAAAAQAAAAHwAAHwAAQUxQSAUBAAABgGRbmyHpj2rbNma27Z7adq/P5iLKNqcVMYhiR8a/g4iYABBNrWwbmZ4eaatMBanp23dqb5jzsFd9t52urGBDHRFWbxQoaHmlEYX0tUVENWaPSLSPqf4bc0SkOsb+aXVEJDtakxS8RaS/FSRsUXl0CwAyNBFETQbAfgR1H9IecR7TqjU4muoOP46/Y4Li0IkFjsMX8CYpDp3sCuAEumq0ONqa9Gec53Q4xTkFyDVgGHIB4JjJY8cAACU/8n5KEqDDI8vTAUnJkkeOZ4kkg9QVrwzvSir8T7r/mBL2101AlJRdmMRMF2UEFJKi23djiHHOQsb32yICEklWw8Dy6uryQEMWAUEAVlA4INYCAACwEwCdASogACAAAAAAJbACuVQA00nkH0Ac4hqJ2Y/Zn+Z5bvyT/Zvxy/oHaA8RH+ufjlwAP07/zPAAf5L+V9YB6AHlQfp38Gf7UfrB8AH6h3an2O2MH9i/Hb8btI9+Gf5VZi3+vflVqJ/4q66L/Y+nX/Y+VD6M/vX41/QB/C/5Z/T/xy/n//c8I3ob/q6dqdRZp3bLydbDftPfk/j6NRNygIzFkyIwAP7//11AT5dFzWVxileTdps9zMXKR/yJzw/F0c5v5xc7P9KVS3Tfa3V67/U8hhYPCOkhEz3trD1CpF8YYvtrjOVuvcLT/x/J1ZbCup5PKJDFDWxqtb+tkt+bUXo3e6Oj/6FIHJtrUmU/J6F8fGpSxO/5n3KCtJaLw92s3Qie956okSUAqKZJItg6/Z1NPsN5xblcJOXEn9PENGUj3WE2Sqp6i+gNEukjhAMxlB7CV8zv/5v/C2mZs06VOWhP/NqZUw9H738AbiM9xt9l/rLCjrzXmoLYEkki73GLs3MwKYdLB4q0H95XW2WPe59ZnAc3UpUZP/9ecu/9ckkaGjVjv8G1vpPaoPIS/+Fo0SEoDOeNmNzTUzg3135GsS0fvwNMBjSrdqj5IsAwHd0hnNeUQPBwvYjNfWsyFbjxnP7x4S77rJCOzN06vaMx4qjEm/K6yhKKVwvA0t7+zCpTE47BeZ2bCupnU3jKW51ScppncvYd7qa/qGjSprXJwO1KxX2421aPEAkz89P+n0zwPqCQdaE4pGJwsVQjQ+ZszsiyKm6T/fH/X8OxBRYL3IR660p0UWNVc9gjOcMd7mSvjh9BwlckXFeeOY99mZhvs2jRU//uFEWQ//7h3lt3WdCyLbn/7Ef/8YF/+k0CtDz5GHmrwo6DYEjx9/Ewpq7N2bN06yvn6O8Yrf1OFZ6/dOIB5jPgz+St8F9+Fs00Y7egPUob61gcGlPBM9mn8Sdr6JcswAA=',
+        }
 
     ]
 
