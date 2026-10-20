@@ -2,11 +2,12 @@
 
 // ----------------------------------- MetaData --------------------------------------
 
-// @name        CLEAR - CoverUp!
+// @name        CLEAR - 🌸 CoverUp!
 // @author      WirlyWirly
-// @version     1.6
+// @version     1.7
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/ClearJAV/CoverUp.user.js
 // @description Cover up low resolution posters with higher resolution covers!
+//              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
 
 // @namespace   https://github.com/WirlyWirly
 // @icon        https://clearjav.com/favicon.ico
@@ -26,13 +27,17 @@
 
 // ==/UserScript==
 
-// The dimensions of the CoverCards
-let cardWidthMinimum = '420px' // Default: 420px
-let coverHeight = '290px' // Default: 290px
+// If coverCards should be enabled by default when the search page is loaded
+let autoCoverCards = false // Default: false
 
-/* -- Other Ratios worth trying --
-UltraWide: 480px by 338px
-Mobile: 295px by 200px
+// The dimensions of the CoverCards (Ultrawide)
+let cardWidthMinimum = '420px' // Default: 420px
+let cardCoverImgHeight = '315px' // Default: 315px
+
+/* -- Dimensions to try for other resolutions --
+1080p: 420px by 304px
+1440p: 420px by 325px
+Mobile: 295px by 230px
 */
 
 
@@ -41,21 +46,11 @@ Mobile: 295px by 200px
 // This string helps prevent various JavaScript oddities when working with variables
 'use strict'
 
-const pageURL = document.URL
+// The URL path of the current page, used to determine what page this is and how to proceed
 const pagePath = document.location.pathname
 
-
-// CoverCard global variables
-let autoCoverCards = false
+// CoverCardButton global element
 let coverCardsButton = document.createElement('div')
-coverCardsButton.textContent = '🌸 CoverCards'
-
-if ( window.screen.availWidth < 400 ) {
-    // SmallScreen: Likely a mobile, so adjust CoverCard dimensions
-    cardWidthMinimum = '295px'
-    coverHeight = '200px'
-    coverCardsButton.textContent = '🌸'
-}
 
 // The MutationObserver global variables
 let target, config
@@ -76,9 +71,23 @@ if ( pagePath.match(/\/$/) ) {
 } else if ( pagePath.match(/\/torrents/) ) {
     // ---------- Search Page ----------
 
-    // Create the CoverCards button
+    // Style the CoverCards button
     coverCardsButton.title = 'Click to Enable CoverCards'
+    coverCardsButton.textContent = '🌸 CoverCards'
     coverCardsButton.classList.add('coverup_button')
+
+    if ( autoCoverCards == true ) {
+        // AutoCoverCards is enabled, so style the button accordingly
+        coverCardsButton.classList.add('coverCardsView')
+        coverCardsButton.title = 'Click to Disable CoverCards'
+    }
+
+    if ( window.screen.availWidth < 400 ) {
+        // SmallWidthScreen, likely a mobile, so adjust CoverCards accordingly
+        cardWidthMinimum = '295px'
+        cardCoverImgHeight = '230px'
+        coverCardsButton.textContent = '🌸'
+    }
 
     coverCardsButton.addEventListener('mouseup', function(event) {
         // The actions to take when the CoverCard button is clicked
@@ -89,6 +98,7 @@ if ( pagePath.match(/\/$/) ) {
             if ( autoCoverCards == true ) {
                 // Disable autoCoverCards
                 autoCoverCards = false
+
                 this.title = 'Click to Enable CoverCards'
                 this.classList.remove('coverCardsView')
 
@@ -179,7 +189,8 @@ function searchpageCoverUp() {
         }
 
         // If autoCoverCards is enabled, call CoverCards()
-        autoCoverCards == true ? CoverCards() : null
+        autoCoverCards == true ? CoverCards() : document.querySelector('main.page__torrent--index').style.margin = ''
+
 
     }
 
@@ -222,6 +233,14 @@ function CoverCards() {
 
     // The listViewElement is null, probably already having been removed in a previous call
     if ( listViewElement == null ) { return }
+
+    // Edit margins so cover cards span entire view-width
+    document.querySelector('main.page__torrent--index').style.margin = '0 1vw'
+    document.querySelector('div.torrent-search__component').style.margin = 'unset'
+
+    document.querySelector('section.torrent-search__results').style.width = '100%'
+    document.querySelector('section.torrent-search__results').style.maxWidth = 'unset'
+
 
     let allListViewRows = listViewElement.querySelectorAll('tbody > tr:not([data-coverup_covercards="true"])')
     if ( allListViewRows ) {
@@ -295,7 +314,7 @@ function CoverCards() {
     </div>
 </header>
 <aside class="torrent-card__aside" style="background-image: url('${coverURL}');">
-    <a class="torrent-card__similar-link" href="https://clearjav.com/movies/${moviesId}">
+    <a class="torrent-card__similar-link" href="https://clearjav.com/torrents/${torrentId}">
         <figure class="torrent-card__figure">
             <img class="torrent-card__image" src="${coverURL}" alt="Similar Torrents" loading="lazy">
         </figure>
@@ -303,7 +322,7 @@ function CoverCards() {
 </aside>
 <div class="torrent-card__body">
     <h2 class="torrent-card__title" title="${torrentTitle}">
-        <a class="torrent-card__link max-2-lines" href="https://clearjav.com/movies/${moviesId}">
+        <a class="torrent-card__link max-2-lines" href="https://clearjav.com/torrents/${torrentId}">
             ${torrentTitle}
         </a>
     </h2>
@@ -343,7 +362,7 @@ function CoverCards() {
 
 
 if ( pagePath.match(/\/torrents/) ) {
-    // Apply the styles of the CoverUp button and CoverCards view
+    // Apply the styles of the CoverCards button and the coverCards themselves
 
     GM_addStyle(`
 
@@ -392,7 +411,7 @@ if ( pagePath.match(/\/torrents/) ) {
            min-width: ${cardWidthMinimum};
            border-radius: 8px;
            height: unset;
-           grid-template-rows: 40px ${coverHeight} 55px 40px;
+           grid-template-rows: 40px ${cardCoverImgHeight} 60px 40px;
            grid-template-areas: "header header" "poster poster" "body body" "footer footer";
         }
 
@@ -406,7 +425,7 @@ if ( pagePath.match(/\/torrents/) ) {
 
         #coverCardsView figure.torrent-card__figure {
             width: unset;
-            height: ${coverHeight};
+            height: ${cardCoverImgHeight};
             backdrop-filter: blur(20px)
         }
 
