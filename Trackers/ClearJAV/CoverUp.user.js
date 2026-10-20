@@ -40,6 +40,13 @@ let cardCoverImgHeight = '315px' // Default: 315px
 Mobile: 295px by 230px
 */
 
+// If the display has a pixel width smaller than this, assume it's a mobile device
+let mobileScreenWidthThreshold = 500
+
+// If the device is determined to be a mobile, use these dimensions for the CoverCards
+let mobileCardWidthMinimum = '295px' // Default: 295px
+let mobileCardCoverImgHeight = '235px' // Default: 235px
+
 
 // =================================== CODE ======================================
 
@@ -82,10 +89,10 @@ if ( pagePath.match(/\/$/) ) {
         coverCardsButton.title = 'Click to Disable CoverCards'
     }
 
-    if ( window.screen.availWidth < 400 ) {
+    if ( window.screen.availWidth < mobileScreenWidthThreshold ) {
         // SmallWidthScreen, likely a mobile, so adjust CoverCards accordingly
-        cardWidthMinimum = '295px'
-        cardCoverImgHeight = '230px'
+        cardWidthMinimum = mobileCardWidthMinimum
+        cardCoverImgHeight = mobileCardCoverImgHeight
         coverCardsButton.textContent = '🌸'
     }
 
