@@ -27,17 +27,17 @@
 
 // ==/UserScript==
 
-// If coverCards should be enabled by default when the search page is loaded
+// If CoverCards should be enabled by default when the search page is loaded
 let autoCoverCards = false // Default: false
 
-// The dimensions of the CoverCards (Ultrawide)
+// The dimensions of the CoverCards (Default is for Ultrawide @ 3440x1440)
 let cardWidthMinimum = '420px' // Default: 420px
 let cardCoverImgHeight = '315px' // Default: 315px
 
-/* -- Dimensions to try for other resolutions --
+/* 
+Dimensions to try for other resolutions
 1080p: 420px by 304px
 1440p: 420px by 325px
-Mobile: 295px by 230px
 */
 
 // If the display has a pixel width smaller than this, assume it's a mobile device
@@ -45,7 +45,7 @@ let mobileScreenWidthThreshold = 500
 
 // If the device is determined to be a mobile, use these dimensions for the CoverCards
 let mobileCardWidthMinimum = '295px' // Default: 295px
-let mobileCardCoverImgHeight = '235px' // Default: 235px
+let mobileCardCoverImgHeight = '240px' // Default: 240px
 
 
 // =================================== CODE ======================================
