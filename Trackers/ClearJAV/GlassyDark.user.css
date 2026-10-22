@@ -1,0 +1,102 @@
+/* ==UserStyle==
+@name       ClearJAV - GlassyDark
+@version    0.1
+@author     WirlyWirly
+@namespace  https://github.com/WirlyWirly
+@description A glassy re-coloring of the sites native 'Material design 3 Dark' theme
+
+@updateURL   
+@homepageURL 
+@supportURL  
+
+@advanced text background-pattern "🖼️  Background Pattern URL" 'https://i.ibb.co/FbynFp47/pattern.webp'
+
+==/UserStyle== */
+
+@-moz-document regexp("https://clearjav.\w+.*") {
+    :root {
+        /* ----------- Theme Colors ----------- */
+
+        --transparent: #0000;
+        
+        --primary: #1a1820;
+        --primary-glass: #1a1820cc;
+        
+        --highlight: #3a3648;
+        --highlight-glass: #3a36488a;
+        
+        --icon-color: #c0c0c0;
+
+        /* ----------- Variable Overrides ----------- */
+        /* These variables already exist as part of the sites CSS, so override their default values with our custom colors */
+
+        --panel-bg: var(--primary-glass);
+        --panel-bg-1: var(--primary-glass);
+        --panel-head-bg: var(--transparent);
+        --button-filled-bg: var(--highlight);
+        --article-card-bg: var(--highlight-glass);
+        --chatbox-message-bg: var(--highlight);
+        --button-outlined-bg: var(--primary);
+        --option-bg: var(--primary);
+        --option-hover-bg: var(--highlight);
+        --icon-button-fg: var(--icon-color);
+        --achievment-bg: var(--highlight);
+
+        /* Navigation Bar */
+        --top-nav-bg: var(--primary-glass);
+        --secondary-nav-bg: var(--primary-glass);
+        --quick-search-bg: var(--highlight);
+        --top-nav-icon-bar-icon-bg: var(--highlight);
+        --top-nav-dropdown-hover-bg: var(--highlight);
+        --top-nav-dropdown-menu-bg: var(--primary);
+        --top-nav-dropdown-menu-item-icon-bg: var(--highlight);
+        --top-nav-dropdown-menu-item-hover-bg: var(--highlight);
+
+        /* Alert Banner */
+        --alert-gap-color: var(--transparent);
+        --alert-bg: var(--transparent);
+            
+        /* ----------- Torrent Search ----------- */
+        --compact-search-bg: var(--primary-glass);
+        --paginate-bg: var(--transparent);
+        --paginate-bg-current: var(--highlight-glass);
+        --paginate-bg-hover: var(--highlight);
+        
+        /* List View */
+        --data-table-th-bg: var(--transparent);
+        --data-table-tr-odd-bg: var(--transparent);
+        --data-table-tr-even-bg: var(--transparent);
+        --data-table-tr-hover-bg: var(--highlight-glass);
+        
+        /* Cards View */
+        --torrent-card-head-bg: var(--primary);
+        --torrent-card-bg: var(--primary);
+        
+        /* Groupings View */
+        --torrent-group-header-bg: var(--primary);
+        --torrent-group-table-stripe-odd: var(--primary);
+        
+        /* Playlists */
+        --playlist-card-bg: var(--primary);
+
+        /* Forums */
+        --post-toolbar-bg: var(--highlight-glass);
+        --post-toolbar-hover-bg: var(--highlight);
+        --post-bg: var(--primary);
+        --post-aside-bg: var(--primary);
+        --bbcode-rendered-quote-bg: var(--highlight-glass);
+        --bbcode-input-bg: var(--primary-glass);
+        --bbcode-input-body-bg: var(--primary-glass);
+        
+    }
+
+    body {
+        background: url("/*[[background-pattern]]*/");
+        background-color: var(--primary);
+    }
+
+    .matrix-chat__message:hover {
+        background: var(--highlight);
+    }
+
+}
