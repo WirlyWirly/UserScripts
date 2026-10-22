@@ -1,14 +1,15 @@
 /* ==UserStyle==
-@name       ClearJAV - GlassyDark
+@name       ClearJAV - 🪟 GlassyDark
 @version    0.1
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
-@description A glassy re-coloring of the sites native 'Material design 3 Dark' theme
+@description A glassy re-coloring of the  native 'Material design 3 Dark' theme
 
 @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/GlassyDark.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/raw/refs/heads/main/Trackers/ClearJAV/GlassyDark.user.css
+@supportURL  https://clearjav.com/forums/topics/198
 
-@advanced text background-pattern "🖼️  Background Pattern" 'https://i.ibb.co/LX0NvgGf/pattern.webp'
+@advanced text background-pattern "🖼️  Background Pattern" 'https://clearjav.moe/attachments/808019/4274902cd1f868c201c9feeb196650fc.avif'
 
 ==/UserStyle== */
 
@@ -31,19 +32,20 @@
         /* ----------- Variable Overrides ----------- */
         /* These variables already exist as part of the sites CSS, so override their default values with our custom colors */
 
-        --panel-bg: var(--primary-glass);
-        --panel-bg-1: var(--primary-glass);
-        --panel-head-bg: var(--transparent);
-        --button-filled-bg: var(--highlight);
+        --achievement-bg: var(--highlight);
+        --achievement-progress-bg: var(--highlight);
         --article-card-bg: var(--highlight-glass);
-        --chatbox-message-bg: var(--highlight);
+        --button-filled-bg: var(--highlight);
         --button-outlined-bg: var(--primary);
+        --chatbox-message-bg: var(--highlight);
+        --dialog-bg: var(--primary-glass);
+        --dialog-head-bg: var(--primary-glass);
+        --icon-button-fg: var(--icon-color);
         --option-bg: var(--primary);
         --option-hover-bg: var(--highlight);
-        --icon-button-fg: var(--icon-color);
-        --achievement-bg: var(--highlight);
-        --dialog-head-bg: var(--primary-glass);
-        --dialog-bg: var(--primary-glass);
+        --panel-bg-1: var(--primary-glass);
+        --panel-bg: var(--primary-glass);
+        --panel-head-bg: var(--transparent);
 
         /* Navigation Bar */
         --top-nav-bg: var(--primaryDark);
@@ -65,6 +67,7 @@
         --paginate-bg: var(--transparent);
         --paginate-bg-current: var(--highlight-glass);
         --paginate-bg-hover: var(--highlight);
+        --paginate-fg-disabled: var(--icon-color);
         
         /* List View */
         --data-table-th-bg: var(--transparent);
