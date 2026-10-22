@@ -5,11 +5,11 @@
 @namespace  https://github.com/WirlyWirly
 @description A glassy re-coloring of the sites native 'Material design 3 Dark' theme
 
-@updateURL   
-@homepageURL 
+@updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/GlassyDark.user.css?raw=true
+@homepageURL https://github.com/WirlyWirly/UserScripts/raw/refs/heads/main/Trackers/ClearJAV/GlassyDark.user.css
 @supportURL  
 
-@advanced text background-pattern "🖼️  Background Pattern URL" 'https://i.ibb.co/FbynFp47/pattern.webp'
+@advanced text background-pattern "🖼️  Background Pattern" 'https://i.ibb.co/FbynFp47/pattern.webp'
 
 ==/UserStyle== */
 
@@ -40,7 +40,7 @@
         --option-bg: var(--primary);
         --option-hover-bg: var(--highlight);
         --icon-button-fg: var(--icon-color);
-        --achievment-bg: var(--highlight);
+        --achievement-bg: var(--highlight);
 
         /* Navigation Bar */
         --top-nav-bg: var(--primary-glass);
