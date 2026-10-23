@@ -132,6 +132,7 @@
     }
 
     /* Title Text Glow */
+    section.alert .alert__content strong,
     h1.meta__title,
     h1.torrent__name,
     .panel__heading,
