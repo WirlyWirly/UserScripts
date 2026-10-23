@@ -3,7 +3,7 @@
 @version    0.2
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
-@description A glassy re-coloring of the  native 'Material design 3 Dark' theme
+@description A glassy re-coloring of the native 'Material design 3 Dark' theme
 
 @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/GlassyDark.user.css?raw=true
 @homepageURL https://github.com/WirlyWirly/UserScripts/raw/refs/heads/main/Trackers/ClearJAV/GlassyDark.user.css
@@ -154,7 +154,6 @@
     main.page__topic--show aside.post__aside {
         background-color: var(--transparent);
     }
-
 
     /* Make Elements Transparent */
     div.torrent-search--card__results,
