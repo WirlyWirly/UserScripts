@@ -100,7 +100,7 @@
 
         --post-toolbar-bg: var(--highlight-glass);
         --post-toolbar-hover-bg: var(--highlight);
-        --post-bg: var(--primary);
+        --post-bg: var(--primary-glass);
         --post-aside-bg: var(--primary);
         --bbcode-rendered-neutral-muted: var(--highlight-glass);
         --bbcode-rendered-quote-bg: var(--highlight-glass);
@@ -147,11 +147,20 @@
     div.torrent-title {
         padding: 5px 0px;
     }
+    
+    /* Forums */
+    main.page__topic--show section,
+    main.page__topic--show div.panel__body,
+    main.page__topic--show aside.post__aside {
+        background-color: var(--transparent);
+    }
+
 
     /* Make Elements Transparent */
     div.torrent-search--card__results,
     div.meta__poster-popup-content,
-    article.torrent-card {
+    article.torrent-card,
+    div.panelV2[x-data="mediainfo"] > div.panel__body {
         background-color: var(--transparent);
     }
 
