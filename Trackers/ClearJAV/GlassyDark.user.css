@@ -140,6 +140,7 @@
     .panel__heading,
     div.torrent-title a,
     div.torrent-search--grouped__title-name h2 a,
+    .torrent-search--poster__title,
     h2.torrent-card__title a,
     h3.meta__poster-popup-title,
     h1.blacklist__title,
@@ -171,8 +172,15 @@
     div.torrent-search--card__results,
     div.meta__poster-popup-content,
     article.torrent-card,
-    div.panelV2[x-data="mediainfo"] > div.panel__body {
+    div.panelV2[x-data="mediainfo"] > div.panel__body,
+    .collection-posters,
+    .torrent-search--poster__result > figure::before {
         background-color: var(--transparent);
+    }
+
+    .torrent-search--poster__result:hover .torrent-search--poster__caption,
+    .torrent-search--poster__result:hover > figure::before {
+        background-color:var(--highlight);
     }
 
     /* Seeding Status Highlights */
