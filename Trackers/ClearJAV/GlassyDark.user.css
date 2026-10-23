@@ -144,6 +144,10 @@
         text-shadow: 0 0 12px var(--text-glow);
     }
     
+    h1.meta__title {
+        text-align: center;
+    }
+
     .torrent-icons__freeleech {
         filter: drop-shadow(0px 0px 5px #ffcb00);
     }
