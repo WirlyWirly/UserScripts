@@ -29,7 +29,10 @@
         --highlight-glass: #3a36488a;
         
         --icon-color: #c0c0c0;
+
         --seeding-color: #44ff001a;
+        --text-glow: #9475ff;
+        --hyperlink-color: #79b1fe;
 
 
         /* ----------- Variable Overrides ----------- */
@@ -113,14 +116,14 @@
     }
 
     a.top-nav__branding > img {
-        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%) drop-shadow(0px 0px 10px #9475ff);
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%) drop-shadow(0px 0px 10px var(--text-glow));
     }
 
     /* Hyperlinks */
     a,
     .breadcrumb__link,
     .breadcrumb--active {
-        color: #79b1fe;
+        color: var(--hyperlink-color);
     }
 
     /* Matrix Chat Box */
@@ -137,8 +140,8 @@
     h2.torrent-card__title a,
     h3.meta__poster-popup-title,
     li.pagination__current {
-        color: #d7d7d7;
-        text-shadow: 0 0 12px #9475ff;
+        color: #e1e1e1;
+        text-shadow: 0 0 12px var(--text-glow);
     }
     
     div.torrent-title {
