@@ -84,6 +84,7 @@
         --data-table-tr-odd-bg: var(--transparent);
         --data-table-tr-even-bg: var(--transparent);
         --data-table-tr-hover-bg: var(--highlight-glass);
+        --torrent-row-format-bg: var(--highlight);
         
         /* Cards View */
         --torrent-card-head-bg: var(--primary);
