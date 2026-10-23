@@ -140,6 +140,7 @@
     div.torrent-search--grouped__title-name h2 a,
     h2.torrent-card__title a,
     h3.meta__poster-popup-title,
+    h1.blacklist__title,
     li.pagination__current {
         color: #e1e1e1;
         text-shadow: 0 0 12px var(--text-glow);
@@ -183,7 +184,8 @@
         background-color: var(--transparent);
     }
 
-    main.page__torrent--show:has(ul.torrent__tags > li.torrent__seeders.torrent-activity-indicator--seeding) section.video-meta { /* Torrent Details */
+    main.page__torrent--show:has(ul.torrent__tags > li.torrent-activity-indicator--seeding) div.video-meta-title,
+    main.page__torrent--show:has(ul.torrent__tags > li.torrent-activity-indicator--seeding) section.video-meta { /* Torrent Details */
         background-color: var(--seeding-color);
         border-radius: 10px;
         padding: 10px;
