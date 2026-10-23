@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name       ClearJAV - 🪟 GlassyDark
-@version    0.1
+@version    0.2
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description A glassy re-coloring of the  native 'Material design 3 Dark' theme
@@ -15,6 +15,7 @@
 
 @-moz-document regexp("https://clearjav.\w+.*") {
     :root {
+
         /* ----------- Theme Colors ----------- */
 
         --transparent: #0000;
@@ -28,6 +29,8 @@
         --highlight-glass: #3a36488a;
         
         --icon-color: #c0c0c0;
+        --seeding-color: #44ff001a;
+
 
         /* ----------- Variable Overrides ----------- */
         /* These variables already exist as part of the sites CSS, so override their default values with our custom colors */
@@ -61,13 +64,17 @@
         --alert-gap-color: var(--highlight-glass);
         --alert-bg: var(--primary);
         --alert-fg: var(--icon-color);
-            
+
+
+
         /* ----------- Torrent Search ----------- */
+
         --compact-search-bg: var(--primary-glass);
         --paginate-bg: var(--transparent);
         --paginate-bg-current: var(--highlight-glass);
         --paginate-bg-hover: var(--highlight);
         --paginate-fg-disabled: var(--icon-color);
+        --meta-popup-bg: var(--primary);
         
         /* List View */
         --data-table-th-bg: var(--transparent);
@@ -86,7 +93,8 @@
         /* Playlists */
         --playlist-card-bg: var(--primary);
 
-        /* Forums */
+        /* ----------- Forums ----------- */
+
         --post-toolbar-bg: var(--highlight-glass);
         --post-toolbar-hover-bg: var(--highlight);
         --post-bg: var(--primary);
@@ -98,13 +106,70 @@
         
     }
 
+    /* Background Pattern Image */
     body {
         background: url("/*[[background-pattern]]*/");
         background-color: var(--primary);
     }
 
+    a.top-nav__branding > img {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%) drop-shadow(0px 0px 10px #9475ff);
+    }
+
+    /* Hyperlinks */
+    a,
+    .breadcrumb__link,
+    .breadcrumb--active {
+        color: #79b1fe;
+    }
+
+    /* Matrix Chat Box */
     .matrix-chat__message:hover {
         background: var(--highlight);
     }
 
+    /* Title Text Glow */
+    h1.meta__title,
+    h1.torrent__name,
+    .panel__heading,
+    div.torrent-title a,
+    div.torrent-search--grouped__title-name h2 a,
+    h2.torrent-card__title a,
+    h3.meta__poster-popup-title,
+    li.pagination__current {
+        color: #d7d7d7;
+        text-shadow: 0 0 12px #9475ff;
+    }
+    
+    div.torrent-title {
+        padding: 5px 0px;
+    }
+
+    /* Make Elements Transparent */
+    div.torrent-search--card__results,
+    div.meta__poster-popup-content,
+    article.torrent-card {
+        background-color: var(--transparent);
+    }
+
+    /* Seeding Status Highlights */
+    tr:has(td.torrent-activity-indicator--seeding), /* List\Group row */
+    article.torrent-card:has(> header.torrent-card__header a.torrent-activity-indicator--seeding) /* Card article */ {
+        background-color: var(--seeding-color);
+    }
+
+    header.torrent-card__header:has(a.torrent-activity-indicator--seeding),
+    header.torrent-card__header:has(a.torrent-activity-indicator--seeding) ~ footer.torrent-card__footer {
+        background-color: var(--transparent);
+    }
+
+    main.page__torrent--show:has(ul.torrent__tags > li.torrent__seeders.torrent-activity-indicator--seeding) section.video-meta { /* Torrent Details */
+        background-color: var(--seeding-color);
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    main.page__torrent--show:has(ul.torrent__tags > li.torrent__seeders.torrent-activity-indicator--seeding) section.video-meta div.meta__chips {
+        padding: 10px 0px;
+    }
 }
