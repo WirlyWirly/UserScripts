@@ -79,6 +79,9 @@
     goodGrief
     EOT;
 
+    Option7 "MoreSprinkles" <<<EOT
+    moreSprinkles
+    EOT;
 }
 
 ==/UserStyle== */
@@ -111,12 +114,14 @@
             
         */
 
-        --pattern-geishaGardens: url("");
-        --pattern-lostLamb: url("");
-        --pattern-goodGrief: url("");
-        --pattern-pokaSpotted: url("");
-        --pattern-hairDay: url("");
-        --pattern-smileyBoys: url("");
+        --pattern-geishaGardens: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/geishaGardens.svg?raw=true");
+        --pattern-lostLamb: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/lostLamb.svg?raw=true");
+        --pattern-goodGrief: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/goodGrief.svg?raw=true");
+        --pattern-pokaSpotted: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/pokaSpotted.svg?raw=true");
+        --pattern-hairDay: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/hairDay.svg?raw=true");
+        --pattern-smileyBoys: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/smileyBoys.svg?raw=true");
+        --pattern-moreSprinkles: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/moreSprinkles.svg?raw=true");
+
 
 
         /* ----------- Variable Overrides ----------- */
