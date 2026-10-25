@@ -152,7 +152,7 @@
 }
 
 @advanced color opt-seeding-highlight "🖌️ Seeding Highlight" #44ff001a
-@advanced number opt-search-results-width "↔️Search Max-Width [Pixels]" [1800]
+@advanced number opt-search-results-width "↔️Search Max-Width [Pixels]" [2000]
 
 ==/UserStyle== */
 
