@@ -152,6 +152,7 @@
 }
 
 @advanced color opt-seeding-highlight "🖌️ Seeding Highlight" #44ff001a
+@advanced number opt-search-results-width "↔️Search Max-Width [Pixels]" [1800]
 
 ==/UserStyle== */
 
@@ -285,7 +286,8 @@
         
     }
 
-    /* Background Pattern */
+    /* -------------------------- Background -------------------------- */
+
     body::before {
         background-color: var(--pattern-color);
         content: '';
@@ -297,33 +299,20 @@
         z-index: -1;
     }
 
-
     body {
         background-color: var(--background-color);
     }
 
+    /* -------------------------- Glowing Headers -------------------------- */
+
+    /* Logo Image */
     a.top-nav__branding > img {
         filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%) drop-shadow(0px 0px 10px var(--header-text-glow));
         background-image: url(/img/sparkels.gif);
     }
 
-    /* Hyperlinks */
-    a,
-    .breadcrumb__link,
-    .breadcrumb--active {
-        color: var(--hyperlink-color);
-    }
 
-    /* Matrix Chat Box */
-    .matrix-chat__message:hover {
-        background: var(--highlight);
-    }
-
-    .chatbox-message {
-        background: var(--highlight);
-    }
-
-    /* Title Text Glow */
+    /* Headers */
     section.alert .alert__content strong,
     h1.meta__title,
     h1.torrent__name,
@@ -352,19 +341,9 @@
         padding: 5px 0px;
     }
     
-    /* Category Icons */
-    .category__icon {
-        color: var(--hyperlink-color);
-    }
 
-    /* Forums */
-    main.page__topic--show section,
-    main.page__topic--show div.panel__body,
-    main.page__topic--show aside.post__aside {
-        background-color: var(--transparent);
-    }
+    /* -------------------------- Transparent Elements -------------------------- */
 
-    /* Make Elements Transparent */
     div.torrent-search--card__results,
     div.meta__poster-popup-content,
     article.torrent-card,
@@ -374,12 +353,15 @@
         background-color: var(--transparent);
     }
 
-    .torrent-search--poster__result:hover .torrent-search--poster__caption,
-    .torrent-search--poster__result:hover > figure::before {
-        background-color:var(--highlight);
+    /* Forums */
+    main.page__topic--show section,
+    main.page__topic--show div.panel__body,
+    main.page__topic--show aside.post__aside {
+        background-color: var(--transparent);
     }
 
-    /* Seeding Status Highlights */
+    /* -------------------------- Seeding Status Highlights -------------------------- */
+
     tr:has(td.torrent-activity-indicator--seeding), /* List\Group row */
     article.torrent-card:has(> header.torrent-card__header a.torrent-activity-indicator--seeding) /* Card article */ {
         background-color: var(--seeding-highlight);
@@ -399,6 +381,39 @@
 
     main.page__torrent--show:has(ul.torrent__tags > li.torrent__seeders.torrent-activity-indicator--seeding) section.video-meta div.meta__chips {
         padding: 10px 0px;
+    }
+
+    /* -------------------------- Other -------------------------- */
+
+    section.torrent-search__results {
+        max-width: /*[[opt-search-results-width]]*/px;
+        margin: auto;
+    }
+
+    /* Hyperlinks */
+    a,
+    .breadcrumb__link,
+    .breadcrumb--active {
+        color: var(--hyperlink-color);
+    }
+
+    /* Matrix Chat Box */
+    .matrix-chat__message:hover {
+        background: var(--highlight);
+    }
+
+    .chatbox-message {
+        background: var(--highlight);
+    }
+
+    /* Category Icons */
+    .category__icon {
+        color: var(--hyperlink-color);
+    }
+
+    .torrent-search--poster__result:hover .torrent-search--poster__caption,
+    .torrent-search--poster__result:hover > figure::before {
+        background-color:var(--highlight);
     }
 
 }
