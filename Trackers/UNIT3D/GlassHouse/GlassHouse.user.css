@@ -9,7 +9,7 @@
 @homepageURL https://github.com/WirlyWirly/UserScripts/raw/refs/heads/main/Trackers/ClearJAV/GlassyDark.user.css
 @supportURL  https://clearjav.com/forums/topics/198
 
-@advanced dropdown opt-theme-mode "🎨 Theme Mode" {
+@advanced dropdown opt-theme-mode "🎨 Colorscheme" {
     Option1 "PlumPleasure" <<<EOT
 
     --primary: #1a1820;
@@ -99,6 +99,18 @@
     fuckinFancy
     EOT;
 
+    Option11 "DairyDrinker" <<<EOT
+    dairyDrinker
+    EOT;
+
+    Option12 "FlowerChild" <<<EOT
+    flowerChild
+    EOT;
+
+    Option13 "LilyLooking" <<<EOT
+    lilyLooking
+    EOT;
+
 }
 
 ==/UserStyle== */
@@ -142,6 +154,9 @@
         --pattern-riptide: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/riptide.svg?raw=true");
         --pattern-lanternLads: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/lanternLads.svg?raw=true");
         --pattern-fuckinFancy: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/fuckinFancy.svg?raw=true");
+        --pattern-dairyDrinker: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/dairyDrinker.svg?raw=true");
+        --pattern-flowerChild: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/flowerChild.svg?raw=true");
+        --pattern-lilyLooking: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/lilyLooking.svg?raw=true");
 
 
 
