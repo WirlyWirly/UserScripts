@@ -4,9 +4,10 @@
 @author     WirlyWirly
 @namespace  https://github.com/WirlyWirly
 @description A glassy re-coloring of the UNIT3D 'Material design 3 Dark' stylesheet
+            * Originally written exclusively for 'ClearJAV', any other working UNIT3D sites are just a bonus
 
-@updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/ClearJAV/GlassyDark.user.css?raw=true
-@homepageURL https://github.com/WirlyWirly/UserScripts/raw/refs/heads/main/Trackers/ClearJAV/GlassyDark.user.css
+@updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/GlassHouse.user.css?raw=true
+@homepageURL https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/UNIT3D/GlassHouse/GlassHouse.user.css
 @supportURL  https://clearjav.com/forums/topics/198
 
 @advanced dropdown opt-theme-mode "🎨 Colorscheme" {
@@ -21,8 +22,7 @@
     
     --icon-color: #c0c0c0;
 
-    --seeding-color: #44ff001a;
-    --hyperlink-color: #79b1fe;
+    --hyperlink-color: #8874BC;
     --header-text-color: #e1e1e1;
     --header-text-glow: #9475ff;
 
@@ -42,7 +42,6 @@
     
     --icon-color: #c0c0c0;
 
-    --seeding-color: #44ff001a;
     --hyperlink-color: #5e82b4;
     --header-text-color: #eaeaea;
     --header-text-glow: #75b1ff;
@@ -52,9 +51,48 @@
 
     EOT;
 
+    Option3 "Orangutan" <<<EOT
+
+    --primary: #342506;
+    --primary-glass: #342506cc;
+    --primaryDark: #271B03;
+    
+    --highlight: #5c420e;
+    --highlight-glass: #5c420ecc;
+    
+    --icon-color: #e5e5e5;
+
+    --hyperlink-color: #a0803c;
+    --header-text-color: #eaeaea;
+    --header-text-glow: #B17906;
+
+    --pattern-color: var(--highlight);
+    --background-color: var(--primary);
+
+    EOT;
+
+    Option4 "Stonehenge" <<<EOT
+
+    --primary: #222222;
+    --primary-glass: #222222cc;
+    --primaryDark: #151515;
+    
+    --highlight: #3e3e3e;
+    --highlight-glass: #3e3e3ecc;
+    
+    --icon-color: #e5e5e5;
+
+    --hyperlink-color: #B4B4B4;
+    --header-text-color: #e0e0e0;
+    --header-text-glow: #000000;
+
+    --pattern-color: var(--highlight);
+    --background-color: var(--primary);
+
+    EOT;
 }
 
-@advanced dropdown opt-pattern-svg "🖼️  Background Pattern" {
+@advanced dropdown opt-pattern-svg "🖼️ Pattern" {
     Option1 "GeishaGardens" <<<EOT
     geishaGardens
     EOT;
@@ -99,31 +137,33 @@
     fuckinFancy
     EOT;
 
-    Option11 "DairyDrinker" <<<EOT
+    Option12 "DairyDrinker" <<<EOT
     dairyDrinker
     EOT;
 
-    Option12 "FlowerChild" <<<EOT
+    Option13 "FlowerChild" <<<EOT
     flowerChild
     EOT;
 
-    Option13 "LilyLooking" <<<EOT
+    Option14 "LilyLooking" <<<EOT
     lilyLooking
     EOT;
 
 }
 
+@advanced color opt-seeding-highlight "🖌️ Seeding Highlight" #44ff001a
+
 ==/UserStyle== */
 
-@-moz-document regexp("https://(clearjav|oldtoons).\w+.*") {
+@-moz-document regexp("https://(clearjav|oldtoons|lat-team|bitporn).\w+.*") {
     :root {
 
         /* ----------- Theme Colors ----------- */
 
         --transparent: #0000;
 
-        --background-color: /*[[opt-background-color]]*/;
-        
+        --seeding-highlight: /*[[opt-seeding-highlight]]*/;
+
         /*[[opt-theme-mode]]*/
 
         /* ----------- Background Patterns ----------- */
@@ -177,11 +217,17 @@
         --panel-bg-1: var(--primary-glass);
         --panel-bg: var(--primary-glass);
         --panel-head-bg: var(--transparent);
+        --meta-chip-value-fg: var(--icon-color);
+        --meta-chip-icon-bg: var(--highlight);
+        --meta-chip-icon-fg: var(--icon-color);
+        --meta-chip-icon-hover-bg: var(--highlight);
+        --prize-bg: var(--highlight);
 
         /* Navigation Bar */
         --top-nav-bg: var(--primaryDark);
         --secondary-nav-bg: var(--primaryDark);
         --quick-search-bg: var(--highlight);
+        --quick-search-result-hover-bg: var(--primary);
         --top-nav-icon-bar-icon-bg: var(--highlight);
         --top-nav-dropdown-hover-bg: var(--highlight);
         --top-nav-dropdown-menu-bg: var(--primaryDark);
@@ -217,8 +263,10 @@
         --torrent-card-bg: var(--primary);
         
         /* Groupings View */
+        --torrent-group-bg: var(--primary-glass);
         --torrent-group-header-bg: var(--primary);
         --torrent-group-table-stripe-odd: var(--primary);
+        --torrent-group-table-stripe-even: var(--primary-glass);
         
         /* Playlists */
         --playlist-card-bg: var(--primary);
@@ -229,6 +277,7 @@
         --post-toolbar-hover-bg: var(--highlight);
         --post-bg: var(--primary-glass);
         --post-aside-bg: var(--primary);
+        --bbcode-rendered-accent-fg: var(--hyperlink-color);
         --bbcode-rendered-neutral-muted: var(--highlight-glass);
         --bbcode-rendered-quote-bg: var(--highlight-glass);
         --bbcode-input-bg: var(--primary-glass);
@@ -270,6 +319,10 @@
         background: var(--highlight);
     }
 
+    .chatbox-message {
+        background: var(--highlight);
+    }
+
     /* Title Text Glow */
     section.alert .alert__content strong,
     h1.meta__title,
@@ -278,6 +331,7 @@
     div.torrent-title a,
     div.torrent-search--grouped__title-name h2 a,
     .torrent-search--poster__title,
+    .torrent-search--list__name,
     h2.torrent-card__title a,
     h3.meta__poster-popup-title,
     h1.blacklist__title,
@@ -298,6 +352,11 @@
         padding: 5px 0px;
     }
     
+    /* Category Icons */
+    .category__icon {
+        color: var(--hyperlink-color);
+    }
+
     /* Forums */
     main.page__topic--show section,
     main.page__topic--show div.panel__body,
@@ -323,7 +382,7 @@
     /* Seeding Status Highlights */
     tr:has(td.torrent-activity-indicator--seeding), /* List\Group row */
     article.torrent-card:has(> header.torrent-card__header a.torrent-activity-indicator--seeding) /* Card article */ {
-        background-color: var(--seeding-color);
+        background-color: var(--seeding-highlight);
     }
 
     header.torrent-card__header:has(a.torrent-activity-indicator--seeding),
@@ -333,7 +392,7 @@
 
     main.page__torrent--show:has(ul.torrent__tags > li.torrent-activity-indicator--seeding) div.video-meta-title,
     main.page__torrent--show:has(ul.torrent__tags > li.torrent-activity-indicator--seeding) section.video-meta { /* Torrent Details */
-        background-color: var(--seeding-color);
+        background-color: var(--seeding-highlight);
         border-radius: 10px;
         padding: 10px;
     }
@@ -341,4 +400,5 @@
     main.page__torrent--show:has(ul.torrent__tags > li.torrent__seeders.torrent-activity-indicator--seeding) section.video-meta div.meta__chips {
         padding: 10px 0px;
     }
+
 }
