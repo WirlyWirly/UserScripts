@@ -82,6 +82,23 @@
     Option7 "MoreSprinkles" <<<EOT
     moreSprinkles
     EOT;
+
+    Option8 "WildWaves" <<<EOT
+    wildWaves
+    EOT;
+
+    Option9 "Riptide" <<<EOT
+    riptide
+    EOT;
+
+    Option10 "LanternLads" <<<EOT
+    lanternLads
+    EOT;
+
+    Option11 "FuckinFancy" <<<EOT
+    fuckinFancy
+    EOT;
+
 }
 
 ==/UserStyle== */
@@ -121,6 +138,10 @@
         --pattern-hairDay: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/hairDay.svg?raw=true");
         --pattern-smileyBoys: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/smileyBoys.svg?raw=true");
         --pattern-moreSprinkles: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/moreSprinkles.svg?raw=true");
+        --pattern-wildWaves: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/wildWaves.svg?raw=true");
+        --pattern-riptide: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/riptide.svg?raw=true");
+        --pattern-lanternLads: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/lanternLads.svg?raw=true");
+        --pattern-fuckinFancy: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/fuckinFancy.svg?raw=true");
 
 
 
@@ -173,6 +194,7 @@
         --data-table-tr-odd-bg: var(--transparent);
         --data-table-tr-even-bg: var(--transparent);
         --data-table-tr-hover-bg: var(--highlight-glass);
+        --torrent-row-sticky-bg: var(--transparent);
         --torrent-row-format-bg: var(--highlight);
         
         /* Cards View */
