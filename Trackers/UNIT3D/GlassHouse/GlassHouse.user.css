@@ -172,13 +172,10 @@
         /* 
          -- Adding SVG patterns --
             * Verify the .svg pattern is actually seamless using a tool such as https://tools.svgandme.com/seamless-checker
-            * If the pattern is seamless, open the .svg in a text editor and copy the <svg> tag.
-            * Using an online tool, convert the <svg> tag into a `url()` string
-            * Add a variable named '--pattern-{patternName}' and paste the `url()` as the value
-            * In the `url()` string you just pasted...
+            * Open the .svg in a text-editor and...
                 * Find and make sure `height='100%'`
                 * Change `width='X'` to a pixel value that looks good, such as `width='378px'`
-            * Using the same {patternName} as the variable, add an entry in the `@advanced dropdown opt-pattern-svg` section above
+            * Add an entry in the `@advanced dropdown opt-pattern-svg` section above, with the value corresponding to the 
 
             ! If you are having problems setting the width and height of the pattern, you may have to open the .svg file in an editor and then export it yourself. Sometimes files have been badly exported and won't work right our purposes.
             

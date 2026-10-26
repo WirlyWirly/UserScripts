@@ -2,7 +2,7 @@
 
 // ----------------------------------- MetaData --------------------------------------
 
-// @name        🇯🇵 JAVScout
+// @name        JAVScout
 // @author      WirlyWirly
 // @version     1.4
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Other/JAVScout.user.js
