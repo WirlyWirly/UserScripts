@@ -280,6 +280,7 @@
         --bbcode-rendered-quote-bg: var(--highlight-glass);
         --bbcode-input-bg: var(--primary-glass);
         --bbcode-input-body-bg: var(--primary-glass);
+        --subforum-listing-odd-bg: var(--primaryDark);
         
     }
 
