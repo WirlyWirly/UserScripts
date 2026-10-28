@@ -7,8 +7,9 @@
 
 @preprocessor less
 
-@updateURL   
-@homepageURL 
+@updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Empornium/AfterParty.user.css?raw=true
+@homepageURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/Empornium/AfterParty.user.css?raw=true
+@supportURL  https://emparadise.rs/forum/thread/155965
 
 @var select opt-colorscheme '🎨 Colorscheme' ['Stonehenge', 'PlumPleasure', 'TealTime*', 'Orangutan', 'Lotus']
 
@@ -450,7 +451,7 @@
 		cursor: pointer;
 			
 	}
-	
+
 	table.forum_post td.postbody,
 	blockquote.bbcode > blockquote.bbcode,
 	.torrent_grid__torrent__info,
@@ -475,6 +476,8 @@
 	table.bb_holder,
 	.torrentdetails table tr:nth-child(2n),
 	tr.rowa,
+    #dnulist tr:nth-child(2n+1), #whitelist tr:nth-child(2n+1),
+    input[type="text"]:read-only,
 	#articles tr.colhead, #forums tr.colhead, #top10 tr.colhead, #torrents tr.colhead, #staff tr.colhead, #collage tr.colhead, #staffpm tr.colhead, #staffpms tr.colhead, #tools tr.colhead, #userhistory tr.colhead, #user tr.colhead, #reports tr.colhead, #requests tr.colhead, #upload tr.colhead, #tags tr.colhead, #inbox tr.colhead {
 		background: var(--primaryDark);
 	}
