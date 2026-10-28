@@ -173,14 +173,15 @@
          -- Adding SVG patterns --
             * Verify the .svg pattern is actually seamless using a tool such as https://tools.svgandme.com/seamless-checker
             * Open the .svg in a text-editor and...
-                * Find and make sure `height='100%'`
-                * Change `width='X'` to a pixel value that looks good, such as `width='378px'`
+                * Make sure `height='100%'`
+                * Change `width='X'` to a pixel value that looks good for the pattern, such as `width='378px'`
             * Add an entry in the `@advanced dropdown opt-pattern-svg` section above, with the value corresponding to the 
 
             ! If you are having problems setting the width and height of the pattern, you may have to open the .svg file in an editor and then export it yourself. Sometimes files have been badly exported and won't work right our purposes.
             
         */
 
+https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/_sparkles.gif?raw=true
         --pattern-geishaGardens: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/geishaGardens.svg?raw=true");
         --pattern-lostLamb: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/lostLamb.svg?raw=true");
         --pattern-goodGrief: url("https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/UNIT3D/GlassHouse/patterns/goodGrief.svg?raw=true");
@@ -281,6 +282,7 @@
         --bbcode-input-bg: var(--primary-glass);
         --bbcode-input-body-bg: var(--primary-glass);
         --subforum-listing-odd-bg: var(--primaryDark);
+        --key-value-odd-bg: var(--primaryDark);
         
     }
 
