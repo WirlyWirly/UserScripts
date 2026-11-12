@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name 		MAM - SearchParty
 // @author 		WirlyWirly
-// @version     2.1
+// @version     2.5
 // @description It's a search party! 🥳 Custom search bars and quick-search icons throughout the site
 
 // @match 		https://www.myanonamouse.net/*
@@ -639,19 +639,19 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
                     
                     if ( authorIcons == true ) {
                         // Author quickSearch icons
-                        let authorElements = torrentRow.querySelectorAll('a.author[href^="/tor/browse.php?author="]')
+                        let authorElements = torrentRow.querySelectorAll('a.author[href^="/tor/browse.php?author="], a.author[href^="/tor/search.php?author="]')
                         authorElements.length > 0 ? quickSearchIcons(authorElements, 'author') : null
                     }
 
                     if ( narratorIcons == true ) {
                         // Narrator quickSearch icons
-                        let narratorElements = torrentRow.querySelectorAll('a.narrator[href^="/tor/browse.php?narrator="]')
+                        let narratorElements = torrentRow.querySelectorAll('a.narrator[href^="/tor/browse.php?narrator="], a.narrator[href^="/tor/search.php?narrator="]')
                         narratorElements.length > 0 ? quickSearchIcons(narratorElements, 'narrator') : null
                     }
 
                     if ( seriesIcons == true ) {
                         // Series quickSearch icons
-                        let seriesElements = torrentRow.querySelectorAll('a.series[href^="/tor/browse.php?series="]')
+                        let seriesElements = torrentRow.querySelectorAll('a.series[href^="/tor/browse.php?series="], a.series[href^="/tor/search.php?series="]')
                         seriesElements.length > 0 ? quickSearchIcons(seriesElements, 'series') : null
                     }
 
@@ -677,19 +677,19 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
         
         if ( authorIcons == true ) {
             // Author quickSearch icons
-            let authorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/browse.php?author="]')
+            let authorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?author="]')
             authorElements.length > 0 ? quickSearchIcons(authorElements, 'author') : null
         }
 
         if ( narratorIcons == true ) {
             // Narrator quickSearch icons
-            let narratorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/browse.php?narrator="]')
+            let narratorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?narrator="]')
             narratorElements.length > 0 ? quickSearchIcons(narratorElements, 'narrator') : null
         }
 
         if ( seriesIcons == true ) {
             // Series quickSearch icons
-            let seriesElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/browse.php?series="]')
+            let seriesElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?series="]')
             seriesElements.length > 0 ? quickSearchIcons(seriesElements, 'series') : null
         }
 
