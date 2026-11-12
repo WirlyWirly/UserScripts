@@ -563,7 +563,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.style.fontSize = '125%'
         
                 if ( key == 'authorAll' ) {
-                    quickSearchElement.text = '🧑'
+                    quickSearchElement.text = '🔍'
                 } else if ( key == 'authorAudiobooks') {
                     quickSearchElement.text = '🎧'
                 } else if ( key == 'authorEbooks') {
@@ -584,7 +584,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.style.fontSize = '125%'
         
                 if ( key == 'narratorAudiobooks' ) {
-                    quickSearchElement.text = '🧑'
+                    quickSearchElement.text = '🔍'
                 } 
 
                 element.insertAdjacentElement('afterend', quickSearchElement)
@@ -602,7 +602,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.style.fontSize = '125%'
         
                 if ( key == 'seriesAll' ) {
-                    quickSearchElement.text = '📚'
+                    quickSearchElement.text = '🔍'
                 } else if ( key == 'seriesAudiobooks') {
                     quickSearchElement.text = '🎧'
                 } else if ( key == 'seriesEbooks') {
@@ -620,6 +620,7 @@ function quickSearchIcons(hrefElements, hrefType) {
 
 
 pageURL = document.URL
+
 if ( authorIcons || narratorIcons || seriesIcons ) {
 
     if ( pageURL.match(/\/tor\/browse\.php/) || pageURL.match(/myanonamouse\.net\/?$/) || pageURL.match(/\/tor\/search\.php/) || pageURL.match(/top10Tor\.php/) ) {
