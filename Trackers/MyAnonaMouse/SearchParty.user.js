@@ -25,8 +25,8 @@
 
 // =================================== CONFIG MENU ======================================
 
-// let configFrame = document.createElement('div')
-// document.body.appendChild(configFrame)
+let configFrame = document.createElement('div')
+document.body.appendChild(configFrame)
 
 let reloadWindow = false
 GM_config.init({
@@ -39,6 +39,9 @@ GM_config.init({
         </div>
     `,
     'fields': {
+
+        // ------------------ OPTIONS ------------------
+
         'authorIcons': {
             'label': 'Author Icons 🧑',
             'type': 'checkbox',
@@ -65,6 +68,15 @@ GM_config.init({
             'title': "The fontSize of the emoji icons; Any percentile or CSS 'font-size' value",
         },
 
+        'oldSearchLinks': {
+            'label': 'Old Search Links',
+            'type': 'checkbox',
+            'default': true,
+            'title': "Replace various 'search.php' links (new search page) with 'browse.php' links (old search page)",
+        },
+
+        // ------------------ BANNER BARS ------------------
+
         'searchbar1Enabled': {
             'label': '',
             'type': 'checkbox',
@@ -75,128 +87,135 @@ GM_config.init({
             'label': '',
             'type': 'text',
             'default': 'Torrents 🔍',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab",
+            'sectin': ['Banner Bars']
         },
         'searchbar1URL': {
             'label': '',
             'type': 'text',
-            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]=__SEARCHTEXT__&tor[cat][]=0&tor[main_cat]=0',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]={SearchText}&tor[cat][]=0&tor[main_cat]=0',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar2Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar2Text': {
             'label': '',
             'type': 'text',
             'default': 'AudioBooks 🎧',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar2URL': {
             'label': '',
             'type': 'text',
-            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]=__SEARCHTEXT__&tor[cat][]=0&tor[main_cat]=13',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]={SearchText}&tor[cat][]=0&tor[main_cat]=13',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar3Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar3Text': {
             'label': '',
             'type': 'text',
             'default': 'eBooks 📗',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar3URL': {
             'label': '',
             'type': 'text',
-            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]=__SEARCHTEXT__&tor[cat][]=0&tor[main_cat]=14',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]={SearchText}&tor[cat][]=0&tor[main_cat]=14',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar4Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar4Text': {
             'label': '',
             'type': 'text',
             'default': 'Series 📚',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar4URL': {
             'label': '',
             'type': 'text',
-            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]=__SEARCHTEXT__&tor[srchIn]=Series',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]={SearchText}&tor[srchIn]=Series',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar5Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar5Text': {
             'label': '',
             'type': 'text',
             'default': 'Comics 🦸',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar5URL': {
             'label': '',
             'type': 'text',
-            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]=__SEARCHTEXT__&tor[cat][]=61',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': 'https://www.myanonamouse.net/tor/browse.php?tor[text]={SearchText}&tor[cat][]=61',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar6Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar6Text': {
             'label': '',
             'type': 'text',
             'default': 'Audible 🔗',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar6URL': {
             'label': '',
             'type': 'text',
-            'default': '#https://www.audible.com/search?keywords=__SEARCHTEXT__',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': '#https://www.audible.com/search?keywords={SearchText}',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
+
         'searchbar7Enabled': {
             'label': '',
             'type': 'checkbox',
             'default': true,
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar7Text': {
             'label': '',
             'type': 'text',
             'default': 'Goodreads 🔗',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
         'searchbar7URL': {
             'label': '',
             'type': 'text',
-            'default': '#https://www.goodreads.com/search?q=__SEARCHTEXT__',
-            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '__SEARCHTEXT__' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
+            'default': '#https://www.goodreads.com/search?q={SearchText}',
+            'title': "The URL that will be opened when pressing Enter\n\nℹ️ The variable '{SearchText}' will be replaced with the text that was entered\n\nℹ️ Prepend the URL with a '#' to open the search in a new tab"
         },
     },
     "events": {
         "open": function (doc) {
             let style = this.frame.style
             style.width = "420px"
-            style.height = "640px"
+            style.height = "675px"
             style.inset = ""
             style.top = "2%"
             style.right = "6%"
@@ -205,7 +224,6 @@ GM_config.init({
 
             reloadWindow = false
 
-            // Shorten the 
             // Collapse Searchbar fields into a single row
             for (let i = 1; i <= 7; i++) {
                 let checkboxRowElement = doc.getElementById(`MAM_SearchParty_config_field_searchbar${i}Enabled`).parentElement
@@ -269,7 +287,8 @@ GM_config.init({
         }
     },
     'css': `
-        #MAM_SearchParty_config_field_iconsFontSize {
+        #MAM_SearchParty_config_field_iconsFontSize,
+        #MAM_SearchParty_config_field_oldSearchLinks {
             width: 50px !important;
         }
         #MAM_SearchParty_config {
@@ -466,6 +485,9 @@ const authorIcons = GM_config.get('authorIcons')
 const narratorIcons = GM_config.get('narratorIcons')
 const seriesIcons = GM_config.get('seriesIcons')
 
+const iconsFontSize = GM_config.get('iconsFontSize')
+const oldSearchLinks = GM_config.get('oldSearchLinks')
+
 // ----------------------------------- SearchBars --------------------------------------
 
 // The element that will hold the search bars, inserted below the site banner
@@ -499,20 +521,24 @@ for ( let i = 1; i <=7 ; i++ ) {
 
         if (event.key == 'Enter') {
 
-            let url = itemURL.replace(/^#?(.*)__SEARCHTEXT__(.*)/, `$1${encodeURIComponent(this.value)}$2`)
+            let url = itemURL.replace(/({SearchText}|__SearchText__)/i, `${encodeURIComponent(this.value)}`)
 
             if ( itemURL.match(/^#/) ) {
                 // Open the search in a new tab
                 this.value = ''
-                window.open(url)
+                window.open(url.substring(1))
+
             } else {
                 // Open the search in the current tab
                 window.location = url
             }
+
         }
+
     })
 
     searchBarsRowElement.appendChild(searchInput)
+
 }
 
 function quickSearchIcons(hrefElements, hrefType) {
@@ -525,6 +551,7 @@ function quickSearchIcons(hrefElements, hrefType) {
         hrefType == 'series' ? searchId = element.href.match(/series=(\d+)/)[1] : null
         hrefType == 'author' ?  searchId = element.href.match(/author=(\d+)/)[1] : null
         hrefType == 'narrator' ? searchId = element.href.match(/narrator=(\d+)/)[1] : null
+
         
         if ( searchId == undefined ) {
             // There was no search id found for this element, cannot create quickSearch icons
@@ -560,7 +587,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 let quickSearchElement = document.createElement('a')
                 quickSearchElement.href = authorURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
-                quickSearchElement.style.fontSize = '125%'
+                quickSearchElement.style.fontSize = iconsFontSize
         
                 if ( key == 'authorAll' ) {
                     quickSearchElement.text = '🔍'
@@ -581,7 +608,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 let quickSearchElement = document.createElement('a')
                 quickSearchElement.href = narratorURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
-                quickSearchElement.style.fontSize = '125%'
+                quickSearchElement.style.fontSize = iconsFontSize
         
                 if ( key == 'narratorAudiobooks' ) {
                     quickSearchElement.text = '🔍'
@@ -599,7 +626,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 let quickSearchElement = document.createElement('a')
                 quickSearchElement.href = seriesURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
-                quickSearchElement.style.fontSize = '125%'
+                quickSearchElement.style.fontSize = iconsFontSize
         
                 if ( key == 'seriesAll' ) {
                     quickSearchElement.text = '🔍'
@@ -616,6 +643,19 @@ function quickSearchIcons(hrefElements, hrefType) {
         }
             
     }
+}
+
+
+function replaceBrowseLink(elements) {
+    // For the provided <a> element, replace 'search.php' (new search page) with 'browse.php' (old search page)
+
+    for ( let element of elements ) {
+        element.href = element.href.replace('search\.php', 'browse\.php')
+    }
+}
+
+function GMC_SingleRow(selector) {
+    // 
 }
 
 
@@ -679,19 +719,33 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
         if ( authorIcons == true ) {
             // Author quickSearch icons
             let authorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?author="]')
-            authorElements.length > 0 ? quickSearchIcons(authorElements, 'author') : null
+
+            if ( authorElements.length > 0 ) {
+                quickSearchIcons(authorElements, 'author')
+                oldSearchLinks == true ? replaceBrowseLink(authorElements) : null
+            }
+
         }
 
         if ( narratorIcons == true ) {
             // Narrator quickSearch icons
             let narratorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?narrator="]')
-            narratorElements.length > 0 ? quickSearchIcons(narratorElements, 'narrator') : null
+
+            if ( narratorElements.length > 0 ) {
+                quickSearchIcons(narratorElements, 'narrator') 
+                oldSearchLinks == true ? replaceBrowseLink(narratorElements) : null
+            }
         }
 
         if ( seriesIcons == true ) {
             // Series quickSearch icons
             let seriesElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?series="]')
-            seriesElements.length > 0 ? quickSearchIcons(seriesElements, 'series') : null
+
+            if ( seriesElements.length > 0 ) {
+                quickSearchIcons(seriesElements, 'series')
+                oldSearchLinks == true ? replaceBrowseLink(seriesElements) : null
+            }
+
         }
 
 
