@@ -10,7 +10,7 @@
 // @namespace 	https://github.com/WirlyWirly
 // @run-at 		document-end
 
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/saveToFile.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/gmcSettingsImportExport.js?raw=true
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // @grant       GM_setValue
@@ -881,61 +881,3 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
     }
 }
 
-
-function importGMConfigSettings(gmcId) {
-    // Prompt the user to select a .json file from which to import GM_config settings
-
-    let inputElement = document.createElement('input');
-    inputElement.type = 'file';
-
-    inputElement.onchange = (event) => {
-
-        // Getting a hold of the file reference
-        let file = event.target.files[0]
-
-        // Setting up the reader
-        let reader = new FileReader()
-        reader.readAsText(file,'UTF-8')
-
-        // Here we tell the reader what to do when it's done reading...
-        reader.onload = (readerEvent) => {
-
-            let textContent = readerEvent.target.result // this is the content!
-
-            try {
-
-                // Parse the content of the selected file, making sure it is valid JSON
-                let settingsJSON = JSON.stringify(JSON.parse(textContent))
-
-                GM_setValue(gmcId, settingsJSON)
-
-                window.alert('⭐ Import Successful ⭐\n\nThe selected settings file has been imported\n\nThe page will now refresh')
-
-                window.location.reload()
-
-            } catch (error) {
-                // The JSON parse has failed, so abort the import
-                console.log('------ ❌ Import Failure ❌------\n')
-                console.log(error)
-                window.alert('❌ Failed ❌\n\nThe selected settings file failed to import, likely because it is not valid JSON\n\nThe full error has been printed in the console')
-            }
-       }
-
-    }
-
-    inputElement.click()
-
-}
-
-function exportGMConfigSettings(fileTitle, gmcId, scriptVersion) {
-        // Export the currently saved GM_config settings to a .json file
-
-        // Pretty-print the settings string to make it easier to read
-        let jsonParsed = JSON.parse(GM_getValue(gmcId))
-
-        let jsonString = JSON.stringify(jsonParsed, null, 4)
-
-        // Save the quiCKIE settings to a local file
-        saveToFile(jsonString, `${fileTitle}-v${scriptVersion}-${new Date().toISOString().split('T')[0]}.json`)
-
-}
