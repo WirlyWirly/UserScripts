@@ -49,20 +49,6 @@ GM_config.init({
     `,
 
     'fields': {
-        // ------------------ Settings Import\Export ------------------
-
-        'settingsImport' : {
-            'label': 'Import Settings',
-            'type': 'button',
-            'click': () => { importGMConfigSettings(GM_config.id, GM_info.script.version) },
-        },
-
-        'settingsExport' : {
-            'label': 'Export Settings',
-            'type': 'button',
-            'click': () => { exportGMConfigSettings('SearchParty', GM_config.id, GM_info.script.version) },
-        },
-
         // ------------------ OPTIONS ------------------
 
         'authorIcons': {
@@ -229,7 +215,9 @@ GM_config.init({
 
         'open': function () {
 
-            let gmcFrame = this.frame
+            const gmcFrame = this.frame
+            importExportButtons(this, 'SearchParty')
+
             reloadWindow = false
 
             // Collapse Searchbar fields into a single row

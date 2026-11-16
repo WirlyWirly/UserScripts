@@ -43,7 +43,6 @@ function importExportButtons(gmcObject, filetitle) {
     // Create and insert Import\Export buttons into the GM_config frame
 
     let closeButton = gmcObject.frame.querySelector('button[id$="_closeBtn"]')
-    let buttonsHolder = closeButton.parentElement
 
     let importButton = document.createElement('button')
     let exportButton = document.createElement('button')
@@ -69,11 +68,12 @@ function importExportButtons(gmcObject, filetitle) {
         exportButton.innerText = '★ Exported ★'
     })
 
-    // Move the Import\Export buttons after the Save\Close buttons
-    buttonsHolder.insertAfter(importButton, closeButton)
-    buttonsHolder.insertAfter(exportButton, closeButton)
+    // Insert the Import\Export buttons after the Save\Close buttons
+    closeButton.insertAdjacentElement('afterend', exportButton)
+    closeButton.insertAdjacentElement('afterend', importButton)
 
 }
+
 
 function importGMCSettings(gmcId) {
     // Prompt the user to select a .json file from which to import GM_config settings
