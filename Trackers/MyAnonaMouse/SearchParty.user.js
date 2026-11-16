@@ -28,6 +28,7 @@
 // =================================== CONFIG MENU ======================================
 
 let configFrame = document.createElement('div')
+configFrame.classList.add('gmcFrame')
 document.body.appendChild(configFrame)
 
 let reloadWindow = false
@@ -35,12 +36,12 @@ GM_config.init({
     'id': 'MAM_SearchParty',
     'frame': configFrame,
     'title': `
-            <div id="MAM_SearchParty_headerTitleContainer">
-                <a id="headerMainText" href="${GM_info.script.homepage}" target="_blank">SearchParty</a>
+            <div>
+                <a class="headerMainText" href="${GM_info.script.homepage}" target="_blank">SearchParty</a>
             </div>
 
-            <div id="headerSubText">
-                ★ Hover over settings for details ★ 
+            <div class="headerSubText">
+                ★ Hover over settings for details ★
             </div>
     `,
     'fields': {
@@ -234,13 +235,6 @@ GM_config.init({
     "events": {
         "open": function (doc) {
 
-            let panelStyle = this.frame.style
-            panelStyle.inset = '2% 2% auto auto'
-            panelStyle.width = '380px'
-            panelStyle.height = 'auto'
-            
-            document.getElementById('MAM_SearchParty_wrapper').style.padding = '35px 16px 35px 16px'
-
             reloadWindow = false
 
             // Collapse Searchbar fields into a single row
@@ -256,51 +250,62 @@ GM_config.init({
                 checkboxRowElement.appendChild(searchTextElement)
                 checkboxRowElement.appendChild(searchURLElement)
             }
+
+            // ================ GMC ButtonsHolder ================
+
+            let gmcPanel = this.frame
+
+            // If there is a welcomeMessage element, remove it so that it's not creating a gap
+            let welcomeMessage = gmcPanel.querySelector('div[id*=welcomeMessage]')
+            welcomeMessage != null ? welcomeMessage.remove() : null
+
+            let buttonsHolderElement = gmcPanel.querySelector('div:has(> button.saveclose_buttons)')
+
             // --- Settings Import\Export ---
-            let exportButton = document.getElementById('MAM_SearchParty_field_settingsExport')
+            let exportButton = gmcPanel.querySelector('input[id$="_settingsExport"]')
             exportButton.classList.add('saveclose_buttons')
 
-            let importButton = document.getElementById('MAM_SearchParty_field_settingsImport')
+            let importButton = gmcPanel.querySelector('input[id$="_settingsImport"]')
             importButton.classList.add('saveclose_buttons')
 
-            let buttonsHolderElement = document.getElementById('MAM_SearchParty_buttons_holder')
             buttonsHolderElement.appendChild(importButton)
             buttonsHolderElement.appendChild(exportButton)
 
-            // Remove the now empty <div> elements
-            for ( let emptyElement of document.getElementById('MAM_SearchParty').querySelectorAll('div.config_var:empty') ) {
-                emptyElement.remove()
-            }
-            
             // --- Version Element ---
             let versionSVG = '<svg width="16" height="16" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_730_27136)"><path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="#FFFFFFF6"/></g><defs><clipPath id="clip0_730_27136"><rect width="98" height="96" fill="white"/></clipPath></defs></svg>'
 
             let versionElement = document.createElement('a')
-            versionElement.classList = 'version_label reset'
+            versionElement.classList = 'version reset'
             versionElement.title = 'Go to Homepage'
             versionElement.target = '_blank'
             versionElement.href = `${GM_info.script.homepage}`
             versionElement.innerHTML = `${versionSVG} Version ${GM_info.script.version}`
 
-            doc.getElementById('MAM_SearchParty_buttons_holder').appendChild(versionElement)
+            buttonsHolderElement.appendChild(versionElement)
 
-            // Add success animation to save button
-            let saveButton = doc.getElementById('MAM_SearchParty_saveBtn')
-            saveButton.addEventListener('click', () => {
-                saveButton.classList.add('success')
-                setTimeout(() => saveButton.classList.remove('success'), 500)
-            })
+            // Add clicked button animation class
+            let saveButtons = buttonsHolderElement.querySelectorAll('.saveclose_buttons')
+            for ( let button of saveButtons) {
+                button.addEventListener('click', () => {
+                button.classList.add('clicked')
+                setTimeout(() => button.classList.remove('clicked'), 800)
+                })
+            }
+
+            // Remove the now empty <div> elements
+            for ( let emptyElement of gmcPanel.querySelectorAll('div.config_var:empty') ) {
+                emptyElement.remove()
+            }
 
         },
         "save": function () {
             reloadWindow = true
             // Clear cached data when settings are saved
             GM_listValues().forEach(key => {
-                if (key !== 'MAM_SearchParty') {
+                if (key !== GM_config.id) {
                     GM_setValue(key, null)
                 }
             })
-            console.log(`${GM_info.script.name}: Cleared cache data after settings change`)
         },
         "close": function () {
             if (reloadWindow) {
@@ -324,20 +329,30 @@ GM_config.init({
 
         :root {
 
-            /* ---------- PanelElement ---------- */
-            --panelBackgroundColor: rgba(25, 29, 42, 0.64);
-            --panelBorderColor: #2C3E50;
-            --panelTextColor: #DDDDDD;
+            /* ---------- UserScript Specific ---------- */
+            --frameWidth: 380;
+            --frameHeight: auto;
+            --frameInset: 2% 2% auto auto;
+            --frameTransform: unset;
+            --buttonContainerWidth: 75%;
+
+            /* ---------- FrameElement ---------- */
+            --frameBackgroundColor: rgba(25, 29, 42, 0.64);
+            --frameBorderColor: #2C3E50;
+            --frameTextColor: #DDDDDD;
+            --frameFont: 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
             /* ---------- HeaderText ---------- */
+            --headerFonts: 'Lilita One', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --headerTextSize: 40px;
             --headerTextColor: #FFFFFF;
             --headerTextGlowColor: rgba(0, 124, 255, 0.60);
-            --headerSubTextSize: 10px;
+            --headerSubTextSize: 14px;
             --headerSubTextColor: #B7B7B7;
+            --headerSubTextMargin: 14px auto auto auto;
 
             /* ---------- InputFields ---------- */
-            --inputFieldBackground: #FFFFFFE6;
+            --inputFieldBackground: #FFFFFFe6;
             --inputFieldText: #191d2a;
             --inputFieldBorder: #ddd;
             --inputFieldInnerShadow: #949494;
@@ -356,40 +371,62 @@ GM_config.init({
             /* ---------- SaveClose Buttons ---------- */
             --buttonClickedColor: #2B67A7;
 
+            /* ---------- Table ---------- */
+            --tableHeadersRow: #2c3e5091;
+            --tableHeadersText: #ddd;
+
+            --tableRowOddBackground: #0000;
+            --tableRowEvenBackground: #2c3e5091;
+            --tableBorders: #191d2a;
+
         }
 
-        #MAM_SearchParty {
+        div:has( > div[id$="_wrapper"]) {
 
-            /* ---------- PanelElement ---------- */
+            /* ---------- FrameElement ---------- */
             /* Set panel width, height, padding, and inset in open() */
 
-            backdrop-filter: blur(9px);
-            background: var(--panelBackgroundColor);
-            border-radius: 10px;
-            border: 1px solid var(--panelBorderColor) !important;
-            box-shadow: 0px 0px 15px var(--panelBorderColor);
+            background: var(--frameBackgroundColor) !important;
+            border: 1px solid var(--frameBorderColor) !important;
+            height: var(--frameHeight) !important;
+            inset: var(--frameInset) !important;
             line-height: 22px;
-            max-height: 95%;
-            max-width: 95%;
-            overflow: auto scroll;
-            position: fixed;
+            max-height: 95% !important;
+            max-width: 95% !important;
+            overflow: auto scroll !important;
+            width: var(--frameWidth) !important;
+
+            backdrop-filter: blur(9px);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px var(--frameBorderColor);
             touch-action: pan-x pan-y;
+            transform: var(--frameTransform);
+            animation: fadeIn 750ms;
+
+            > div {
+                /* ---------- WrapperElement ---------- */
+                padding: 35px 16px;
+            }
 
             * {
                 /* ---------- AllFields ---------- */
-                color: var(--panelTextColor);
-                font-family: 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: var(--frameTextColor);
+                font-family: var(--frameFont) !important;
                 font-size: 13px;
                 font-weight: normal;
             }
 
-            #headerMainText {
+            div:has(.headerMainText) {
+                font-size:30px;
+            }
+
+            .headerMainText {
                 /* ---------- MainHeader ---------- */
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-color: var(--headerTextColor);
                 filter: brightness(110%);
-                font-family: 'Lilita One', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: var(--headerFonts) !important;
                 font-size: var(--headerTextSize);
                 font-style: normal;
                 font-weight: 400;
@@ -397,17 +434,18 @@ GM_config.init({
                 text-decoration: none;
                 text-shadow: 0 0 20px var(--headerTextGlowColor);
                 user-select: none;
+                
             }
 
-            #headerSubText {
+            .headerSubText {
                 /* ---------- SubHeader ---------- */
                 color: var(--headerSubTextColor);
                 cursor: default;
                 font-size: var(--headerSubTextSize);
-                margin: 0px auto auto auto;
+                margin: var(--headerSubTextMargin);
             }
 
-            select, textarea, input[type="text"], input[type="number"], input[type="checkbox"] {
+            select, textarea, input[type="password"], input[type="text"], input[type="number"], input[type="checkbox"] {
 
                 /* ---------- InputFields ---------- */
                 background: var(--inputFieldBackground);
@@ -418,14 +456,29 @@ GM_config.init({
                 color: var(--inputFieldText);
                 font-size: 13px;
                 font-weight: 500;
+                height: 22px;
+                padding: 2px;
                 text-align: center;
-                width: 65%;
+                width: 95%;
                 
+                &[type="checkbox"] {
+                    cursor: pointer;
+                    width: 16px;
+                    height: 16px;
+                }
+
+                option {
+                    background: var(--inputFieldBackground);
+                    color: var(--inputFieldText);
+                }
+
                 &:focus {
                     /* --- Focused --- */
                     border: 2px dashed var(--inputFieldFocusShadow) !important;
                     box-shadow: 0 0 2px var(--inputFieldInnerShadow) inset, 0 0 7px var(--inputFieldFocusShadow);
                     outline: none;
+                    animation-name: jellyEffect;
+                    animation-duration: 500ms;
                 }
 
                 &:checked {
@@ -434,17 +487,94 @@ GM_config.init({
                     border: 1px solid var(--checkboxCheckedBorder);
                 }
 
+                &.disabledField {
+                    background-color: var(--inputFieldDisabledBackground) !important;
+                    border: 1px solid var(--inputFieldDisabledBorder) !important;
+                    color: var(--inputFieldDisabledText) !important;
+                    font-style: normal !important;
+                    text-shadow: none !important;
+
+                }
+
+            }
+
+            table {
+                /* ---------- Table Elements ---------- */
+
+                background: none;
+                border-collapse: collapse;
+                border-radius: 5px;
+                border: none;
+                box-shadow: none !important;
+                margin: auto;
+                max-width: 90%;
+                text-align: center;
+                width: 100%;
+
+                col {
+                    text-align: center;
+                    background: none;
+                    box-shadow: none;
+                    border: none;
+
+                }
+
+                th {
+                    background: var(--tableHeadersRow);
+                    border-color: var(--tableBorders);
+                    border-style: none solid none none;
+                    border-width: 3px;
+                    color: var(--tableHeadersText);
+                    cursor: pointer;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: normal;
+                    padding: 10px 10px;
+                    text-align: center;
+                }
+
+                th:nth-last-child(1) {
+                    border-right: none !important;
+                }
+
+                tr {
+                    background-color: var(--tableRowOddBackground) !important;
+                    border: none;
+
+                }
+
+                tr:nth-child(even) {
+                    background-color: var(--tableRowEvenBackground) !important;
+                    border-bottom: 1px solid var(--tableBorders);
+                    border-top: 1px solid var(--tableBorders);
+                    border-left: none;
+                    border-right: none;
+                }
+
+                td {
+                    border: none;
+                    padding: 3px 2px 3px 2px;
+                    text-align: center;
+                }
+
             }
 
             .field_label {
             /* ---------- GMC Labels ---------- */
-            color: var(--panelTextColor);
-            margin-right: 6px;
-            font-weight: normal;
-            font-size: var(--labelFieldFontSize);
+                color: var(--frameTextColor);
+                margin-right: 6px;
+                font-weight: normal;
+                font-size: var(--labelFieldFontSize);
             }
 
-            /* ---------- Save\Close Section ---------- */
+            .config_var {
+                border-bottom: none;
+                margin: 0px auto 5px auto;
+                padding: 5px 0px 5px 0px;
+                text-align: center;
+            }
+
+            /* ---------- Save\Close <div> ---------- */
             div:has( > button.saveclose_buttons) {
 
                 align-items: center;
@@ -452,47 +582,61 @@ GM_config.init({
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: 1fr;
-                margin-top: 14px;
+                margin: 14px auto auto auto;
                 row-gap: 14px;
                 text-align: center;
-                width: 100%;
+                width: var(--buttonContainerWidth);
 
                 .saveclose_buttons {
-                    margin: unset;
-                    background: var(--panelBorderColor);
+                    background: var(--frameBorderColor);
                     border-radius: 5px;
-                    border: 1px solid var(--panelBackgroundColor);
-                    color: var(--panelTextColor);
+                    border: 1px solid var(--frameBackgroundColor);
+                    box-shadow: none;
+                    color: var(--frameTextColor);
                     cursor: pointer;
                     font-size: 1rem;
                     font-weight: normal;
-                    padding-bottom: 6px !important;
-                    padding-top: 6px !important;
-                    padding: 15px 20px;
+                    margin: unset !important;
+                    padding: 8px !important;
                     transition: background-color 0.2s ease, transform 0.2s ease;
+                    width: 100%;
                     will-change: background-color, transform;
 
+                    &[value="Import Settings"], &[value="Export Settings"] {
+                        background: none;
+                        border: 1px solid var(--frameBorderColor);
+                    }
+
                     &:hover {
-                        background-color: var(--panelBorderColor);
                         transform: translateY(-3px);
 
                     }
 
                     &:active {
-                        background-color: var(--buttonClickedColor);
-                        box-shadow: 0 0px 15px var(--panelBorderColor);
                         transform: translateY(3px);
+                    }
+
+                    &.clicked {
+                        animation-name: buttonClicked;
+                        animation-duration: 750ms;
                     }
 
                 }
 
-                .version_label, .reset {
-                    text-align: center;
+                .reset {
+                    color: var(--headerSubTextColor) !important;
+                    text-align: center !important;
                     
                     &:hover {
                         text-decoration: underline;
                     }
+
                 }
+
+                .reset_holder {
+                    text-align: center;
+                }
+
                 
                 /* --- Column 1 --- */
                 &[value="Save Settings"] {
@@ -506,7 +650,7 @@ GM_config.init({
                     grid-row: 2;
                 }
 
-                .version_label {
+                .version {
                     grid-column: 1;
                     grid-row: 3;
                 }
@@ -532,6 +676,54 @@ GM_config.init({
 
         }
 
+        /* ---------- Animations ---------- */
+
+        @keyframes buttonClicked {
+
+            0% {
+                background: var(--buttonClickedColor);
+                box-shadow: 0px 0px 15px var(--buttonClickedColor);
+            }
+
+            50% {
+                background: var(--buttonClickedColor);
+                box-shadow: 0px 0px 15px var(--buttonClickedColor);
+            }
+
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes jellyEffect {
+
+          0%,
+          100% {
+            transform: scale(1, 1);
+          }
+
+          25% {
+            transform: scale(0.9, 1.1);
+          }
+
+          50% {
+            transform: scale(1.1, 0.9);
+          }
+
+          75% {
+            transform: scale(0.95, 1.05);
+          }
+
+        }
+
+        /* ================== USERSCRIPT ================== */
 
         #MAM_SearchParty .config_var {
             align-items: center;
@@ -548,50 +740,11 @@ GM_config.init({
             max-width: 90%;
             width: 100%;
         }
-        #MAM_SearchParty 
-        #MAM_SearchParty .field_label.disabled {
-            color: #B0BEC5;
-        }
 
-        #MAM_SearchParty input[type="checkbox"] {
-            cursor: pointer;
-            margin-right: 4px !important;
-            width: 16px;
-            height: 16px;
-        }
-        #MAM_SearchParty .reset {
-            color: #95a5a6;
-            text-decoration: none;
-            user-select: none;
-        }
 
         #MAM_SearchParty_field_iconsFontSize {
             width: 50px !important;
         }
-
-
-        /* Tooltip styling */
-        #MAM_SearchParty .field_label[title]:hover::after {
-            content: attr(title);
-            position: absolute;
-            background: #2C3E50;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            max-width: 300px;
-            z-index: 100;
-            margin-top: 25px;
-            left: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Animations */
-        @keyframes pulse {
-            0%, 100% {box-shadow: 0 0 6px 2px rgba(255, 128, 0, 0.5);}
-            50% {box-shadow: 0 0 10px 4px rgba(255, 128, 0, 0.8);}
-        }
-
 
         @font-face {
             font-family: 'Lilita One';
@@ -631,7 +784,7 @@ let navBar = document.getElementById('preNav')
 navBar.parentElement.insertBefore(searchBarsRowElement, navBar)
 
 for ( let i = 1; i <=7 ; i++ ) {
-    // Generate a searchbar for each enabled config 
+    // Generate a searchbar for each enabled config
 
     let itemEnabled = GM_config.get(`searchbar${i}Enabled`)
     let itemText = GM_config.get(`searchbar${i}Text`)
@@ -643,7 +796,7 @@ for ( let i = 1; i <=7 ; i++ ) {
     }
 
     let searchInput = document.createElement('input')
-    searchInput.setAttribute('type', 'text') 
+    searchInput.setAttribute('type', 'text')
     searchInput.setAttribute('placeholder', itemText)
     searchInput.setAttribute('class', 'ac_combined ui-autocomplete-input')
     searchInput.setAttribute('autocomplete', 'off')
@@ -685,7 +838,7 @@ function quickSearchIcons(hrefElements, hrefType) {
         hrefType == 'author' ?  searchId = element.href.match(/author=(\d+)/)[1] : null
         hrefType == 'narrator' ? searchId = element.href.match(/narrator=(\d+)/)[1] : null
 
-        
+
         if ( searchId == undefined ) {
             // There was no search id found for this element, cannot create quickSearch icons
             console.log('none')
@@ -721,7 +874,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.href = authorURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
                 quickSearchElement.style.fontSize = iconsFontSize
-        
+
                 if ( key == 'authorAll' ) {
                     quickSearchElement.text = '🔍'
                 } else if ( key == 'authorAudiobooks') {
@@ -742,10 +895,10 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.href = narratorURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
                 quickSearchElement.style.fontSize = iconsFontSize
-        
+
                 if ( key == 'narratorAudiobooks' ) {
                     quickSearchElement.text = '🔍'
-                } 
+                }
 
                 element.insertAdjacentElement('afterend', quickSearchElement)
 
@@ -760,7 +913,7 @@ function quickSearchIcons(hrefElements, hrefType) {
                 quickSearchElement.href = seriesURLS[key]
                 quickSearchElement.classList = 'MAM-SP-QuickSearchIcon'
                 quickSearchElement.style.fontSize = iconsFontSize
-        
+
                 if ( key == 'seriesAll' ) {
                     quickSearchElement.text = '🔍'
                 } else if ( key == 'seriesAudiobooks') {
@@ -774,7 +927,7 @@ function quickSearchIcons(hrefElements, hrefType) {
             }
 
         }
-            
+
     }
 }
 
@@ -806,7 +959,7 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
 
                 for ( let torrentRow of torrentRows ) {
                     // Loop through each individual torrentRow, adding search icons to each series of the torrent
-                    
+
                     if ( authorIcons == true ) {
                         // Author quickSearch icons
                         let authorElements = torrentRow.querySelectorAll('a.author[href^="/tor/browse.php?author="], a.author[href^="/tor/search.php?author="]')
@@ -844,7 +997,7 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
 
     } else if ( pageURL.match(/\/t\/\d+/) ) {
         // --- Details ---
-        
+
         if ( authorIcons == true ) {
             // Author quickSearch icons
             let authorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?author="]')
@@ -861,7 +1014,7 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
             let narratorElements = document.querySelectorAll('#torDetMainCon a[href^="/tor/search.php?narrator="]')
 
             if ( narratorElements.length > 0 ) {
-                quickSearchIcons(narratorElements, 'narrator') 
+                quickSearchIcons(narratorElements, 'narrator')
                 oldSearchLinks == true ? replaceBrowseLink(narratorElements) : null
             }
         }
@@ -880,4 +1033,3 @@ if ( authorIcons || narratorIcons || seriesIcons ) {
 
     }
 }
-
