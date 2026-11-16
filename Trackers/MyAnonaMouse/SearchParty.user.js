@@ -225,9 +225,9 @@ GM_config.init({
 
     },
 
-    "events": {
+    'events': {
 
-        "open": function () {
+        'open': function () {
 
             let gmcFrame = this.frame
             reloadWindow = false
@@ -251,7 +251,7 @@ GM_config.init({
 
         },
 
-        "save": function () {
+        'save': function () {
             reloadWindow = true
             // Clear cached data when settings are saved
             GM_listValues().forEach(key => {
@@ -261,7 +261,7 @@ GM_config.init({
             })
         },
 
-        "close": function () {
+        'close': function () {
             if (reloadWindow) {
                 if (this.frame) {
                     window.location.reload()
@@ -273,7 +273,7 @@ GM_config.init({
             }
         },
 
-        "reset": function () {
+        'reset': function () {
             // Handle reset functionality
             if (typeof resetToDefaults === 'function') {
                 resetToDefaults()
