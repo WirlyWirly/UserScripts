@@ -42,7 +42,7 @@ GM_config.init({
 function importExportButtons(gmcObject, filetitle) {
     // Create and insert Import\Export buttons into the GM_config frame
 
-    let closeButton = gmcFrame.querySelector('button[id$="_closeBtn"]')
+    let closeButton = gmcObject.frame.querySelector('button[id$="_closeBtn"]')
     let buttonsHolder = closeButton.parentElement
 
     let importButton = document.createElement('button')
