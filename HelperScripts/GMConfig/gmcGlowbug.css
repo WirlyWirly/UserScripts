@@ -40,6 +40,9 @@
     --frameTransform: unset;
     --saveCloseButtonsWidth: 75%;
     --labelFieldFontSize: 16px;
+    --fieldGridColumns: 1fr 1fr; /* Each .config_var gets 2 columns; Label + Input */
+    --fieldGridWidth: 90%;
+
 
     /* Set these values to center the GMConfig frame to the browser window */
     /*
@@ -51,17 +54,22 @@
     --frameBackgroundColor: rgba(25, 29, 42, 0.64);
     --frameBorderColor: #2C3E50;
     --frameTextColor: #DDDDDD;
-    --frameOpenDuration: 750ms;
+    --frameOpenDuration: 500ms;
     --headerFonts: 'Lilita One', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --frameFont: 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
     /* ---------- HeaderText ---------- */
-    --headerTextSize: 40px;
-    --headerTextColor: #FFFFFF;
-    --headerTextGlowColor: rgba(0, 124, 255, 0.60);
-    --headerSubTextSize: 14px;
-    --headerSubTextColor: #B7B7B7;
-    --headerSubTextMargin: 14px auto auto auto;
+    --headerFontSize: 40px;
+    --headerFontColor: #FFFFFF;
+    --headerFontGlow: rgba(0, 124, 255, 0.60);
+    --headerSubFontSize: 14px;
+    --headerSubFontColor: #B7B7B7;
+    --headerSubMargin: 14px auto auto auto;
+
+    /* ---------- SectionHeader Text ---------- */
+    --sectionFontSize: calc(var(--headerFontSize) / 1.6);
+    --sectionFontColor: var(--headerFontColor);
+    --sectionFontGlow: var(--headerFontGlow);
 
     /* ---------- InputFields ---------- */
     --inputFieldBackground: #FFFFFFe6;
@@ -133,28 +141,90 @@ div:has( > div[id$="_wrapper"]) {
         /* ---------- MainHeader ---------- */
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-color: var(--headerTextColor);
+        background-color: var(--headerFontColor);
         filter: brightness(110%);
         font-family: var(--headerFonts) !important;
-        font-size: var(--headerTextSize);
+        font-size: var(--headerFontSize);
         font-style: normal;
         font-weight: 400;
         padding: 0px 0px 5px 0px;
         text-decoration: none;
-        text-shadow: 0 0 20px var(--headerTextGlowColor);
+        text-shadow: 0 0 20px var(--headerFontGlow);
         user-select: none;
         
     }
 
     .headerSubText {
         /* ---------- SubHeader ---------- */
-        color: var(--headerSubTextColor);
+        color: var(--headerSubFontColor);
         cursor: default;
-        font-size: var(--headerSubTextSize);
-        margin: var(--headerSubTextMargin);
+        font-size: var(--headerSubFontSize);
+        margin: var(--headerSubMargin);
     }
 
-    select, textarea, input[type="password"], input[type="text"], input[type="number"], input[type="checkbox"] {
+
+    div.section_header_holder {
+        /* ---------- Sections ---------- */
+
+        margin-top: 12px;
+
+        .section_header {
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-color: var(--sectionFontColor) !important;
+            border: none !important;
+            filter: brightness(110%);
+            font-family: var(--headerFonts) !important;
+            font-size: var(--sectionFontSize) !important;
+            font-style: normal;
+            padding: 5px 0px;
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--sectionFontGlow);
+            user-select: none;
+        }
+
+    }
+
+    div.config_var {
+        /* ---------- FieldDiv ---------- */
+        display: grid;
+        grid-column-gap: 12px;
+        grid-template-columns: var(--fieldGridColumns); 
+        margin: 12px auto 0px auto !important;
+        max-width: unset;
+        padding: 0px;
+        width: var(--fieldGridWidth);
+
+        label.field_label {
+            /* ---------- FieldLabel ---------- */
+            margin: unset !important;
+
+        }
+
+        input {
+            /* ---------- FieldInput ---------- */
+            margin: unset;
+        }
+
+        &.display_inline {
+            /* Do NOT display this FieldDiv as a grid, useful for when the Section\parentElement itself will be the grid */
+            display: inline;
+            margin: unset !important;
+            padding: 0px;
+            text-align: center;
+            width: 100%;
+
+            input {
+                /* ---------- FieldInput ---------- */
+                margin: auto;
+
+            }
+
+        }
+
+    }
+
+    select, textarea, input {
 
         /* ---------- InputFields ---------- */
         background: var(--inputFieldBackground);
@@ -168,12 +238,12 @@ div:has( > div[id$="_wrapper"]) {
         height: 22px;
         padding: 3px;
         text-align: center;
-        width: 95%;
+        width: 100%;
         
         &[type="checkbox"] {
             cursor: pointer;
-            width: 16px;
-            height: 16px;
+            width: auto;
+            height: auto;
         }
 
         &:open option:hover {
@@ -279,13 +349,6 @@ div:has( > div[id$="_wrapper"]) {
         font-size: var(--labelFieldFontSize) !important;
     }
 
-    .config_var {
-        border-bottom: none;
-        margin: 0px auto 5px auto;
-        padding: 5px 0px 5px 0px;
-        text-align: center;
-    }
-
     /* ---------- Save\Close <div> ---------- */
     div:has( > button.saveclose_buttons) {
 
@@ -336,7 +399,7 @@ div:has( > div[id$="_wrapper"]) {
         }
 
         .reset {
-            color: var(--headerSubTextColor) !important;
+            color: var(--headerSubFontColor) !important;
             text-align: center !important;
             
             &:hover {

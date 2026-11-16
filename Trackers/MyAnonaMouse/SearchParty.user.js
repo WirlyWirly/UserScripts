@@ -88,6 +88,7 @@ GM_config.init({
         // ------------------ BANNER BARS ------------------
 
         'searchbar1Enabled': {
+            'section': ['Banner Bars'],
             'label': '',
             'type': 'checkbox',
             'default': true,
@@ -221,19 +222,11 @@ GM_config.init({
 
             reloadWindow = false
 
-            // Collapse Searchbar fields into a single row
-            for (let i = 1; i <= 7; i++) {
-                let checkboxRowElement = gmcFrame.querySelector(`#MAM_SearchParty_field_searchbar${i}Enabled`).parentElement
-                let searchPlaceholderElement = gmcFrame.querySelector(`#MAM_SearchParty_field_searchbar${i}Text`)
-                let searchURLElement = gmcFrame.querySelector(`#MAM_SearchParty_field_searchbar${i}URL`)
-
-                searchPlaceholderElement.setAttribute('style', 'margin: 2%; width: 35%')
-
-                searchPlaceholderElement.parentElement.remove()
-                searchURLElement.parentElement.remove()
-
-                checkboxRowElement.appendChild(searchPlaceholderElement)
-                checkboxRowElement.appendChild(searchURLElement)
+            let bannerBarsSection = gmcFrame.querySelector('.section_header_holder')
+            bannerBarsSection.classList.add('bannerBarsSection')
+            
+            for ( let fieldDiv of bannerBarsSection.querySelectorAll('div.config_var') ) {
+                fieldDiv.classList.add('display_inline')
             }
 
             // Add the GitHub version element before the Reset link
@@ -285,29 +278,29 @@ GM_config.init({
             --frameHeight: auto;
             --frameInset: 2% 2% auto auto;
             --buttonContainerWidth: 75%;
+            --fieldGridColumns: 3fr 1fr;
+            --fieldGridWidth: 55%;
 
         }
 
         /* ================== USERSCRIPT ================== */
 
-        #MAM_SearchParty .config_var {
-            align-items: center;
-            border-bottom: none;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            margin-bottom: 0px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 6px;
-            padding: 0px;
-            text-align: left;
-            max-width: 90%;
-            width: 100%;
-        }
+        #MAM_SearchParty {
 
-        #MAM_SearchParty_field_iconsFontSize {
-            width: 50px !important;
+            .bannerBarsSection {
+                
+                display: grid;
+                grid-template-columns: auto 1fr 2fr;
+                grid-column-gap: 12px;
+                grid-row-gap: 12px;
+                width: 90%;
+                margin: 12px auto auto auto;
+
+                .section_header {
+                    grid-column: 1 / -1;
+                }
+
+            }
         }
 
     `
