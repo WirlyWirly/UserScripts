@@ -9,12 +9,11 @@ GM_config.init({
     ...
 
     'fields': {
-        // ------------------ Settings Import\Export ------------------
 
         'settingsImport' : {
             'label': 'Import Settings',
             'type': 'button',
-            'click': () => { importGMConfigSettings(GM_config.id, GM_info.script.version) },
+            'click': () => { importGMConfigSettings(GM_config.id) },
         },
 
         'settingsExport' : {

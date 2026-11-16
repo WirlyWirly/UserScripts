@@ -306,7 +306,7 @@ div:has( > div[id$="_wrapper"]) {
             box-shadow: none;
             color: var(--frameTextColor);
             cursor: pointer;
-            font-size: 1rem;
+            font-size: var(--labelFieldFontSize);
             font-weight: normal;
             margin: unset !important;
             padding: 8px !important;
