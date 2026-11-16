@@ -1,20 +1,26 @@
 :root {
 
-    /* ---------- UserScript Specific ---------- */
+    /* ---------- UserScript Specific Variables ---------- */
     /* Override these variables within a UserScript to size\position the GMConfig frame */
     --frameWidth: 380px;
     --frameHeight: auto;
     --frameInset: 2% 2% auto auto;
     --frameTransform: unset;
-    --saveCloseWidth: 75%;
+    --saveCloseButtonsWidth: 75%;
     --labelFieldFontSize: 16px;
+
+    /* Set these values to center the GMConfig frame to the browser window */
+    /*
+    --frameInset: 50% auto auto 50%;
+    --frameTransform: translate(-50%,-50%);
+    */
 
     /* ---------- FrameElement ---------- */
     --frameBackgroundColor: rgba(25, 29, 42, 0.64);
     --frameBorderColor: #2C3E50;
     --frameTextColor: #DDDDDD;
     --frameOpenDuration: 750ms;
-    --headerFonts: 'Lilita One', 'Special Elite', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --headerFonts: 'Lilita One', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --frameFont: 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
     /* ---------- HeaderText ---------- */
@@ -259,7 +265,7 @@ div:has( > div[id$="_wrapper"]) {
         margin: 14px auto auto auto;
         row-gap: 14px;
         text-align: center;
-        width: var(--saveCloseWidth);
+        width: var(--saveCloseButtonsWidth);
 
         .saveclose_buttons {
             background: var(--frameBorderColor);

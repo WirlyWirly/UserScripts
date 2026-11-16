@@ -100,8 +100,8 @@ function fieldButtonExportSettings(fileTitle, gmcId, scriptVersion) {
 }
 
 
-function eventOpenCleanup(gmcFrame) {
-    // Move the Import\Export buttons into the button container, add the version element, the fadeOut animation, and remove any empty elements
+function eventOpenCleanupFrame(gmcFrame) {
+    // Move the Import\Export buttons into the button container, add the version element before the reset link, apply the fadeOut Close button animation, and remove any empty elements
 
     // The element holding the Save\Close buttons
     let buttonsHolderElement = gmcFrame.querySelector('div:has(> button.saveclose_buttons)')
