@@ -282,7 +282,7 @@ div:has( > div[id$="_wrapper"]) {
             width: 100%;
             will-change: background-color, transform;
 
-            &[value="Import Settings"], &[value="Export Settings"] {
+            &[value^="Import"], &[value^="Export"] {
                 background: none;
                 border: 1px solid var(--frameBorderColor);
             }
