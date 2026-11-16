@@ -15,8 +15,10 @@ GM_config.init({
         
         'open': function() {
 
-            importExportButtons(this, 'ScriptName')
+            importExportButtons(this, 'ScriptName', GM_info.script.version)
             ...
+
+            versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
             gmcFrameCleanup(this.frame)
 
         }
