@@ -237,7 +237,7 @@ GM_config.init({
             }
 
             // Add the GitHub version element
-            versionElement(this, GM_info.script.version_number, GM_info.script.homepage)
+            versionElement(this.frame, GM_info.script.version_number, GM_info.script.homepage)
 
             gmcFrameCleanup(this.frame)
 
