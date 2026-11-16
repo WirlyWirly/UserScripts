@@ -1,45 +1,30 @@
 /*
-ℹ️ These function will allow you to Import\Export settings when using GM_config. Simply add this file as a '@require' and call the functions with the required arguments...
+ℹ️ This script will add buttons to Import\Export settings when using GM_config. Simply add this file as a '@require' and call the functions with the required arguments...
 
+----------- Example -----------
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/gmcSettingsImportExport.js?raw=true
 ...
 
 GM_config.init({
     ...
-
-    'fields': {
-
-        'settingsImport' : {
-            'label': 'Import Settings',
-            'type': 'button',
-            'click': () => { importGMConfigSettings(GM_config.id) },
-        },
-
-        'settingsExport' : {
-            'label': 'Export Settings',
-            'type': 'button',
-            'click': () => { exportGMConfigSettings('ScriptName', GM_config.id, GM_info.script.version) },
-        },
-    },
-
     'events': {
         
         'open': function() {
 
+            importExportButtons(this, 'ScriptName')
             ...
+            gmcFrameCleanup(this.frame)
 
-            eventOpenCleanup(this.frame)
         }
 
-
-    
+    }
     ...
 })
 
 */
 
-function importExportButtons(gmcObject, filetitle) {
+function importExportButtons(gmcObject, fileTitle) {
     // Create and insert Import\Export buttons into the GM_config frame
 
     let closeButton = gmcObject.frame.querySelector('button[id$="_closeBtn"]')
@@ -47,8 +32,8 @@ function importExportButtons(gmcObject, filetitle) {
     let importButton = document.createElement('button')
     let exportButton = document.createElement('button')
 
-    importButton.id = 'gmc_settingsImport'
-    exportButton.id = 'gmc_settingsExport'
+    importButton.id = 'gmc_importBtn'
+    exportButton.id = 'gmc_exportBtn'
 
     importButton.classList.add('saveclose_buttons')
     exportButton.classList.add('saveclose_buttons')
@@ -135,7 +120,7 @@ function exportGMCSettings(gmcId, fileTitle) {
 }
 
 
-function eventOpenCleanupFrame(gmcFrame) {
+function gmcFrameCleanup(gmcFrame) {
     // Move the Import\Export buttons into the button container, add the version element before the reset link, apply the fadeOut Close button animation, and remove any empty elements
 
     // The element holding the Save\Close buttons
