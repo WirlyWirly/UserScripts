@@ -215,7 +215,7 @@ GM_config.init({
 
         'open': function () {
 
-            importExportButtons(this, 'SearchParty', GM_info.script.version_number)
+            importExportButtons(this, 'SearchParty', GM_info.script.version)
 
             const gmcFrame = this.frame
 
@@ -236,8 +236,8 @@ GM_config.init({
                 checkboxRowElement.appendChild(searchURLElement)
             }
 
-            // Add the GitHub version element
-            versionElement(this.frame, GM_info.script.version_number, GM_info.script.homepage)
+            // Add the GitHub version element before the Reset link
+            versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
 
             gmcFrameCleanup(this.frame)
 

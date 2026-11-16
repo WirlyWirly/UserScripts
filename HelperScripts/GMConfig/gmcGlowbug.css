@@ -314,7 +314,7 @@ div:has( > div[id$="_wrapper"]) {
             width: 100%;
             will-change: background-color, transform;
 
-            &[id$="_importBtn"], &[id&="_exportBtn"] {
+            &[id$="_importBtn"], &[id$="_exportBtn"] {
                 background: none;
                 border: 1px solid var(--frameBorderColor);
             }
