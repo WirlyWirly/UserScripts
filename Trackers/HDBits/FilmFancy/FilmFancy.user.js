@@ -91,7 +91,7 @@ GM_config.init({
         },
 
         'detailsPageGrouping': {
-            'label': 'Enabling Grouping',
+            'label': 'Enable Grouping',
             'type': 'checkbox',
             'default': true,
             'section': 'Details Page',
