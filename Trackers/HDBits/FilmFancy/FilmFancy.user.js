@@ -260,7 +260,7 @@ function updateFilmInfo(filmInfoElement, pageType) {
 
         // Append search links after title(s)
         titleHeader.parentElement.appendChild(searchLinks)
-    
+
     }
 
 }
@@ -463,10 +463,10 @@ if (document.URL.match(/^.*film\/info\?id=\d+/)){
     // Get and update the FilmInfo box
     updateFilmInfo(document.getElementsByClassName('film-info')[0], 'film')
 
-    // Insert the FilmFancy header
+    // Insert the FilmFancy button
     let filmFancyButton = document.querySelector('#torrent-list').previousElementSibling
     filmFancyButton.innerText = '🎟️ FilmFancy'
-    filmFancyButton.style.cursor = 'pointer'
+    filmFancyButton.classList.add('torrentListHeader')
     filmFancyButton.addEventListener('click', function(event) {
         GM_config.open()
     })
@@ -477,6 +477,17 @@ if (document.URL.match(/^.*film\/info\?id=\d+/)){
 
 } else if ( document.URL.match(/^.*browse.php.*/) ) {
     // -- Browse page --
+
+    // Insert the FilmFancy button
+    let filmFancyButton = document.createElement('div')
+    filmFancyButton.innerHTML = '<a>🎟️ FilmFancy</a>'
+    filmFancyButton.style.width = '1073px'
+    filmFancyButton.classList.add('torrentListHeader')
+    filmFancyButton.addEventListener('click', function(event) {
+        GM_config.open()
+    })
+
+    document.querySelector('#torrent-list').insertAdjacentElement('beforeBegin', filmFancyButton)
 
     // The main torrent body to be organized
     if (gmCache.browsePageGrouping === true) {
@@ -531,6 +542,12 @@ GM_addStyle(`
         font-weight: bold;
         text-align: left;
         margin-bottom: .5em;
+        cursor: pointer;
+        
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
     }
 
     /* Configuration Menu */
@@ -586,5 +603,5 @@ GM_addStyle(`
     /* Dead: Hover */
     tr.HDB-FF-Seederless:hover {
         opacity: 100%
-`
-}
+    }
+`)
