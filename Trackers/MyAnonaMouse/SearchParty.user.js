@@ -237,13 +237,19 @@ GM_config.init({
         },
 
         'save': function () {
+            // Actions to take when the 'Save' button is clicked
+
             reloadWindow = true
+
+            this.frame.querySelector('button[id$="_saveBtn"]').innerText = 'Saved'
+
             // Clear cached data when settings are saved
             GM_listValues().forEach(key => {
-                if (key !== GM_config.id) {
+                if ( key !== GM_config.id ) {
                     GM_setValue(key, null)
                 }
             })
+
         },
 
         'close': function () {

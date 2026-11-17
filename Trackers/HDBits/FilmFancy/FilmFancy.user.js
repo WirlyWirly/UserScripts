@@ -122,7 +122,7 @@ GM_config.init({
 
             const gmcFrame = this.frame
             reloadWindow = false
-            importExportButtons(this, 'SearchParty', GM_info.script.version)
+            importExportButtons(this, 'FilmFancy', GM_info.script.version)
 
             let bannerBarsSection = gmcFrame.querySelector('.section_header_holder')
             bannerBarsSection.classList.add('bannerBarsSection')
@@ -135,13 +135,19 @@ GM_config.init({
         },
 
         'save': function () {
+            // Actions to take when the 'Save' button is clicked
+
             reloadWindow = true
+
+            this.frame.querySelector('button[id$="_saveBtn"]').innerText = 'Saved'
+
             // Clear cached data when settings are saved
             GM_listValues().forEach(key => {
-                if (key !== GM_config.id) {
+                if ( key !== GM_config.id ) {
                     GM_setValue(key, null)
                 }
             })
+
         },
 
         'close': function () {

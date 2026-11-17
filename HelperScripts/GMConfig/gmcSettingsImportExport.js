@@ -55,7 +55,7 @@ function importExportButtons(gmcObject, fileTitle, versionNumber) {
 
     exportButton.addEventListener('click', function(event) {
         exportGMCSettings(gmcObject.id, fileTitle, versionNumber)
-        exportButton.innerText = '★ Exported ★'
+        exportButton.innerText = 'Exported'
     })
 
     // Insert the Import\Export buttons after the Save\Close buttons
@@ -121,6 +121,9 @@ function exportGMCSettings(gmcId, fileTitle, versionNumber) {
 
         // Save the quiCKIE settings to a local file
         saveToFile(jsonString, `${fileTitle}-v${versionNumber}-${new Date().toISOString().split('T')[0]}.json`)
+
+        // Update the Export button text
+        document.querySelector('#gmc_exportBtn').innerText = 'Exported'
         
 }
 
