@@ -88,7 +88,7 @@
     --inputFieldDisabledBorder: #545454;
 
     /* ---------- SaveClose Buttons ---------- */
-    --buttonClickedColor: #2B67A7;
+    --buttonClickedColor: var(--headerFontGlow);
 
     /* ---------- Table ---------- */
     --tableHeadersRow: #2c3e5091;
@@ -99,6 +99,7 @@
     --tableBorders: #191d2a;
 
 }
+
 
 div.gmcFrame:has( > div[id$="_wrapper"]) {
 
@@ -454,6 +455,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
     }
 
 }
+
 
 /* ---------- Animations ---------- */
 
