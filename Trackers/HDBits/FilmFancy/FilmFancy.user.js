@@ -1,172 +1,193 @@
 // ==UserScript==
+
+// ----------------------------------- MetaData --------------------------------------
 // @name 		HDB - FilmFancy
 // @author 		WirlyWirly
-// @namespace 		https://github.com/WirlyWirly
-// @version 		2.5
+// @version 	3.0
+// @description 🎟️ Film, details, and even the browse page, but done all fancy-like
+
+// @icon    https://hdbits.org/favicon.ico
+// @run-at 		document-end
 
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php*
 
-// @icon    https://hdbits.org/favicon.ico
+
+// ----------------------------------- Dependencies --------------------------------------
+
+// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css?raw=true
+// @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js?raw=true
+
+// ----------------------------------- Permissions --------------------------------------
+
+// @grant       GM_addStyle
+// @grant       GM_getResourceText
+// @grant       GM_getValue
+// @grant       GM_listValues
+// @grant       GM_registerMenuCommand
+// @grant       GM_setValue
+
+// ----------------------------------- Script Links --------------------------------------
 
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
 
-// @resource    HDB-FF-CSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.css?raw=true
-// @grant 		GM_getResourceText
-// @grant 		GM_addStyle
-
-// @grant       GM_setValue
-// @grant       GM_getValue
-
-// @description     Film, details, and even the browse page, but done all fancy-like
-
-// @run-at 		document-end
 // ==/UserScript==
 // ----------------------------------- CODE --------------------------------------
 
-// FilmFancy version number
-const versionNumber = GM_info.script.version
+// Initialize GM_config
+let configFrame = document.createElement('div')
+configFrame.classList.add('gmcFrame')
+document.body.appendChild(configFrame)
 
-// Apply custom CSS
-GM_addStyle(GM_getResourceText('HDB-FF-CSS'))
+let reloadWindow = false
+GM_config.init({
+    'id': 'HDB_FilmFancy',
+    'frame': configFrame,
+    'title': `
+            <div>
+                🎟️ <a class="headerMainText" href="${GM_info.script.homepage}" target="_blank">FilmFancy</a>
+            </div>
 
-// The settings to be saved as a cache item in the browser
-const filmFancySettings = {'resolution': true, 'banners': true, 'alternative': true, 'details': true, 'browse': true, 'browsePageGrouping': true, 'browsePageTitleSorting': true}
+            <div class="headerSubText">
+                ★ Hover over settings for details ★
+            </div>
+    `,
 
-if (GM_getValue('HDB-FilmFancy') === undefined) {
-    // Create cache item for new installs
-    GM_setValue('HDB-FilmFancy', filmFancySettings)
-} else {
-    // Check and add missing settings for updaters
-    let gmCache = GM_getValue('HDB-FilmFancy')
-    let keyArray = Object.keys(filmFancySettings)
-    for (let key of keyArray) {
-        if (gmCache[key] === undefined) {
-            gmCache[key] = filmFancySettings[key]
+    'fields': {
+        // ------------------ OPTIONS ------------------
+
+        'resolutionDescending': {
+            'label': 'Resolution Descending',
+            'type': 'checkbox',
+            'default': false,
+            'title': 'Display resolution groups in descending order'
+        },
+
+        'resolutionBanners': {
+            'label': 'Group Banners',
+            'type': 'checkbox',
+            'default': true,
+            'title': 'Display the banner images separating the resolution groups'
+        },
+
+        'alternativeTitle': {
+            'label': 'Alternative Title',
+            'type': 'checkbox',
+            'default': true,
+            'title': 'Replace the Film title with the alternative title, if any'
+        },
+
+        'quicksearchLinks': {
+            'label': 'QuickSearch Links',
+            'type': 'checkbox',
+            'default': true,
+            'title': 'Display quicksearch links to various sites'
+        },
+
+        'detailsPageGrouping': {
+            'label': 'Enabling Grouping',
+            'type': 'checkbox',
+            'default': true,
+            'section': 'Details Page',
+            'title': 'Enable resolution grouping in the torrent details page'
+        },
+
+        'browsePageGrouping': {
+            'label': 'Enable Grouping',
+            'type': 'checkbox',
+            'default': true,
+            'section': 'Browse Page',
+            'title': 'Enable resolution grouping in the browse page'
+        },
+
+        'browsePageTitleSorting': {
+            'label': 'Sort Alphabetically',
+            'type': 'checkbox',
+            'default': false,
+            'title': 'Within resolution groups, sort torrents alphabetically by Title'
+        },
+
+
+    },
+
+    'events': {
+
+        'open': function () {
+
+            const gmcFrame = this.frame
+            reloadWindow = false
+            importExportButtons(this, 'SearchParty', GM_info.script.version)
+
+            let bannerBarsSection = gmcFrame.querySelector('.section_header_holder')
+            bannerBarsSection.classList.add('bannerBarsSection')
+
+            // Add the GitHub version element before the Reset link
+            versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
+
+            gmcFrameCleanup(this.frame)
+
+        },
+
+        'save': function () {
+            reloadWindow = true
+            // Clear cached data when settings are saved
+            GM_listValues().forEach(key => {
+                if (key !== GM_config.id) {
+                    GM_setValue(key, null)
+                }
+            })
+        },
+
+        'close': function () {
+            if (reloadWindow) {
+                if (this.frame) {
+                    window.location.reload()
+                } else {
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 250)
+                }
+            }
+        },
+
+        'reset': function () {
+            // Handle reset functionality
+            if (typeof resetToDefaults === 'function') {
+                resetToDefaults()
+            }
         }
-    }
 
-    GM_setValue('HDB-FilmFancy', gmCache)
-}
+    },
 
-// Load saved settings
-const gmCache = GM_getValue('HDB-FilmFancy')
+    'css': `
 
+        ${GM_getResourceText('gmcFrameCSS')}
 
-function filmConfigMenu(torrentListTitle) {
-    // --- Build and append the toggable FilmFancy options ---
+        :root {
 
-    // Create menu elements
-    let hdbffMenu = document.createElement('div')
-    hdbffMenu.id = 'HDB-FF-Menu'
-    hdbffMenu.innerHTML = `<a href="https://hdbits.org/forums/viewtopic?topicid=79065" target="_blank">🎟️ FilmFancy (v${versionNumber})</a> ⚙️  <label title='Resolution groups displayed in descending order'>2160pTop <input type="checkbox" id="HDB-FF-Resolution"></label> | <label title='Banners designating torrent groups'>Banners <input type="checkbox" id="HDB-FF-Banners"></label> | <label title='Replace the main title with the English/Alternative title when available'>AltTitle <input type="checkbox" id="HDB-FF-Alternative"></label> | <label title='Enable FilmFancy features on torrent details page'>DetailsPage <input type="checkbox" id="HDB-FF-DetailsPage"></label> | <label title='Enable FilmFancy features on the browse page'>BrowsePage <input type="checkbox" id="HDB-FF-BrowsePage"></label>`
+            /* ---------- UserScript Specific ---------- */
+            --fieldGridColumns: 4fr 1fr;
+            --fieldGridWidth: 80%;
 
-    // Replace torrent list header with FilmFancy
-    let torrentsTitle = document.getElementById('torrent-list').previousElementSibling
-    torrentsTitle.style = null
-    torrentsTitle.innerText = '🎟️ FilmFancy'
-    torrentsTitle.classList.add('torrentListHeader')
+        }
 
-    // Append configuration menu
-    torrentListTitle.parentElement.insertBefore(hdbffMenu, torrentListTitle)
+    `
+})
 
-    // set current checkbox status
-    let hdbffMenuResolution = document.getElementById('HDB-FF-Resolution')
-    hdbffMenuResolution.checked = gmCache.resolution
-
-    let hdbffMenuBanners = document.getElementById('HDB-FF-Banners')
-    hdbffMenuBanners.checked = gmCache.banners
-
-    let hdbffMenuAlternative = document.getElementById('HDB-FF-Alternative')
-    hdbffMenuAlternative.checked = gmCache.alternative
-
-    let hdbffMenuDetailsPage = document.getElementById('HDB-FF-DetailsPage')
-    hdbffMenuDetailsPage.checked = gmCache.details
-
-    let hdbffMenuBrowsePage = document.getElementById('HDB-FF-BrowsePage')
-    hdbffMenuBrowsePage.checked = gmCache.browse
-
-    // Resolution: Toggle
-    hdbffMenuResolution.addEventListener('click', function() {
-        gmCache.resolution = hdbffMenuResolution.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // Banners: Toggle
-    hdbffMenuBanners.addEventListener('click', function() {
-        gmCache.banners = hdbffMenuBanners.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // Alternative: Toggle
-    hdbffMenuAlternative.addEventListener('click', function() {
-        gmCache.alternative = hdbffMenuAlternative.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // Details: Toggle
-    hdbffMenuDetailsPage.addEventListener('click', function() {
-        gmCache.details = hdbffMenuDetailsPage.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // Browse: Toggle
-    hdbffMenuBrowsePage.addEventListener('click', function() {
-        gmCache.browse = hdbffMenuBrowsePage.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-}
-
-function browseConfigMenu (torrentList) {
-    // Create menu element
-    let browseMenuElement = document.createElement('div')
-    browseMenuElement.style = `width: ${torrentList.offsetWidth}px`
-
-    // Create FilmFancy text header
-    let browseHeader = document.createElement('div')
-    browseHeader.innerHTML = '🎟️ FilmFancy'
-    browseHeader.classList.add('torrentListHeader')
-
-    // Create browse menu toggles
-    let browseMenu = document.createElement('div')
-    browseMenu.id = 'HDB-FF-Menu'
-    browseMenu.innerHTML = `<a href="https://hdbits.org/forums/viewtopic?topicid=79065" target="_blank">🎟️ FilmFancy (v${versionNumber})</a> ⚙️  <label title='Enable resolution grouping'>Grouping <input type="checkbox" id="HDB-FF-Grouping"></label> | <label title='Sort torrents in resolution groups by title ascending'>TitleSorting <input type="checkbox" id="HDB-FF-TitleSorting">`
-
-    // Append configuration menu above torrentList
-    browseMenuElement.appendChild(browseMenu)
-    browseMenuElement.appendChild(browseHeader)
-    torrentList.parentElement.insertBefore(browseMenuElement, torrentList)
-
-    // Set current checkbox status
-    let menuResolutionGrouping = document.getElementById('HDB-FF-Grouping')
-    menuResolutionGrouping.checked = gmCache.browsePageGrouping
+// Register the menu command that will open the GM_config panel
+GM_registerMenuCommand('🛠️ Settings', () => {
+    GM_config.open()
+})
 
 
-    let menuTitleSorting = document.getElementById('HDB-FF-TitleSorting')
-    menuTitleSorting.checked = gmCache.browsePageTitleSorting
-
-    // Grouping: Toggle
-    menuResolutionGrouping.addEventListener('click', function() {
-        gmCache.browsePageGrouping = menuResolutionGrouping.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // TitleSorting: Toggle
-    menuTitleSorting.addEventListener('click', function() {
-        gmCache.browsePageTitleSorting = menuTitleSorting.checked
-        GM_setValue('HDB-FilmFancy', gmCache)
-    })
-
-    // Hide options when resolution grouping is disabled
-    if (gmCache.browsePageGrouping === false) {
-        menuTitleSorting.parentElement.style = 'display: none'
-    }
-
-
+// Load all saved GM_Config settings
+let gmCache = {}
+for ( let key of Object.keys(GM_config.fields) ) {
+    gmCache[key] = GM_config.get(key)
 }
 
 
@@ -195,7 +216,7 @@ function updateFilmInfo(filmInfoElement, pageType) {
     }
 
     // Alternative: Change main title to alternative
-    if (gmCache.alternative == true) {
+    if (gmCache.alternativeTitle == true) {
         try {
             // The alternative title element
             let alternativeTitleHeader = titleHeader.nextSibling
@@ -216,28 +237,34 @@ function updateFilmInfo(filmInfoElement, pageType) {
     let movieIMDB = titleHeader.children[0].href.match(/(tt\d+)$/)[1]
     let movieSearchTitle = encodeURIComponent(titleHeader.innerText)
 
-    // Generate search link elements
-    let searchLinks = document.createElement('div')
-    searchLinks.classList.add('HDB-FF-SearchLinks')
-    searchLinks.innerHTML = `
-        <a href="https://passthepopcorn.me/torrents.php?action=advanced&searchstr=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/x-icon;base64,AAABAAEAEBAAAAAAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ6cAAD//wAA//8AAI/mAAD//wAA//8AAP8/AACcngAA/z8AAP//AAD/PwAA//8AANtfAACWlwAAuLwAAP8/">PassThePopcorn</a>
-        <a href="https://www.themoviedb.org/redirect?external_source=imdb_id&external_id=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABXElEQVR42qWTXUoDMRSFT2yTSbFaCwV/QHwVRFF8EAVRoVZ8ForgPlyESxEqRYrgMtQdKKIiUtpJO3+dxGQ67VhQLJ3A4SYP5+Pek4SsHlVPPpr2lR+E6wAIxluK0czTfHHmkhQ3Tx/aHXdjTOPImp3mj2R6rRK6fjA1CYAzKjXgWLl+bxK/BmRhOtCAIBlOqaj+GQYhPwA0ARhjlmbAcgxK2/sywLias95I1wF6vQg0BDiej7lSHofVHRRWFtGRTIuOqBtLPL/Ca9wAzS9wi/UBXddH+WwLB+e7aIUMtlbbSFrR3tZAoavQ1VYWnNsa5H0dOW4lgEp1G/u6g1ZAtdmKTINqx2ahO7DB4TTqkHe1BOBoQGmpgPLFHvLLC9EIIqSxiQ1HMFW8vMGtXwOf78kIgxAZp+D5XBSYjEOUiiRnE2JHQHneaIi/XePw1v6/xvQPKd1TTv2Z0n7nb6xy2pHNiRQwAAAAAElFTkSuQmCC">TheMovieDB</a>
-        <a href="https://letterboxd.com/imdb/${movieIMDB}/" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABTElEQVR42mNkQAPukdna///+Sfn3n8ENyJWDCj9iYmTYxcjMMmfn8qlXkdUzwhihoQ1sHxif9wGZmf///2diwAIYGRn/AanpAv8li1avbvgFNwCsmeH59v8M/50YiACMDIz7BBgkPUGGgA1wDUufArQ1mxjNSK6ZunvVzBxGkJ///f1zCZez8Rjwj4mZRY/RLSy9/9///wWWvA8YjHieMjz+KcCw7YMGwydBRoZnZj/BiqVOsTNwfWBl+KdhycAgIMrA8PQ2A9ODKwxMjIwTGF1C06+GiZzXShU/BTd9h5ATg4+7MMNf9v9gPvNPRoaAW/kMbzkN4GqYTmxmYLp44BrIgM8r1BfzCLN8g0teTNnGEMW4i+Ha7ydgvharDEMnZx5D7zkxhB++fWZgWdzwhSoGUOYFigOR4mikOCGBOBQnZbgh5GYmZEBqdgYAWa/VMb4fg70AAAAASUVORK5CYII=">Letterboxd</a>
-        <a href="https://duckduckgo.com/?q=\\${movieSearchTitle}+${movieIMDB}+site%3Arottentomatoes.com" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQwIDc5LjE2MDQ1MSwgMjAxNy8wNS8wNi0wMTowODoyMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkNBRTM0NDlCMTQ3ODExRThCM0VFQjlDNTlERjBCNDFFIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkNBRTM0NDlDMTQ3ODExRThCM0VFQjlDNTlERjBCNDFFIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Q0FFMzQ0OTkxNDc4MTFFOEIzRUVCOUM1OURGMEI0MUUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Q0FFMzQ0OUExNDc4MTFFOEIzRUVCOUM1OURGMEI0MUUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz76UXYgAAAJYUlEQVR42uxdC3BU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">RottenTomatoes</a>
-        <a href="https://duckduckgo.com/?q=\\${movieSearchTitle}+${movieIMDB}+site%3Ametacritic.com" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,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">Metacritic</a>
-        <br>
-        <a href="https://broadcasthe.net/torrents.php?action=advanced&imdb=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,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">BroadcasTheNet</a>
-        <a href="https://thetvdb.com/redirect/imdb/${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAkFBMVEUbJSVr1ZH///+MkZGusrI2Pz/3+PiJjo5iwoVnzIszWkUhMS1MVFRka2s1XkgyWEQsSzw7a1AdKiglOjJkx4hctX1Snm9Hh2E9cFMoQjdZrXhOl2pDfVsqRjlfu4EkLi5ASUlLkGYvODgvUkGhpaVbbGV6gICYnZ1IUFBWp3RAclbNz8/DxsZscnJfZmZRm22q8P4tAAAA60lEQVQ4je2R63KCMBCFd1csCUmUWwCBioi1Kr28/9t15VZmZNoX8PzYZHK+bM5kAZ4aFaq//ShGaZM02+7CZcDDSSIvysd2r+zs8wlKASpz0OYXUHy6URNQA6xp5bzMWkiMt0oIwW4sMFtrcwe0Po6ARa9ba5SqqU/EWjldHYCk7xD5WEDyRqeqf6Jy6ADDzS5DCdbfxWfSYwZDQ9KyBwQ0zBo6j8A7XXogQMzAu3ISJfHWUtveM3y05AwZGkRZBlfMg4J33qfrutpw+Zr+GueqH/86nPt7f2Ealg1pv9OgiZbHpTb+PxN/6ge00QyWHXgbEAAAAABJRU5ErkJggg==">TheTvDB</a>
-        <a href="https://api.simkl.com/redirect?to=Simkl&imdb=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR42p2Tz08TURDHv/urlNIGtB6QnuQqkQPam9QrniTxB2o1RA8iiaKxtAZNtP5IKKiIGBQviuhZ0cgJId407UEa/B+antva7nZ3fTPbhW7kopO8zHtv33zeznznScH2XT8ARPF/9l0SAFNMZHfHtm2Pd02SJI9vmEkA2w2gj6FQCH6/H6qqiLUMOm7ZFgzdQKlcRqVS4XMNkM0ACg6Hd2Ps6hXE+vsRCgahahpkASCCZVmo1WooFotY/vQZb5feoVqtEsQBmKaJ0csjmM5MMpmAFETDvU1RFP7nUqmEoTNxrK2v0569lcL88zmci5/lmyanppHN5hppgYNPnjiOwWODvL4xnsTrN4siTdUB0A0LL+ZxeugUA2afzSGby/G8VtPZh/eEsbezE4VCAT838uw9KUzcTOH2rQk0q0H77tB1nYu4ufkLd9Jp9rIsOwDKNdLVhWQygYN9fayEz+fjoYliqiIFUobWZC8XXiGRTG3/gSDhSCyG7u59UGQFq2tfWa6WFr8YPgFQ0dt7AI+mMgz/srKC+Plh1Ot1ByCKgfdLizg6MCACf+PxzAw28nnKA24/9fTsR2o8gUAggA8flzF84SKptN0H99N3cf3amKcGbjc2NQ7bvQcPkRFKbdWADkYiEYyOXEI0eggd7R0iX40OgBBUI8MwuAdI3idPZ70qNPd+sK0N/tZWaCItSXaeCAHMeh1VIWdZKOE2mNvKOz8mZ/HXA9rpMa2KyWFw1/+TEf3bH+Z0GEFGcmpoAAAAAElFTkSuQmCC">Simkl</a>
-        <a href="https://trakt.tv/search/imdb/${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAzFBMVEVHcEzjzu2gQcT////BKX/1AxL8AAC0J5OuK5/CHHe0Mpq0Mpns2u+kPbuoN7GdNMDkrcbsq7rWnsnx4fHo0evavOXAJX/LDmDZstvFFm67ec2uMqOyKJe6fdOnLKuhQsS8LYnWs+HOb6S0FIufGa7tABHbaYyzIZK4FYXZAD+iOLvlx+KhMLm+d8WZILvQAFDly+irF5rOlMrRbp+pRbrVbJjXqdPLcKvAc77Ib67qm6rXj7fjACntiJS2R6bGJ3TLfrf+/f6zV7iqW8pWRlinAAAADHRSTlMAycYtxsYrK/39xsbNoycUAAAA30lEQVQYlSXP2XaCMBSF4dNWRdskQECSQASKzEMZXM7a8f3fqUm7777/4qx1AIznZRi2bWuaUfRoABhxMXH+qrb+iczNE8xKh566zvf9jbLzAKsrHYOQ1HVtKqM1COssAxJijP88qHCU7w1Pcesru2/ArKRo0MDTf0c6lNRFw4S0MYbe3nlb6h60U3UJKnvvxVv61XA3JYTokAtd0GEk5LsjcLNz9qHKpwyC4MRDyO6XngnPKwspRzotYZ45lzzf75LkeKZO8QKLLLvbapbatYzVu4t5dquqnjEhVjMDfgGG0BwicSWbxgAAAABJRU5ErkJggg==">Trakt</a>
-        <a href="https://www.imdb.com/title/${movieIMDB}/" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAahJREFUWMNj+HpU4v9AYoZRB4w6YNQBow4YdQC6wKIm/v+u5mz/w1w5/h+aIwxmg3CiH+f/pzvE4HwQvrJaBIXvZsH2vyqJ5//nw+L/c8K5wGLdBbykOaAxg+c/AwPDfwlhpv9ruwXBbBDmZGf4f2SuMJwPwicWIviCvIxw9vI2gf9mOqxgdhLQ4VRxAAh35vHidMD2yYL/WZgh7AnFfHAHgEJudacAGH85Ik6eA9hYIQaDghQUEtgcsGuq0H8uDkYMB7CzIdQ3Z/KQ5wB1eWYwzQE0TEuRhSgHmGpDHBDjxfnf34EdzPa1YyfPAYYaLP8lRZjAbG9bdpJCIMmfE4xBbB9bMh1gBHSArSEbmA1K3bgcAIsemjgAlJhA7L4iXqwOqE3lgbMnliCiIBYYBaEuHJRFAcgBrdkQi9f3CmJ1AAwzMTH8PzpfGB4CrCwIucpEbsIOOLlI+P/0Kr7/Cxv5/99aLwpmr+4S+H9llQiY/Xi7GJgG4SfbReFsEJ4BxCD9IHPWdAuAxQ4DC7OpFXz/p5Tz/f9wUHy0Lhh1wKgDRh0w6oDB5wAAnyEaXz1l5ZIAAAAASUVORK5CYII=">IMDB</a>
-        <a href="https://www.youtube.com/results?search_query=${movieSearchTitle}+trailer" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAD/EAAA/0AAAP9AAAD/cAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/QAAA/0AAAP8Q////AP///wD///8AAAD/YAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2D///8AAAD/MAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD/MAAA/1AAAP//AAD//wAA//8AAP//AAD//wAA//8QEP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2AAAP+AAAD//wAA//8AAP//AAD//wAA//8AAP//4OD//1BQ//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP+AAAD/gAAA//8AAP//AAD//wAA//8AAP//AAD/////////////wMD//yAg//8AAP//AAD//wAA//8AAP//AAD/gAAA/4AAAP//AAD//wAA//8AAP//AAD//wAA/////////////7Cw//8gIP//AAD//wAA//8AAP//AAD//wAA/4AAAP+AAAD//wAA//8AAP//AAD//wAA//8AAP//4OD//0BA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP+AAAD/UAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD/YAAA/zAAAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/zD///8AAAD/YAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2D///8A////AP///wAAAP8QAAD/QAAA/0AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP9AAAD/QAAA/xD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AADAAwAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAMADAAD//wAA//8AAA==">YouTube</a>
-    `
+    if ( gmCache.quicksearchLinks === true ) {
+        // Generate quicksearch link elements
 
-    // Append search links after title(s)
-    titleHeader.parentElement.appendChild(searchLinks)
+        let searchLinks = document.createElement('div')
+        searchLinks.classList.add('HDB-FF-SearchLinks')
+        searchLinks.innerHTML = `
+            <a href="https://passthepopcorn.me/torrents.php?action=advanced&searchstr=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/x-icon;base64,AAABAAEAEBAAAAAAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAABmfP9mtP9m6/9o/fMAAAB3342I0mep2mbW7WYAAADmtGbLhma8aGbBZpEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAD///////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ6cAAD//wAA//8AAI/mAAD//wAA//8AAP8/AACcngAA/z8AAP//AAD/PwAA//8AANtfAACWlwAAuLwAAP8/">PassThePopcorn</a>
+            <a href="https://lat-team.com/torrents?imdbId=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,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">Lat-Team</a>
+            <a href="https://www.themoviedb.org/redirect?external_source=imdb_id&external_id=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABXElEQVR42qWTXUoDMRSFT2yTSbFaCwV/QHwVRFF8EAVRoVZ8ForgPlyESxEqRYrgMtQdKKIiUtpJO3+dxGQ67VhQLJ3A4SYP5+Pek4SsHlVPPpr2lR+E6wAIxluK0czTfHHmkhQ3Tx/aHXdjTOPImp3mj2R6rRK6fjA1CYAzKjXgWLl+bxK/BmRhOtCAIBlOqaj+GQYhPwA0ARhjlmbAcgxK2/sywLias95I1wF6vQg0BDiej7lSHofVHRRWFtGRTIuOqBtLPL/Ca9wAzS9wi/UBXddH+WwLB+e7aIUMtlbbSFrR3tZAoavQ1VYWnNsa5H0dOW4lgEp1G/u6g1ZAtdmKTINqx2ahO7DB4TTqkHe1BOBoQGmpgPLFHvLLC9EIIqSxiQ1HMFW8vMGtXwOf78kIgxAZp+D5XBSYjEOUiiRnE2JHQHneaIi/XePw1v6/xvQPKd1TTv2Z0n7nb6xy2pHNiRQwAAAAAElFTkSuQmCC">TheMovieDB</a>
+            <a href="https://letterboxd.com/imdb/${movieIMDB}/" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABTElEQVR42mNkQAPukdna///+Sfn3n8ENyJWDCj9iYmTYxcjMMmfn8qlXkdUzwhihoQ1sHxif9wGZmf///2diwAIYGRn/AanpAv8li1avbvgFNwCsmeH59v8M/50YiACMDIz7BBgkPUGGgA1wDUufArQ1mxjNSK6ZunvVzBxGkJ///f1zCZez8Rjwj4mZRY/RLSy9/9///wWWvA8YjHieMjz+KcCw7YMGwydBRoZnZj/BiqVOsTNwfWBl+KdhycAgIMrA8PQ2A9ODKwxMjIwTGF1C06+GiZzXShU/BTd9h5ATg4+7MMNf9v9gPvNPRoaAW/kMbzkN4GqYTmxmYLp44BrIgM8r1BfzCLN8g0teTNnGEMW4i+Ha7ydgvharDEMnZx5D7zkxhB++fWZgWdzwhSoGUOYFigOR4mikOCGBOBQnZbgh5GYmZEBqdgYAWa/VMb4fg70AAAAASUVORK5CYII=">Letterboxd</a>
+            <a href="https://duckduckgo.com/?q=\\${movieSearchTitle}+${movieIMDB}+site%3Atrakt.tv" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAzFBMVEVHcEzjzu2gQcT////BKX/1AxL8AAC0J5OuK5/CHHe0Mpq0Mpns2u+kPbuoN7GdNMDkrcbsq7rWnsnx4fHo0evavOXAJX/LDmDZstvFFm67ec2uMqOyKJe6fdOnLKuhQsS8LYnWs+HOb6S0FIufGa7tABHbaYyzIZK4FYXZAD+iOLvlx+KhMLm+d8WZILvQAFDly+irF5rOlMrRbp+pRbrVbJjXqdPLcKvAc77Ib67qm6rXj7fjACntiJS2R6bGJ3TLfrf+/f6zV7iqW8pWRlinAAAADHRSTlMAycYtxsYrK/39xsbNoycUAAAA30lEQVQYlSXP2XaCMBSF4dNWRdskQECSQASKzEMZXM7a8f3fqUm7777/4qx1AIznZRi2bWuaUfRoABhxMXH+qrb+iczNE8xKh566zvf9jbLzAKsrHYOQ1HVtKqM1COssAxJijP88qHCU7w1Pcesru2/ArKRo0MDTf0c6lNRFw4S0MYbe3nlb6h60U3UJKnvvxVv61XA3JYTokAtd0GEk5LsjcLNz9qHKpwyC4MRDyO6XngnPKwspRzotYZ45lzzf75LkeKZO8QKLLLvbapbatYzVu4t5dquqnjEhVjMDfgGG0BwicSWbxgAAAABJRU5ErkJggg==">Trakt</a>
+            <a href="https://duckduckgo.com/?q=\\${movieSearchTitle}+${movieIMDB}+site%3Arottentomatoes.com" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQwIDc5LjE2MDQ1MSwgMjAxNy8wNS8wNi0wMTowODoyMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkNBRTM0NDlCMTQ3ODExRThCM0VFQjlDNTlERjBCNDFFIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkNBRTM0NDlDMTQ3ODExRThCM0VFQjlDNTlERjBCNDFFIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Q0FFMzQ0OTkxNDc4MTFFOEIzRUVCOUM1OURGMEI0MUUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Q0FFMzQ0OUExNDc4MTFFOEIzRUVCOUM1OURGMEI0MUUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz76UXYgAAAJYUlEQVR42uxdC3BU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">RottenTomatoes</a>
+            <br>
+            <a href="https://broadcasthe.net/torrents.php?action=advanced&imdb=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,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">BroadcasTheNet</a>
+            <a href="https://thetvdb.com/redirect/imdb/${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAkFBMVEUbJSVr1ZH///+MkZGusrI2Pz/3+PiJjo5iwoVnzIszWkUhMS1MVFRka2s1XkgyWEQsSzw7a1AdKiglOjJkx4hctX1Snm9Hh2E9cFMoQjdZrXhOl2pDfVsqRjlfu4EkLi5ASUlLkGYvODgvUkGhpaVbbGV6gICYnZ1IUFBWp3RAclbNz8/DxsZscnJfZmZRm22q8P4tAAAA60lEQVQ4je2R63KCMBCFd1csCUmUWwCBioi1Kr28/9t15VZmZNoX8PzYZHK+bM5kAZ4aFaq//ShGaZM02+7CZcDDSSIvysd2r+zs8wlKASpz0OYXUHy6URNQA6xp5bzMWkiMt0oIwW4sMFtrcwe0Po6ARa9ba5SqqU/EWjldHYCk7xD5WEDyRqeqf6Jy6ADDzS5DCdbfxWfSYwZDQ9KyBwQ0zBo6j8A7XXogQMzAu3ISJfHWUtveM3y05AwZGkRZBlfMg4J33qfrutpw+Zr+GueqH/86nPt7f2Ealg1pv9OgiZbHpTb+PxN/6ge00QyWHXgbEAAAAABJRU5ErkJggg==">TheTvDB</a>
+            <a href="https://api.simkl.com/redirect?to=Simkl&imdb=${movieIMDB}" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR42p2Tz08TURDHv/urlNIGtB6QnuQqkQPam9QrniTxB2o1RA8iiaKxtAZNtP5IKKiIGBQviuhZ0cgJId407UEa/B+antva7nZ3fTPbhW7kopO8zHtv33zeznznScH2XT8ARPF/9l0SAFNMZHfHtm2Pd02SJI9vmEkA2w2gj6FQCH6/H6qqiLUMOm7ZFgzdQKlcRqVS4XMNkM0ACg6Hd2Ps6hXE+vsRCgahahpkASCCZVmo1WooFotY/vQZb5feoVqtEsQBmKaJ0csjmM5MMpmAFETDvU1RFP7nUqmEoTNxrK2v0569lcL88zmci5/lmyanppHN5hppgYNPnjiOwWODvL4xnsTrN4siTdUB0A0LL+ZxeugUA2afzSGby/G8VtPZh/eEsbezE4VCAT838uw9KUzcTOH2rQk0q0H77tB1nYu4ufkLd9Jp9rIsOwDKNdLVhWQygYN9fayEz+fjoYliqiIFUobWZC8XXiGRTG3/gSDhSCyG7u59UGQFq2tfWa6WFr8YPgFQ0dt7AI+mMgz/srKC+Plh1Ot1ByCKgfdLizg6MCACf+PxzAw28nnKA24/9fTsR2o8gUAggA8flzF84SKptN0H99N3cf3amKcGbjc2NQ7bvQcPkRFKbdWADkYiEYyOXEI0eggd7R0iX40OgBBUI8MwuAdI3idPZ70qNPd+sK0N/tZWaCItSXaeCAHMeh1VIWdZKOE2mNvKOz8mZ/HXA9rpMa2KyWFw1/+TEf3bH+Z0GEFGcmpoAAAAAElFTkSuQmCC">Simkl</a>
+            <a href="https://www.imdb.com/title/${movieIMDB}/" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAahJREFUWMNj+HpU4v9AYoZRB4w6YNQBow4YdQC6wKIm/v+u5mz/w1w5/h+aIwxmg3CiH+f/pzvE4HwQvrJaBIXvZsH2vyqJ5//nw+L/c8K5wGLdBbykOaAxg+c/AwPDfwlhpv9ruwXBbBDmZGf4f2SuMJwPwicWIviCvIxw9vI2gf9mOqxgdhLQ4VRxAAh35vHidMD2yYL/WZgh7AnFfHAHgEJudacAGH85Ik6eA9hYIQaDghQUEtgcsGuq0H8uDkYMB7CzIdQ3Z/KQ5wB1eWYwzQE0TEuRhSgHmGpDHBDjxfnf34EdzPa1YyfPAYYaLP8lRZjAbG9bdpJCIMmfE4xBbB9bMh1gBHSArSEbmA1K3bgcAIsemjgAlJhA7L4iXqwOqE3lgbMnliCiIBYYBaEuHJRFAcgBrdkQi9f3CmJ1AAwzMTH8PzpfGB4CrCwIucpEbsIOOLlI+P/0Kr7/Cxv5/99aLwpmr+4S+H9llQiY/Xi7GJgG4SfbReFsEJ4BxCD9IHPWdAuAxQ4DC7OpFXz/p5Tz/f9wUHy0Lhh1wKgDRh0w6oDB5wAAnyEaXz1l5ZIAAAAASUVORK5CYII=">IMDB</a>
+            <a href="https://www.youtube.com/results?search_query=${movieSearchTitle}+trailer" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAD/EAAA/0AAAP9AAAD/cAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/QAAA/0AAAP8Q////AP///wD///8AAAD/YAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2D///8AAAD/MAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD/MAAA/1AAAP//AAD//wAA//8AAP//AAD//wAA//8QEP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2AAAP+AAAD//wAA//8AAP//AAD//wAA//8AAP//4OD//1BQ//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP+AAAD/gAAA//8AAP//AAD//wAA//8AAP//AAD/////////////wMD//yAg//8AAP//AAD//wAA//8AAP//AAD/gAAA/4AAAP//AAD//wAA//8AAP//AAD//wAA/////////////7Cw//8gIP//AAD//wAA//8AAP//AAD//wAA/4AAAP+AAAD//wAA//8AAP//AAD//wAA//8AAP//4OD//0BA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP+AAAD/UAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD/YAAA/zAAAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/zD///8AAAD/YAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA/2D///8A////AP///wAAAP8QAAD/QAAA/0AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP9AAAD/QAAA/xD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AADAAwAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAMADAAD//wAA//8AAA==">YouTube</a>
+            <a href="https://duckduckgo.com/?q=\\${movieSearchTitle}+${movieIMDB}+site%3Ametacritic.com" target="_blank" class="HDB-FF-SearchLink"><img src="data:image/png;base64,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">Metacritic</a>
+        `
+
+        // Append search links after title(s)
+        titleHeader.parentElement.appendChild(searchLinks)
+    
+    }
 
 }
+
 
 function deadTorrents(torrent, pageType) {
     // --- Apply visual changes to dead torrents ---
@@ -254,6 +281,7 @@ function deadTorrents(torrent, pageType) {
     }
 }
 
+
 function organizeTorrents(torrentBody, pageType) {
     // --- Group and sort torrents on a movie page ---
 
@@ -261,7 +289,7 @@ function organizeTorrents(torrentBody, pageType) {
     let torrentRows = torrentBody.getElementsByTagName('tr')
 
     // Group torrent rows into resolutions
-    if (gmCache.resolution === true) {
+    if (gmCache.resolutionDescending === true) {
         var resGroups = {'Featured': [], '2160p': [], '1080p': [], '1080i': [], '720p': [], 'Extras': [], 'Audio': [], 'Unknown': []}
     } else {
         var resGroups = {'Featured': [], '720p': [], '1080i': [], '1080p': [], '2160p': [], 'Extras': [], 'Audio': [], 'Unknown': []}
@@ -390,7 +418,7 @@ function organizeTorrents(torrentBody, pageType) {
 
 
             // Append group banner to torrent list
-            if (gmCache.banners === true) {
+            if (gmCache.resolutionBanners === true) {
                 torrentBody.appendChild(banner)
 
                 // Clone the table header below the first group banner and hide the original
@@ -425,6 +453,9 @@ function organizeTorrents(torrentBody, pageType) {
 }
 
 
+let torrentBody = false
+let pageType = null
+
 // Parse the page URL to determine how to run the script
 if (document.URL.match(/^.*film\/info\?id=\d+/)){
     // -- Film page --
@@ -432,32 +463,34 @@ if (document.URL.match(/^.*film\/info\?id=\d+/)){
     // Get and update the FilmInfo box
     updateFilmInfo(document.getElementsByClassName('film-info')[0], 'film')
 
-    // Create and float the FilmFancy toggles
-    filmConfigMenu(document.getElementById('torrent-list').previousElementSibling)
+    // Insert the FilmFancy header
+    let filmFancyButton = document.querySelector('#torrent-list').previousElementSibling
+    filmFancyButton.innerText = '🎟️ FilmFancy'
+    filmFancyButton.style.cursor = 'pointer'
+    filmFancyButton.addEventListener('click', function(event) {
+        GM_config.open()
+    })
 
     // The main torrent body to be organized
-    var torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
-    var pageType = 'film'
+    torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
+    pageType = 'film'
 
-} else if ( document.URL.match(/^.*browse.php.*/) && gmCache.browse === true ) {
+} else if ( document.URL.match(/^.*browse.php.*/) ) {
     // -- Browse page --
-
-    // Create and float the browsePage toggles
-    browseConfigMenu(document.getElementById('torrent-list'))
 
     // The main torrent body to be organized
     if (gmCache.browsePageGrouping === true) {
-        var torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
-        var pageType = 'browse'
+        torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
+        pageType = 'browse'
     } else {
         // Apply visual changes to dead torrents
-        let torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
+        torrentBody = document.getElementById('torrent-list').getElementsByTagName('tbody')[0]
         for (let torrent of torrentBody.getElementsByTagName('tr')) { deadTorrents(torrent, 'browse') }
 
         torrentBody = false
     }
 
-} else if ( document.URL.match(/^.*details.php.*/) && gmCache.details === true ) {
+} else if ( document.URL.match(/^.*details.php.*/) ) {
     // -- Details page --
 
     // Update the FilmInfo box if available
@@ -469,20 +502,89 @@ if (document.URL.match(/^.*film\/info\?id=\d+/)){
         // console.log('HDB - FilmFancy: No filmInfo Box')
     }
 
-    // Organize the tableBody, if available
-    try {
-        // The main tableBody to be organized
-        var torrentBody = document.getElementsByClassName('table_other_copies')[0].getElementsByTagName('tbody')[0]
-        var pageType = 'details'
-    } catch(e) {
-        // No torrent table, skipping
-        // console.log('HDB - FilmFancy: No torrent tableBody')
-        var torrentBody = false
+    if ( gmCache.detailsPageGrouping === true ) {
+        // Organize the tableBody, if available
+        try {
+            // The main tableBody to be organized
+            torrentBody = document.getElementsByClassName('table_other_copies')[0].getElementsByTagName('tbody')[0]
+            pageType = 'details'
+        } catch(e) {
+            // No torrent table, skipping
+            // console.log('HDB - FilmFancy: No torrent tableBody')
+            torrentBody = false
 
+        }
     }
+
 }
 
 // Call the main function to organize the provided torrent table
 if (torrentBody) {
     organizeTorrents(torrentBody, pageType)
+}
+
+// Add custom CSS styles
+GM_addStyle(`
+    /* FilmFancy torrentList header */
+    div.torrentListHeader {
+        font-size: 21px;
+        font-weight: bold;
+        text-align: left;
+        margin-bottom: .5em;
+    }
+
+    /* Configuration Menu */
+    div#HDB-FF-Menu {
+        float: right;
+        margin-right: 1em;
+    }
+
+    /* Search Links */
+    div.HDB-FF-SearchLinks {
+        margin-bottom: 8px;
+        margin-left: 15px;
+        text-align: left;
+    }
+
+    /* SearchLinks: Text */
+    a.HDB-FF-SearchLink {
+        margin-right: .5em;
+        font-size: 13px;
+    }
+
+    /* SearchLinks: Images */
+    a.HDB-FF-SearchLink > img {
+        max-width: 18px;
+        max-height: 18px;
+        margin-right: .5em;
+    }
+    /* Banner element */
+    td.HDB-FF-Banner {
+        background-color: var(--dark);
+    }
+
+    /* Banner: Text */
+    div.HDB-FF-BannerText {
+        margin: .5em;
+        font-size: 21px;
+        font-weight: bold;
+        text-align: center;
+        color: var(--white);
+    }
+
+    /* Banner: Images */
+    div.HDB-FF-BannerText  > img {
+        max-width: 64px;
+        max-height: 28px;
+    }
+
+    /* Dead: Transparency*/
+    tr.HDB-FF-Seederless {
+        opacity: 40%
+    }
+
+    /* Dead: Hover */
+    tr.HDB-FF-Seederless:hover {
+        opacity: 100%
+`
 }
