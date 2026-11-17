@@ -55,7 +55,6 @@ function importExportButtons(gmcObject, fileTitle, versionNumber) {
 
     exportButton.addEventListener('click', function(event) {
         exportGMCSettings(gmcObject.id, fileTitle, versionNumber)
-        exportButton.innerText = 'Exported'
     })
 
     // Insert the Import\Export buttons after the Save\Close buttons
