@@ -252,6 +252,7 @@ div:has( > div[id$="_wrapper"]) {
 
         option {
             color: var(--inputFieldText);
+            background: var(--inputFieldBackground);
         }
 
         &:focus {
