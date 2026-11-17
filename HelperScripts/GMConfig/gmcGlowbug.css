@@ -5,25 +5,27 @@
  1: Add this CSS to the Metadata section of your UserScript
 
     // @grant       GM_getResourceText
-    // @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcFrameStylesheet.css?raw=true
+    // @resource    gmcGlowbug https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css
 
- 2: When initializing GM_config, add the 'frame' property so that the panel is not an iFrame and can be matched by the CSS selectors below
+ 2: Create a <div> element, give it the class 'gmcFrame', and then add that element as the 'frame' property when initializing GM_config
 
     let configFrame = document.createElement('div')
+    configFrame.classList.add('gmcFrame')
     GM_config.init({
         'frame': configFrame,
         ...
     }
 
- 4: Insert the CSS text and if necessary override any default CSS values
+ 3: Insert the CSS text when initializing GM_config and optionally override any of the default CSS variables to fit your needs
     
     'css': `
 
-        ${GM_getResourceText(gmcFrameCSS)}
+        ${GM_getResourceText(gmcGlowbug)}
 
         :root {
             --frameWidth: 800px;
-            --labelFieldFontSize: 18px;
+            --fieldGridColumns: 3fr 1fr;
+            --saveCloseButtonsWidth: 50%;
         }
 
     `
@@ -33,19 +35,18 @@
 :root {
 
     /* ---------- UserScript Specific Variables ---------- */
-    /* Override these variables within a UserScript to size\position the GMConfig frame */
-    --frameWidth: 380px;
+    /* These are the most common variables you might want to override on a per-UserScript basis */
+
+    --frameWidth: 380px; 
     --frameHeight: auto;
+    --fieldGridColumns: 2fr 1fr; /* Each .config_var is displayed as a grid with 2 columns; Label + Input */
+    --fieldGridWidth: 90%; /* The max-width of .config_var elements */
+    --labelFieldFontSize: 16px; /* The font-size that label fields will be displayed */
+    --saveCloseButtonsWidth: 75%; /* The max-width of the SaveClose buttons holder */
+
     --frameInset: 2% 2% auto auto;
     --frameTransform: unset;
-    --saveCloseButtonsWidth: 75%;
-    --labelFieldFontSize: 16px;
-    --fieldGridColumns: 1fr 1fr; /* Each .config_var gets 2 columns; Label + Input */
-    --fieldGridWidth: 90%;
-
-
-    /* Set these values to center the GMConfig frame to the browser window */
-    /*
+    /* These values will center the GM_Config frame to the browser window 
     --frameInset: 50% auto auto 50%;
     --frameTransform: translate(-50%,-50%);
     */
@@ -55,8 +56,8 @@
     --frameBorderColor: #2C3E50;
     --frameTextColor: #DDDDDD;
     --frameOpenDuration: 500ms;
-    --headerFonts: 'Lilita One', 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --frameFont: 'Roboto Condensed', arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --headerFonts: 'Lilita One', 'Roboto Condensed', Tahoma, Arial, 'Segoe UI', Geneva, Verdana, sans-serif;
+    --frameFont: 'Roboto Condensed', Tahoma, Arial, 'Segoe UI', Geneva, Verdana, sans-serif;
 
     /* ---------- HeaderText ---------- */
     --headerFontSize: 40px;
@@ -78,8 +79,9 @@
     --inputFieldInnerShadow: #949494;
     --inputFieldFocusShadow: #a8afbd;
 
-    --checkboxCheckedBackground: #0060DF;
-    --checkboxCheckedBorder: #4284FF;
+    --checkboxSize: 18px;
+    --checkboxCheckedBackground: var(--headerFontGlow);
+    --checkboxCheckedBorder: var(--headerFontGlow);
 
     --inputFieldDisabledText: #3E3E3E;
     --inputFieldDisabledBackground: #8b8e94;
@@ -98,7 +100,7 @@
 
 }
 
-div:has( > div[id$="_wrapper"]) {
+div.gmcFrame:has( > div[id$="_wrapper"]) {
 
     /* ---------- FrameElement ---------- */
     /* Set panel width, height, padding, and inset in open() */
@@ -242,8 +244,9 @@ div:has( > div[id$="_wrapper"]) {
         
         &[type="checkbox"] {
             cursor: pointer;
-            width: auto;
-            height: auto;
+            width: var(--checkboxSize);
+            height: var(--checkboxSize);
+            --r: 45deg;
         }
 
         &:open option:hover {
@@ -482,6 +485,18 @@ div:has( > div[id$="_wrapper"]) {
   75% {
     transform: scale(0.95, 1.05);
   }
+
+}
+
+@keyframes pulseShadow {
+
+    0% {
+        text-shadow: 0px 0px 5px var(--headerFontGlow);
+    }
+
+    100% {
+        text-shadow: 0px 0px 20px var(--headerFontGlow);
+    }
 
 }
 
