@@ -7,12 +7,11 @@
 // @description 🎟️ Film, details, and even the browse page, but done all fancy-like
 
 // @icon    https://hdbits.org/favicon.ico
-// @run-at 		document-end
+// @run-at 	document-end
 
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php*
-
 
 // ----------------------------------- Dependencies --------------------------------------
 
@@ -36,7 +35,11 @@
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
 
 // ==/UserScript==
-// ----------------------------------- CODE --------------------------------------
+
+// ----------------------------------- Code --------------------------------------
+
+// This string helps prevent various JavaScript oddities when working with variables
+'use strict'
 
 // Initialize GM_config
 let configFrame = document.createElement('div')
@@ -53,12 +56,11 @@ GM_config.init({
             </div>
 
             <div class="headerSubText">
-                ★ Hover over settings for details ★
+                ★ Hover settings for details ★
             </div>
     `,
 
     'fields': {
-        // ------------------ OPTIONS ------------------
 
         'resolutionDescending': {
             'label': 'Resolution Descending',
@@ -453,6 +455,7 @@ function organizeTorrents(torrentBody, pageType) {
 }
 
 
+// The variables that will store the torrent table and page type
 let torrentBody = false
 let pageType = null
 
@@ -499,6 +502,7 @@ if (document.URL.match(/^.*film\/info\?id=\d+/)){
         for (let torrent of torrentBody.getElementsByTagName('tr')) { deadTorrents(torrent, 'browse') }
 
         torrentBody = false
+
     }
 
 } else if ( document.URL.match(/^.*details.php.*/) ) {
