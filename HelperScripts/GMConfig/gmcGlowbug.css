@@ -138,6 +138,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
 
     div:has(.headerMainText) {
         font-size:30px;
+        text-align: center;
     }
 
     .headerMainText {
