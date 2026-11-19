@@ -182,6 +182,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             font-size: var(--sectionFontSize) !important;
             font-style: normal;
             padding: 5px 0px;
+            text-align: center;
             text-decoration: none;
             text-shadow: 0 0 20px var(--sectionFontGlow);
             user-select: none;
@@ -377,6 +378,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             cursor: pointer;
             font-size: var(--labelFieldFontSize);
             font-weight: normal;
+            height: auto;
             margin: unset !important;
             padding: 8px !important;
             transition: background-color 0.2s ease, transform 0.2s ease;
