@@ -271,7 +271,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             color: var(--inputFieldText);
             background: var(--inputFieldBackground);
 
-            &.disabledField {
+            &.disabled {
                 background-color: var(--inputFieldDisabledBackground);
             }
 
