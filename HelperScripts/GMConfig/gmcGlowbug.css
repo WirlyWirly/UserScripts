@@ -241,6 +241,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         font-size: 13px;
         font-weight: 500;
         height: 22px;
+        min-width: auto;
         padding: 3px;
         text-align: center;
         width: 100%;
