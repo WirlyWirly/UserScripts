@@ -141,6 +141,11 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         text-align: center;
     }
 
+    a {
+        background: none;
+        cursor: pointer;
+    }
+
     .headerMainText {
         /* ---------- MainHeader ---------- */
         -webkit-background-clip: text;
@@ -315,11 +320,11 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             border-style: none solid none none;
             border-width: 3px;
             color: var(--tableHeadersText);
-            cursor: pointer;
+            cursor: default;
             font-size: 18px;
             font-style: normal;
             font-weight: normal;
-            padding: 10px 10px;
+            padding: 10px 10px !important;
             text-align: center;
         }
 
@@ -343,7 +348,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
 
         td {
             border: none;
-            padding: 3px 2px 3px 2px;
+            padding: 3px 2px 3px 2px !important;
             text-align: center;
         }
 
