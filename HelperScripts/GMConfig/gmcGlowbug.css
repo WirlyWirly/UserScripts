@@ -224,6 +224,11 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             text-align: center;
             width: 100%;
 
+            label {
+                /* ---------- FieldLabel ---------- */
+                margin: auto;
+            }
+
             input {
                 /* ---------- FieldInput ---------- */
                 margin: auto;
@@ -265,6 +270,11 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         option {
             color: var(--inputFieldText);
             background: var(--inputFieldBackground);
+
+            &.disabledField {
+                background-color: var(--inputFieldDisabledBackground);
+            }
+
         }
 
         &:focus {
