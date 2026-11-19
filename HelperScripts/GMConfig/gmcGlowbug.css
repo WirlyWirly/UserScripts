@@ -253,8 +253,8 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         
         &[type="checkbox"] {
             cursor: pointer;
-            width: var(--checkboxSize);
-            height: var(--checkboxSize);
+            width: var(--checkboxSize) !important;
+            height: var(--checkboxSize) !important;
             --r: 45deg;
         }
 
