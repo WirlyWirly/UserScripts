@@ -18,10 +18,10 @@ GM_config.init({
         'open': function() {
 
             let gmcExtened = new gmcExtendedInjections(this, GM_info)
-
             gmcExtended.importExportButtons('exportFilename')
-
             gmcExtended.scriptVersionLink('github')
+
+            ...
 
             gmcExtended.frameCleanup()
 
@@ -52,9 +52,6 @@ class gmcExtendedInjections {
 
 importExportButtons(filename = this.scriptName) {
     // Create and insert Import\Export buttons after the 'Close' button
-
-    // Clean filename of non \w characters
-    filename = filename.replace(/[^\w\d]/, '')
 
     let closeButton = this.gmcFrame.querySelector('button[id$="_closeBtn"]')
 
@@ -112,7 +109,7 @@ importGMCSettings() {
                 // Parse the content of the selected file, making sure it is valid JSON
                 let settingsJSON = JSON.stringify(JSON.parse(textContent))
 
-                GM_setValue(gmcId, settingsJSON)
+                GM_setValue(this.gmcId, settingsJSON)
 
                 window.alert('⭐ Settings Imported ⭐\n\nThe selected settings file has been succesfully imported\n\nThe page will now refresh')
 
@@ -135,6 +132,9 @@ importGMCSettings() {
 
 exportGMCSettings(filename) {
         // Export the currently saved GM_config settings to a .json file
+
+        // Clean filename of non \w characters
+        filename = filename.replace(/[^\w\d]/, '')
 
         // Pretty-print the settings string to make it easier to read
         let jsonParsed = JSON.parse(GM_getValue(this.gmcId))
