@@ -101,7 +101,7 @@
 }
 
 
-div.gmcFrame:has( > div[id$="_wrapper"]) {
+div.gmcFrame {
 
     /* ---------- FrameElement ---------- */
     /* Set panel width, height, padding, and inset in open() */
@@ -374,7 +374,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
     }
 
     /* ---------- Save\Close <div> ---------- */
-    div:has( > button.saveclose_buttons) {
+    div[id$="_buttons_holder"]:has( > button.saveclose_buttons) {
 
         align-items: center;
         column-gap: 14px;
@@ -382,7 +382,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         grid-template-columns: 1fr 1fr;
         margin: 14px auto auto auto;
         row-gap: 14px;
-        text-align: center;
+        text-align: center !important;
         width: var(--saveCloseButtonsWidth);
 
         .saveclose_buttons {
@@ -423,7 +423,6 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
 
         .reset {
             color: var(--headerSubFontColor) !important;
-            text-align: center !important;
             
             &:hover {
                 text-decoration: underline;
@@ -466,18 +465,6 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
   75% {
     transform: scale(0.95, 1.05);
   }
-
-}
-
-@keyframes pulseShadow {
-
-    0% {
-        text-shadow: 0px 0px 5px var(--headerFontGlow);
-    }
-
-    100% {
-        text-shadow: 0px 0px 20px var(--headerFontGlow);
-    }
 
 }
 
