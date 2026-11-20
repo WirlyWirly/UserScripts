@@ -380,7 +380,6 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
         column-gap: 14px;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
         margin: 14px auto auto auto;
         row-gap: 14px;
         text-align: center;
@@ -408,8 +407,7 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
             }
 
             &:hover {
-                transform: translateY(-3px);
-
+                animation: jellyEffect 500ms;
             }
 
             &:active {
@@ -431,45 +429,6 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
                 text-decoration: underline;
             }
 
-        }
-
-        .reset_holder {
-            text-align: center;
-        }
-
-        
-        /* --- Column 1 --- */
-        &[value="Save Settings"] {
-            grid-column: 1;
-            grid-row: 1;
-        }
-
-        &[value="Export Settings"] {
-            background: none;
-            grid-column: 1;
-            grid-row: 2;
-        }
-
-        .version {
-            grid-column: 1;
-            grid-row: 3;
-        }
-
-        /* --- Column 2 --- */
-        &[title="Close window"] {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        &[title="Import settings"] {
-            background: none;
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        .reset_holder {
-            grid-column: 2;
-            grid-row: 3;
         }
 
     }
