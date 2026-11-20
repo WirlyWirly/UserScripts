@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name 		MAM - SearchParty
 // @author 		WirlyWirly
-// @version     2.5
+// @version     2.6
 // @description It's a search party! 🥳 Custom search bars and quick-search icons throughout the site
 
 // @match 		https://www.myanonamouse.net/*
@@ -215,13 +215,17 @@ GM_config.init({
     'events': {
 
         'open': function () {
-
-            let gmcExtended = new gmcExtendedInjections(this, GM_info)
-            gmcExtended.importExportButtons('SearchParty')
+            // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
+            // @open
 
             const gmcFrame = this.frame
-
             reloadWindow = false
+
+            // Call the helper methods provided by gmcExtendedInjections
+            let gmcExtended = new gmcExtendedInjections(this, GM_info)
+            gmcExtended.importExportButtons('SearchParty')
+            gmcExtended.scriptVersionLink()
+
 
             let bannerBarsSection = gmcFrame.querySelector('.section_header_holder')
             bannerBarsSection.classList.add('bannerBarsSection')
@@ -230,10 +234,8 @@ GM_config.init({
                 fieldDiv.classList.add('display_inline')
             }
 
-            // Add the GitHub version element before the Reset link
-            gmcExtended.scriptVersionLink('github')
 
-            gmcExtende.frameCleanup()
+            gmcExtended.frameCleanup()
 
         },
 

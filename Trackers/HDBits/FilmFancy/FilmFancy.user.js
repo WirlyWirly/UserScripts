@@ -3,7 +3,7 @@
 // ----------------------------------- MetaData --------------------------------------
 // @name 		HDB - FilmFancy
 // @author 		WirlyWirly
-// @version 	3.0
+// @version 	3.1
 // @description 🎟️ Film, details, and even the browse page, but done all fancy-like
 
 // @icon    https://hdbits.org/favicon.ico
@@ -15,9 +15,9 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css?raw=true
+// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcExtendedInjections.js
 
 // ----------------------------------- Permissions --------------------------------------
 
@@ -31,8 +31,8 @@
 // ----------------------------------- Script Links --------------------------------------
 
 // @homepage    https://github.com/WirlyWirly/UserScripts/blob/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js
-// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
-// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js?raw=true
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/Trackers/HDBits/FilmFancy/FilmFancy.user.js
 
 // ==/UserScript==
 
@@ -119,18 +119,21 @@ GM_config.init({
     'events': {
 
         'open': function () {
+            // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
+            // @open
 
             const gmcFrame = this.frame
             reloadWindow = false
-            importExportButtons(this, 'FilmFancy', GM_info.script.version)
+
+            // Call the helper methods provided by gmcExtendedInjections
+            let gmcExtended = new gmcExtendedInjections(this, GM_info)
+            gmcExtended.importExportButtons('FilmFancy')
+            gmcExtended.scriptVersionLink()
 
             let bannerBarsSection = gmcFrame.querySelector('.section_header_holder')
             bannerBarsSection.classList.add('bannerBarsSection')
 
-            // Add the GitHub version element before the Reset link
-            versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
-
-            gmcFrameCleanup(this.frame)
+            gmcExtended.gmcFrameCleanup()
 
         },
 
