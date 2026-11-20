@@ -207,13 +207,14 @@ div.gmcFrame:has( > div[id$="_wrapper"]) {
 
         label.field_label {
             /* ---------- FieldLabel ---------- */
+            text-align: left;
             margin: unset !important;
 
         }
 
         input {
             /* ---------- FieldInput ---------- */
-            margin: unset;
+            margin: auto;
         }
 
         &.display_inline {

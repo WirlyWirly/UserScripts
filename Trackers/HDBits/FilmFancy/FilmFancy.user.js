@@ -178,7 +178,7 @@ GM_config.init({
         :root {
 
             /* ---------- UserScript Specific ---------- */
-            --fieldGridColumns: 4fr 1fr;
+            --fieldGridColumns: 2fr 1fr;
             --fieldGridWidth: 80%;
 
         }

@@ -273,6 +273,7 @@ GM_config.init({
 
     },
 
+    // @css
     'css': `
 
         ${GM_getResourceText('gmcFrameCSS')}
