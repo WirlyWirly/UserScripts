@@ -1,7 +1,7 @@
 /*
 This script is a collection of functions that will extend the capabilities of the GM_config library: https://github.com/sizzlemctwizzle/GM_config
 
-Usage: Add this file as a '@require', create the object within the 'open' event, and then call the desired methods...
+Usage: Add this file as a '@require', create a new 'gmcExtended' object within the 'open' event, and then call the desired methods...
 
 ----------- Example -----------
 
@@ -43,7 +43,7 @@ class gmcExtendedInjections {
         this.scriptHomepage = gmInfo.script.homepage
         this.scriptVersion = gmInfo.script.version
 
-        this.gmcResetLink = this.gmcFrame.querySelector('div.reset_holder:has(a[id$="_resetLink"])')
+        this.gmcResetHolder = this.gmcFrame.querySelector('div.reset_holder:has(a[id$="_resetLink"])')
 
         this.exportButton = null
         this.importButton = null
@@ -52,6 +52,9 @@ class gmcExtendedInjections {
 
 importExportButtons(filename = this.scriptName) {
     // Create and insert Import\Export buttons after the 'Close' button
+
+    // Clean filename of non \w characters
+    filename = filename.replace(/[^\w\d]/, '')
 
     let closeButton = this.gmcFrame.querySelector('button[id$="_closeBtn"]')
 
@@ -73,13 +76,9 @@ importExportButtons(filename = this.scriptName) {
     importButton.innerText = 'Import'
     exportButton.innerText = 'Export'
 
-    importButton.addEventListener('click', function(event) {
-        this.importGMCSettings()
-    })
+    importButton.addEventListener('click', () => this.importGMCSettings() )
 
-    exportButton.addEventListener('click', function(event) {
-        this.exportGMCSettings(filename)
-    })
+    exportButton.addEventListener('click', () => this.exportGMCSettings(filename) )
 
     // Insert the Import\Export buttons after the Save\Close buttons
     closeButton.insertAdjacentElement('afterend', exportButton)
@@ -193,7 +192,7 @@ scriptVersionLink(svgStyle = 'github') {
     element.innerHTML = `${svgElement} Version ${this.scriptVersion}`
 
     // Insert the version link before the reset link
-    resetLink.insertAdjacentElement('beforebegin', element)
+    this.gmcResetHolder.insertAdjacentElement('beforebegin', element)
 
 }
 
