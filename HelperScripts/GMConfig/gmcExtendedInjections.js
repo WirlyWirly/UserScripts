@@ -53,7 +53,7 @@ class gmcExtendedInjections {
 importExportButtons(filename = this.scriptName) {
     // Create and insert Import\Export buttons after the 'Close' button
 
-    let closeButton = this.gmcObject.frame.querySelector('button[id$="_closeBtn"]')
+    let closeButton = this.gmcFrame.querySelector('button[id$="_closeBtn"]')
 
     let importButton = document.createElement('button')
     let exportButton = document.createElement('button')
