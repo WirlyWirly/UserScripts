@@ -12,7 +12,7 @@
 
 // @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css?raw=true
 
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcExtendedInjections.js
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // @grant       GM_getResourceText
@@ -216,7 +216,8 @@ GM_config.init({
 
         'open': function () {
 
-            importExportButtons(this, 'SearchParty', GM_info.script.version)
+            let gmcExtended = new gmcExtendedInjections(this, GM_info)
+            gmcExtended.importExportButtons('SearchParty')
 
             const gmcFrame = this.frame
 
@@ -230,9 +231,9 @@ GM_config.init({
             }
 
             // Add the GitHub version element before the Reset link
-            versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
+            gmcExtended.scriptVersionLink('github')
 
-            gmcFrameCleanup(this.frame)
+            gmcExtende.frameCleanup()
 
         },
 
