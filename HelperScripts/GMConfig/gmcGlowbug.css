@@ -382,6 +382,7 @@ div.gmcFrame {
         grid-template-columns: 1fr 1fr;
         margin: 14px auto auto auto;
         row-gap: 14px;
+        text-align: center !important;
         width: var(--saveCloseButtonsWidth);
 
         .saveclose_buttons {
