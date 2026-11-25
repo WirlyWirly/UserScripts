@@ -289,7 +289,7 @@ GM_config.init({
             --frameInset: 2% 2% auto auto;
             --buttonContainerWidth: 75%;
             --fieldGridColumns: 3fr 1fr;
-            --fieldGridWidth: 55%;
+            --fieldGridWidth: 75%;
 
         }
 
