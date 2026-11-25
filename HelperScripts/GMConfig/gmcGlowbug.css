@@ -282,6 +282,7 @@ div.gmcFrame {
             /* --- Focused --- */
             border: 2px dashed var(--inputFieldFocusShadow) !important;
             box-shadow: 0 0 2px var(--inputFieldInnerShadow) inset, 0 0 7px var(--inputFieldFocusShadow);
+            color: var(--inputFieldText);
             outline: none;
             animation-name: jellyEffect;
             animation-duration: 500ms;

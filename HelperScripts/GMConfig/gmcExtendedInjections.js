@@ -5,8 +5,6 @@ Usage: Add this file as a '@require', create a new 'gmcExtended' object within t
 
 ----------- Example -----------
 
-// @grant       GM_getValue
-// @grant       GM_setValue
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/gmcExtendedInjections.js
 
 ...
